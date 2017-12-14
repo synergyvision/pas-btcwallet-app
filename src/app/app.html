@@ -1,0 +1,29 @@
+<ion-menu [content]="content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list>
+      <ion-item color="light">
+        <ion-avatar item-start>
+          <img src="../assets/{{avatar}}">
+        </ion-avatar>
+        <h2>{{username}}</h2>
+      </ion-item>
+      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
+        {{p.title}}
+      </button>
+      <div padding-vertical>
+        <button ion-item menuClose (click)="logOut()">
+          Cerrar Sesión
+        </button>
+      </div>
+    </ion-list>
+  </ion-content>
+
+</ion-menu>
+
+<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>

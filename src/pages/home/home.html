@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Inicio
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding id="inicio">
+  <div class="balance">
+    <img src="assets/imgs/Balance.jpg" />
+  </div>
+  <div class="header">
+    <h5>Cuenta</h5>
+    <p>{{user.address}}</p>
+  </div>
+  <div class="codigo">
+    <img src="{{user.code}}" />
+  </div>
+  <ion-row class="botonera">
+    <ion-col col-6>
+      <button id="recibir" full ion-button on-click="goToReceive()">
+        Recibir
+      </button>
+    </ion-col>
+    <ion-col col-6>
+      <button id="enviar" full ion-button color="secondary" on-click="goToSend()">
+        Enviar
+      </button>
+    </ion-col>
+  </ion-row>
+</ion-content>

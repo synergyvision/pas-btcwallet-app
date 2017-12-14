@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Libreta de Direcciones
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item-sliding *ngFor="let a of addressBook" text-wrap>
+    <ion-item color="none" (click)="openAddress(a)">
+      <ion-avatar item-left>
+        <img src="{{a.img}}"/>
+      </ion-avatar>
+      <h2>
+        #{{a.id}} {{a.alias}}
+      </h2>
+    </ion-item>
+    <ion-item-options>
+        <button ion-button color="danger" (click)="removeAddress(a)" icon-start>
+          <ion-icon name="trash"></ion-icon> Eliminar </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  <ion-fab bottom right>
+    <button ion-fab mini on-click="addAddress()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
+</ion-content>

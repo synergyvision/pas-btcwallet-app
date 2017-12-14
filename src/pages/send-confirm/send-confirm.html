@@ -1,0 +1,49 @@
+<ion-header>
+    <ion-navbar>
+      <ion-title>Enviar</ion-title>
+    </ion-navbar>
+  </ion-header>
+  
+  <ion-content padding>
+    <ion-list>
+      <div class="header">
+        <h5>
+          Seleccionar monto
+        </h5>
+      </div>
+      <form>
+        <ion-item>
+          <ion-input type="number" placeholder="Monto"></ion-input>
+        </ion-item>
+        <p>
+          Disponible: {{availableBTC}}
+        </p>
+        <p>
+          {{availableUSD}}
+        </p>
+        <p>
+          {{availableBsF}}
+        </p>
+        <ion-item>
+          <ion-label stacked>
+            Token
+          </ion-label>
+          <ion-input type="text" placeholder=""></ion-input>
+        </ion-item>
+        <p>
+          Dirección Seleccionada
+        </p>
+        <ion-item color="none">
+          <ion-avatar item-left>
+            <img />
+          </ion-avatar>
+          <h2>
+            Contacto
+          </h2>
+        </ion-item>
+        <button ion-button color="balanced" block on-click="goToInicio()">
+          Enviar
+        </button>
+      </form>
+    </ion-list>
+  </ion-content>

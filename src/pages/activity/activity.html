@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Actividad</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item-sliding *ngFor="let a of activityList" text-wrap>
+      <ion-item>
+        <h6>
+          <strong>Fecha: </strong>{{a.date}}
+        </h6>
+        <br> {{a.description}}
+      </ion-item>
+      <ion-item-options>
+          <button ion-button color="danger" (click)="removeActivity(a)" icon-start><ion-icon name="trash"></ion-icon> Delete </button>
+        </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

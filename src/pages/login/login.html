@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Iniciar Sesión</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <div class="logo">
+    <img src="assets/imgs/Logo.png">
+  </div>
+  <form id="login">
+    <ion-list>
+      <ion-item>
+        <ion-input type="email" placeholder="Correo Electrónico"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input type="password" placeholder="Contraseña"></ion-input>
+      </ion-item>
+    </ion-list>
+    <div class="recuperar">
+      <button ion-button clear block small text-capitalize>
+        Recuperar Contraseña
+      </button>
+    </div>
+    <div>
+      <button ion-button color="positive" block on-click="goToLogIn()">
+        Iniciar Sesión
+      </button>
+    </div>
+    <button ion-button clear color="positive" block on-click="goToRegister()">
+      Registrarse
+    </button>
+  </form>
+</ion-content>
