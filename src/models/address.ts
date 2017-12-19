@@ -1,3 +1,6 @@
+// Placeholder Class/Interface for the user registered addressess
+// Used for Sending BTC or CC
+
 export class Address {
   public id: number;
   public img: string;

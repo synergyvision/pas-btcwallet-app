@@ -1,3 +1,5 @@
+// Placeholder Class/Interface for the data of the logged user
+
 export class User {
     public name: string;
     public email: string;

@@ -4,7 +4,7 @@ import { ReceivePage } from '../receive/receive';
 import { SendPage } from '../send/send';
 import { User } from '../../models/user';
 
-// import { EnviarPage } from '../enviar/enviar';
+// Component for the Home Page, displays user balance, and options
 
 @Component({
   selector: 'page-home',
@@ -15,6 +15,8 @@ export class HomePage {
   public user: User;
 
   constructor(public navCtrl: NavController) {
+
+    // Placeholder user data
     this.user = new User(
     'nombre',
     'correo@correo.com',

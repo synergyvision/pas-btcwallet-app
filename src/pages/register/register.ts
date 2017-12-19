@@ -12,10 +12,6 @@ export class RegisterPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  public ionViewDidLoad() {
-    console.log('ionViewDidLoad RegisterPage ');
-  }
-
   private goToLogin() {
     this.navCtrl.pop();
   }

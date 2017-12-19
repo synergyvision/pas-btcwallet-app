@@ -1,3 +1,6 @@
+// Placeholder Class/Interface for the log of the user's transactions
+// Related to Receveing and Sending BTC or CC
+
 export class Transaction {
     public id: number;
     public date: string;
