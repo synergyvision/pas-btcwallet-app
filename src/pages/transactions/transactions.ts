@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Transaction } from '../../models/transaction';
 import { RestService } from '../../app/rest.service';
-import { IBlockchain } from '../../models/blockchain';
+import { IBlockchain } from '../../models/IBlockchain';
 
 @IonicPage()
 @Component({

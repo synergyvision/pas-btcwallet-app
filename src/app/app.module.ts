@@ -18,6 +18,8 @@ import { AddressPage } from '../pages/address/address';
 import { TransactionsPage } from '../pages/transactions/transactions';
 import { ActivityPage } from '../pages/activity/activity';
 import { BlockchainPage } from '../pages/blockchain/blockchain';
+import { RestService } from './rest.service';
+import { EditAddressPage } from '../pages/edit-address/edit-address';
 
 @NgModule({
   bootstrap: [IonicApp],
@@ -34,6 +36,7 @@ import { BlockchainPage } from '../pages/blockchain/blockchain';
     TransactionsPage,
     ActivityPage,
     BlockchainPage,
+    EditAddressPage,
   ],
   entryComponents: [
     MyApp,
@@ -48,6 +51,7 @@ import { BlockchainPage } from '../pages/blockchain/blockchain';
     TransactionsPage,
     ActivityPage,
     BlockchainPage,
+    EditAddressPage,
   ],
   imports: [
     BrowserModule,

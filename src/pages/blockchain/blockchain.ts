@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { RestService } from '../../app/rest.service';
-import { IBlockchain } from '../../models/blockchain';
+import { IBlockchain } from '../../models/IBlockchain';
 
 // Component for displaying the updated data from the blockchain
 
 @IonicPage()
 @Component({
-  providers: [RestService],
   selector: 'page-blockchain',
   templateUrl: 'blockchain.html',
 })
@@ -23,7 +22,6 @@ export class BlockchainPage {
     this.restService.getBlockchain()
       .subscribe((data) => {
         this.blockchain = data;
-        this.blockchain.time = new Date(this.blockchain.time).toLocaleString();
       },
       // Error Handling
       (error) => {

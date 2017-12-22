@@ -5,13 +5,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @IonicPage()
 @Component({
-  selector: 'page-address',
-  templateUrl: 'address.html',
+  selector: 'page-edit-address',
+  templateUrl: 'edit-address.html',
 })
-
-// Component for displaying one address
-
-export class AddressPage {
+export class EditAddressPage {
 
   private address: Address;
   private action: string;
@@ -19,19 +16,18 @@ export class AddressPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
               public formBuilder: FormBuilder) {
-    // Form Builder
+    this.address = this.navParams.data;
     this.addressForm = formBuilder.group({
-      address: ['', Validators.compose([Validators.minLength(26), Validators.required])],
-      alias: ['', Validators.compose([Validators.required])],
-      id: [{value: null, disabled: true}],
-      img: [{value: '../../assets/imgs/user.png'}],
+      address: [this.address.address, Validators.compose([Validators.minLength(26), Validators.required])],
+      alias: [this.address.alias, Validators.compose([Validators.required])],
+      id: [{value: this.address.id, disabled: true}],
+      img: [this.address.img],
     });
   }
 
-  // Save changes to the address
   private onSubmit(form) {
-    form.value.id = this.navParams.data;
-    this.event.publish('added:address', form.value);
-    this.navCtrl.pop();
+      form.value.id = this.navParams.data;
+      this.event.publish('edited:address', form.value);
+      this.navCtrl.pop();
   }
 }

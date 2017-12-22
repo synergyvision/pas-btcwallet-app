@@ -10,12 +10,15 @@
 </ion-header>
 
 <ion-content padding id="inicio">
-  <div class="balance">
-    <img src="assets/imgs/Balance.jpg" />
+  <div class="balance" *ngIf="user.wallet!==undefined">
+      <h5>Billetera</h5>
+    {{user.wallet.guid}}
   </div>
   <div class="header">
     <h5>Cuenta</h5>
-    <p>{{user.address}}</p>
+    <div *ngIf="user.wallet!==undefined">
+      <p>{{user.wallet.address}}</p>
+    </div>
   </div>
   <div class="codigo">
     <img src="{{user.code}}" />

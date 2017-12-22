@@ -1,3 +1,5 @@
+import { IAddress } from './IAddress';
+
 // Placeholder Class/Interface for the user registered addressess
 // Used for Sending BTC or CC
 

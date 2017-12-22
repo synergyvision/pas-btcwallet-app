@@ -11,8 +11,10 @@ import { AddressBookPage } from '../pages/address-book/address-book';
 import { TransactionsPage } from '../pages/transactions/transactions';
 import { ActivityPage } from '../pages/activity/activity';
 import { BlockchainPage } from '../pages/blockchain/blockchain';
+import { RestService } from './rest.service';
 
 @Component({
+  providers: [RestService],
   templateUrl: 'app.html',
 })
 
@@ -27,7 +29,8 @@ export class MyApp {
   public username: string;
   public avatar: string;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, 
+              public restService: RestService) {
     this.initializeApp();
     // List of pages that appear on the Side Menu
     this.pages = [
@@ -37,7 +40,6 @@ export class MyApp {
       { title: 'Transacciones', component: TransactionsPage },
       { title: 'Actividad', component: ActivityPage },
       { title: 'Datos del BlockChain', component: BlockchainPage },
-
     ];
 
     // Placeholder data for displaying

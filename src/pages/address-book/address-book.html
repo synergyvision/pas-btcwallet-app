@@ -8,8 +8,8 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-item-sliding *ngFor="let a of addressBook" text-wrap>
-    <ion-item color="none" (click)="openAddress(a)">
+    <ion-item-sliding *ngFor="let a of restService.addressBook" text-wrap>
+    <ion-item color="none" (click)="editAddress(a)">
       <ion-avatar item-left>
         <img src="{{a.img}}"/>
       </ion-avatar>
