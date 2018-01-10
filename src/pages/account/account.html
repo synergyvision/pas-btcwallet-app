@@ -13,9 +13,9 @@
   <ion-list>
     <ion-item>
       <ion-avatar item-start>
-        <img src="../assets/{{avatar}}">
+        <img src="../assets/{{user.avatar}}">
       </ion-avatar>
-      <h2>{{username}}</h2>
+      <h2>{{user.name}}</h2>
     </ion-item>
     <div padding-top>
       <p>
@@ -23,7 +23,7 @@
       </p>
     </div>
     <ion-item>
-      Correo: {{correo}}
+      Correo: {{user.email}}
     </ion-item>
     <button ion-item *ngFor="let p of pages" (click)="openPage(p)">
         {{p.title}}

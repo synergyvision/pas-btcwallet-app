@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Events, IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Address } from '../../models/address';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Address } from '../../app/models/address';
 
 @IonicPage()
 @Component({

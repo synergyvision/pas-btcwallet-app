@@ -5,6 +5,8 @@
         "tslint-ionic-rules"
     ],
     "jsRules": {},
-    "rules": {},
+    "rules": {
+        "object-literal-sort-keys": false
+    },
     "rulesDirectory": []
 }

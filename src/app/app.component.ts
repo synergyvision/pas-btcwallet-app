@@ -11,7 +11,8 @@ import { AddressBookPage } from '../pages/address-book/address-book';
 import { TransactionsPage } from '../pages/transactions/transactions';
 import { ActivityPage } from '../pages/activity/activity';
 import { BlockchainPage } from '../pages/blockchain/blockchain';
-import { RestService } from './rest.service';
+import { RestService } from './services/rest.service';
+import { LoaderService } from './services/loader.service';
 
 @Component({
   providers: [RestService],

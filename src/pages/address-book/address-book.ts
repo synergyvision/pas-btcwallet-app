@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { Events, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AddressPage } from '../address/address';
-import { Address } from '../../models/address';
 import { SendPage } from '../send/send';
-import { RestService } from '../../app/rest.service';
 import { EditAddressPage } from '../edit-address/edit-address';
 import { NgZone } from '@angular/core';
+import { RestService } from '../../app/services/rest.service';
 
 @IonicPage()
 @Component({

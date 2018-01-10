@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AddressBookPage } from '../address-book/address-book';
 import { Events } from 'ionic-angular/util/events';
-import { Address } from '../../models/address';
+import { Address } from '../../app/models/address';
 
 @IonicPage()
 @Component({

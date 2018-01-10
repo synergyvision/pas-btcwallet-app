@@ -18,8 +18,9 @@ import { AddressPage } from '../pages/address/address';
 import { TransactionsPage } from '../pages/transactions/transactions';
 import { ActivityPage } from '../pages/activity/activity';
 import { BlockchainPage } from '../pages/blockchain/blockchain';
-import { RestService } from './rest.service';
 import { EditAddressPage } from '../pages/edit-address/edit-address';
+import { LoaderService } from './services/loader.service';
+import { AlertService } from './services/alert.service';
 
 @NgModule({
   bootstrap: [IonicApp],
@@ -65,6 +66,8 @@ import { EditAddressPage } from '../pages/edit-address/edit-address';
       provide: ErrorHandler,
       useClass: IonicErrorHandler,
     },
+    LoaderService,
+    AlertService,
   ],
 })
 export class AppModule { }
