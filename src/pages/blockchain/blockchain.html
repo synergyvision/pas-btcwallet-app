@@ -15,7 +15,10 @@
       <br>
       Height: {{blockchain.height}}
       <br>
-      Indice de Transacciones: {{blockchain.txIndexes}}
+      Indice de Transacciones: 
+      <ion-list *ngFor="let i of blockchain.txIndexes">
+        <ion-item>{{i}}</ion-item>
+      </ion-list>
     </ion-item>
   </ion-list>
 </ion-content>

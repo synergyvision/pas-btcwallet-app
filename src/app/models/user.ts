@@ -4,22 +4,26 @@ import { IWallet } from './IWallet';
 // Placeholder Class/Interface for the data of the logged user
 
 export class User {
-  public name: string;
+  public uid: string;
   public email: string;
   public wallet: IWallet;
-  // Placeholder for the FrontEnd
-  public code: string;
-  public avatar: string;
+  public phone?: number;
+  public emailVerified: boolean;
 
-  constructor(name, email, code, wallet?, avatar?) {
-    this.name = name;
+
+  constructor(uid, email, emailVerified, wallet?, phone? ) {
+    this.uid = uid,
     this.email = email;
-    this.code = code;
+    this.emailVerified = emailVerified;
     this.wallet = wallet;
-    this.avatar = avatar;
+    this.phone = phone;
   }
 
   public setWallet(wallet: IWallet) {
     this.wallet = wallet;
+  }
+
+  public setPhone(phone: number) {
+    this.phone = phone;
   }
 }

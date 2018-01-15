@@ -3,8 +3,20 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { HttpModule } from '@angular/http';
 import { MyApp } from './app.component';
+import { HttpModule } from '@angular/http';
+import { QRScanner } from '@ionic-native/qr-scanner';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
+// i18n Imports
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
+// Firebase
+
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireModule } from 'angularfire2';
+import { FirebaseProvider } from '../providers/firebase/firebase';
 
 // Page List
 import { HomePage } from '../pages/home/home';
@@ -21,6 +33,22 @@ import { BlockchainPage } from '../pages/blockchain/blockchain';
 import { EditAddressPage } from '../pages/edit-address/edit-address';
 import { LoaderService } from './services/loader.service';
 import { AlertService } from './services/alert.service';
+import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
+import { AuthService } from './services/auth.service';
+import { ConfirmEmailPage } from '../pages/confirm-email/confirm-email';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyBTBCJbNBmUBmKaMUK-JMFTKgY1W8H-r6w',
+  authDomain: 'visionbitwallet.firebaseapp.com',
+  databaseURL: 'https://visionbitwallet.firebaseio.com',
+  projectId: 'visionbitwallet',
+  storageBucket: 'visionbitwallet.appspot.com',
+  messagingSenderId: '1069944614319',
+};
 
 @NgModule({
   bootstrap: [IonicApp],
@@ -38,6 +66,7 @@ import { AlertService } from './services/alert.service';
     ActivityPage,
     BlockchainPage,
     EditAddressPage,
+    ConfirmEmailPage,
   ],
   entryComponents: [
     MyApp,
@@ -53,21 +82,36 @@ import { AlertService } from './services/alert.service';
     ActivityPage,
     BlockchainPage,
     EditAddressPage,
+    ConfirmEmailPage,
   ],
   imports: [
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
+    AngularFireModule.initializeApp(firebaseConfig),
     BrowserModule,
     IonicModule.forRoot(MyApp),
     HttpModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient],
+      },
+    }),
   ],
   providers: [
-    StatusBar,
+    AuthService,
+    AlertService,
+    FirebaseProvider,
+    LoaderService,
+    QRScanner,
     SplashScreen,
     {
       provide: ErrorHandler,
       useClass: IonicErrorHandler,
     },
-    LoaderService,
-    AlertService,
+    StatusBar,
   ],
 })
 export class AppModule { }

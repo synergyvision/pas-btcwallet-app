@@ -14,9 +14,15 @@ import { IBlockchain } from '../../app/models/IBlockchain';
 export class BlockchainPage {
 
   private blockchain: IBlockchain;
+  private chart: [{
+    values: {
+      x: number;
+      y: number;
+    },
+  }
+  ];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private restService: RestService,
-              private alertService: AlertService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private restService: RestService) {
   }
 
   // Loads the Blockchain data
@@ -29,7 +35,7 @@ export class BlockchainPage {
         },
         // Error Handling
         (error) => {
-          this.alertService.showAlert().then((res) => {
+          this.restService.showAlert().then((res) => {
             this.navCtrl.pop();
           },
             (err) => {
@@ -37,7 +43,15 @@ export class BlockchainPage {
             });
         });
     } else {
-    this.blockchain = this.restService.blockChain;
+      this.blockchain = this.restService.blockChain;
     }
+/*     this.restService.getChart().subscribe((data) => {
+      this.chart = data;
+      console.log(this.chart);
+    },
+    (error) => {
+      console.log(error);
+    },
+    ); */
   }
 }

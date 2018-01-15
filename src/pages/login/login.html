@@ -7,13 +7,14 @@
   <div class="logo">
     <img src="assets/imgs/Logo.png">
   </div>
-  <form id="login">
+  <span *ngIf="error">{{error}}</span>
+  <form [formGroup]="loginForm" (ngSubmit)="loginEmail(loginForm)">
     <ion-list>
       <ion-item>
-        <ion-input type="email" placeholder="Correo Electrónico"></ion-input>
+        <ion-input type="email" formControlName="email" placeholder="Correo Electrónico"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input type="password" placeholder="Contraseña"></ion-input>
+        <ion-input type="password" formControlName="password" placeholder="Contraseña"></ion-input>
       </ion-item>
     </ion-list>
     <div class="recuperar">
@@ -22,12 +23,16 @@
       </button>
     </div>
     <div>
-      <button ion-button color="positive" block on-click="goToLogIn()">
+      <button ion-button color="positive" block [disabled]="!loginForm.valid" type="submit">
         Iniciar Sesión
       </button>
     </div>
     <button ion-button clear color="positive" block on-click="goToRegister()">
       Registrarse
+    </button>
+    <button ion-button block color="danger" (click)="loginGoogle()">
+      <ion-icon name="logo-googleplus"></ion-icon>
+      Google
     </button>
   </form>
 </ion-content>

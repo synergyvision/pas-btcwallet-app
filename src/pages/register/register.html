@@ -7,22 +7,22 @@
 </ion-header>
 
 <ion-content padding>
-  <form>
+
+  <span *ngIf="error">{{error}}</span>
+  <form [formGroup]="registerForm" (ngSubmit)="registerUser(registerForm)">
     <ion-list>
       <ion-item>
-        <ion-input type="text" placeholder="Usuario"></ion-input>
+        <ion-input type="email" placeholder="Correo electrónico" formControlName="email"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input type="email" placeholder="Correo electrónico"></ion-input>
+        <ion-input type="password" placeholder="Contraseña" formControlName="password" ></ion-input>
       </ion-item>
       <ion-item>
-        <ion-input type="text" placeholder="Contraseña"></ion-input>
+        <ion-input type="password" placeholder="Repetir Contraseña" formControlName="passwordRe"></ion-input>
       </ion-item>
-      <ion-item>
-        <ion-input type="text" placeholder="Repetir Contraseña"></ion-input>
-      </ion-item>
-      <button ion-button color="positive" block on-click="goToLogin()">
-        Registrarse
+
+      <button ion-button color="positive" [disabled]="!registerForm.valid" type="submit">
+        Continuar
       </button>
     </ion-list>
   </form>

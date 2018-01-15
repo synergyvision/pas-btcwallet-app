@@ -12,17 +12,19 @@ import { TransactionsPage } from '../pages/transactions/transactions';
 import { ActivityPage } from '../pages/activity/activity';
 import { BlockchainPage } from '../pages/blockchain/blockchain';
 import { RestService } from './services/rest.service';
-import { LoaderService } from './services/loader.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
-  providers: [RestService],
+  providers: [RestService, AuthService],
   templateUrl: 'app.html',
 })
 
 export class MyApp {
-  @ViewChild(Nav) public nav: Nav;
+  @ViewChild(Nav)
 
-  public rootPage: any = HomePage;
+  public nav: Nav;
+  public rootPage: any;
+
   public pages: Array<{
     title: string,
     component: any,
@@ -30,9 +32,10 @@ export class MyApp {
   public username: string;
   public avatar: string;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, 
-              public restService: RestService) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen,
+              public restService: RestService, public authService: AuthService) {
     this.initializeApp();
+
     // List of pages that appear on the Side Menu
     this.pages = [
       { title: 'Inicio', component: HomePage },
@@ -52,6 +55,12 @@ export class MyApp {
   public initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
+      // User not logged in
+      if (!this.authService.getLoggedUser()) {
+        this.rootPage = LoginPage;
+      } else {
+        this.rootPage = HomePage;
+      }
       this.splashScreen.hide();
     });
   }
@@ -65,6 +74,7 @@ export class MyApp {
 
   // Log Out of the App
   public logOut() {
+    this.authService.logout();
     this.nav.setRoot(LoginPage);
   }
 }

@@ -1,0 +1,19 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Registrarse</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <h4>{{message}} {{email}}</h4>
+  <div>
+    <p>¿No ha recibido ningún correo?</p>
+    <button ion-button color="positive" (click)="resendEmail" type="submit">
+      Continuar
+    </button>
+  </div>
+
+</ion-content>

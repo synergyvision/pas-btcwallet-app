@@ -10,13 +10,15 @@ import { IWallet } from '../models/IWallet';
 import { IBlockchain } from '../models/IBlockchain';
 import { Activity } from '../models/activity';
 import { Transaction } from '../models/transaction';
+import { AlertService } from './alert.service';
 
 // REST Service for gettind data from APIs and the Database
 // Currently using the Blockchain Data API
 
 // API Base URL
 const URL = 'https://blockchain.info/es/';
-
+// API Base URL for the Testnet
+const TESTING_URL = '';
 // API KEY issued to Synergy Vision
 const API_KEY = 'd08f9cd-268e-4875-a881-495a0a3aeb65';
 
@@ -32,7 +34,8 @@ export class RestService {
   public transactionList: Transaction[];
   private options: RequestOptions;
 
-  constructor(private http: Http, private loadService: LoaderService) {
+  constructor(private http: Http, private loadService: LoaderService, private alertService: AlertService) {
+
     // Headers for local testing
     const headers = new Headers();
     headers.append('&cors', 'true');
@@ -45,12 +48,6 @@ export class RestService {
       address: '12AaMuRnzw6vW6s2KPRAGeX53meTf8JbZS',
       label: 'Billetera BTC',
     };
-    this.user = new User('Nombre',
-      'correo@correo.com',
-      'assets/imgs/QRCode.png',
-      this.wallet,
-      '../../assets/imgs/user.png',
-      );
     this.addressBook = [
       new Address(1, '../../assets/imgs/user.png', 'alias 1', '42sdsvgf93ghg823'),
       new Address(2, '../../assets/imgs/user.png', 'alias 2', 'acnjsdnjwsdsjdsd'),
@@ -109,8 +106,21 @@ export class RestService {
       .catch(this.handleError);
   }
 
+  public showAlert(msg?, title?): Promise<any> {
+    return this.alertService.showAlert(msg, title);
+  }
+
+  public  getChart(): any {
+    throw new Error('Method not implemented.');
+  }
+
+  public createWallet() {
+    return "3GWcdf6F9ssYJAx31qubnv46aYbcsdffds";
+  }
+
   // Error Handling for HTTP Errors
   private handleError(error: Response) {
     return Observable.throw(error.statusText);
   }
+
 }

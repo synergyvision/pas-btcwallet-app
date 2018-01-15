@@ -12,7 +12,7 @@
     </h5>
   </div>
   <div padding-vertical>
-    <button ion-button color="secundary" block>
+    <button ion-button color="secundary" block on-click="scanQRCode()">
       Escanear Código QR
     </button>
   </div>
@@ -21,7 +21,11 @@
       Libreta de Contactos
     </button>
   </div>
-  Dirección seleccionada
+  <ion-item *ngIf="this.selectedAddress!=undefined">
+  <h4>Dirección seleccionada</h4>
+  <br>
   {{selectedAddress.address}}
+  <br>
   {{selectedAddress.alias}}
+</ion-item>
 </ion-content>
