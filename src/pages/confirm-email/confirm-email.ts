@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AuthService } from '../../app/services/auth.service';
+import { ViewController } from 'ionic-angular/navigation/view-controller';
 
 /**
  * Generated class for the ConfirmEmailPage page.
@@ -19,12 +20,19 @@ export class ConfirmEmailPage {
   private message = 'Se ha enviado un correo de verificación a: ';
   private email: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService) {
-    this.email = authService.getLoggedUser().email;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
+              private authService: AuthService) {
+    this.email = authService.user.email;
+    this.navCtrl.swipeBackEnabled = false;
+    this.viewCtrl.showBackButton(false);
   }
 
-  private resendEmail(){
-    
+  private resendEmail() {
+    // Reenviamos el correo de verificacion
+  }
+
+  private goBack() {
+    this.navCtrl.popToRoot();
   }
 
 }

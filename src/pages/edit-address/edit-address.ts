@@ -18,9 +18,9 @@ export class EditAddressPage {
               public formBuilder: FormBuilder) {
     this.address = this.navParams.data;
     this.addressForm = formBuilder.group({
-      address: [this.address.address, Validators.compose([Validators.minLength(26), Validators.required])],
+      address: [this.address.wallet, Validators.compose([Validators.minLength(26), Validators.required])],
       alias: [this.address.alias, Validators.compose([Validators.required])],
-      id: [{value: this.address.id, disabled: true}],
+      id: [{value: this.address.uid, disabled: true}],
       img: [this.address.img],
     });
   }

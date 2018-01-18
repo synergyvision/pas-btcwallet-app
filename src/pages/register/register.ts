@@ -47,7 +47,8 @@ export class RegisterPage {
 
   private registerUser(registerForm: FormGroup) {
     this.loaderService.showLoader("Espere");
-    this.authService.signup(registerForm).then((success) => {
+    this.authService.signup(registerForm).
+    then((success) => {
       this.loaderService.dismissLoader();
       this.navCtrl.push(ConfirmEmailPage);
     }).catch((error) => {

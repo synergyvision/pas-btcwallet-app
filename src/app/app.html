@@ -7,12 +7,14 @@
 
   <ion-content>
     <ion-list>
-      <ion-item color="light">
-        <ion-avatar item-start>
-          <img src="../assets/{{avatar}}">
-        </ion-avatar>
-        <h2>{{username}}</h2>
-      </ion-item>
+      <div *ngIf="user">
+        <ion-item color="light">
+          <ion-avatar item-start>
+            <img src="{{user.photoURL}}">
+          </ion-avatar>
+          <h2>{{user.email}}</h2>
+        </ion-item>
+      </div>
       <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
         {{p.title}}
       </button>

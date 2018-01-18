@@ -11,20 +11,27 @@ import { IBlockchain } from '../models/IBlockchain';
 import { Activity } from '../models/activity';
 import { Transaction } from '../models/transaction';
 import { AlertService } from './alert.service';
+import { FormGroup } from '@angular/forms';
+import { FirebaseProvider } from '../../providers/firebase/firebase';
 
-// REST Service for gettind data from APIs and the Database
+// REST Service for getting data from APIs and the Database
 // Currently using the Blockchain Data API
 
 // API Base URL
 const URL = 'https://blockchain.info/es/';
+// Must have BlockchainInfo Wallet Service Running on same environment
+const WALLET_URL = 'http://localhost:300/api/v2/Create';
 // API Base URL for the Testnet
-const TESTING_URL = '';
+const TESTING_URL = 'https://api.blockcypher.com/v1/bcy/test';
+const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
 // API KEY issued to Synergy Vision
 const API_KEY = 'd08f9cd-268e-4875-a881-495a0a3aeb65';
 
 @Injectable()
 
 export class RestService {
+
+  public avatar = '../../assets/imgs/user.png';
   public address: IAddress;
   public user: User;
   public addressBook: Address[];
@@ -32,27 +39,24 @@ export class RestService {
   public blockChain: IBlockchain;
   public activityList: Activity[];
   public transactionList: Transaction[];
+  public public: string;
   private options: RequestOptions;
 
-  constructor(private http: Http, private loadService: LoaderService, private alertService: AlertService) {
+  constructor(private http: Http, private loadService: LoaderService, private alertService: AlertService, 
+              private firebaseData: FirebaseProvider) {
 
-    // Headers for local testing
+    // Headers for get
     const headers = new Headers();
-    headers.append('&cors', 'true');
     headers.append('Access-Control-Allow-Credentials', 'true');
+    headers.append('Content-Type', 'application/json');
     this.options = new RequestOptions({ headers: headers });
 
-    // Placeholder Data coming from the API
-    this.wallet = {
-      guid: '4b8cd8e9-9480-44cc-b7f2-527e98ee3287',
-      address: '12AaMuRnzw6vW6s2KPRAGeX53meTf8JbZS',
-      label: 'Billetera BTC',
-    };
     this.addressBook = [
-      new Address(1, '../../assets/imgs/user.png', 'alias 1', '42sdsvgf93ghg823'),
-      new Address(2, '../../assets/imgs/user.png', 'alias 2', 'acnjsdnjwsdsjdsd'),
-      new Address(3, '../../assets/imgs/user.png', 'alias 3', 'dfje4y7837yjsdcx'),
+      new Address(1, this.avatar, 'alias 1', '42sdsvgf93ghg823'),
+      new Address(2, this.avatar, 'alias 2', 'acnjsdnjwsdsjdsd'),
+      new Address(3, this.avatar, 'alias 3', 'dfje4y7837yjsdcx'),
     ];
+
     this.activityList = [
       new Activity(1, '12/12/2017', 'Acceso desde dispositivo Android NG-7800'),
       new Activity(2, '06/11/2017', 'Cambio de clave'),
@@ -66,42 +70,28 @@ export class RestService {
       new Transaction(2, '11/12/2017', '343sdsd12sed5jh343jhjhjh839281fhn19403nc903i3iencjdiofw0w24', 0.00023, 9.20),
       new Transaction(3, '09/12/2017', 'acbvy34fds353125ghgda3432sd24rewfwdqw432|7684rerqecxz231414', 0.00000232, 3.40),
     ];
-
-    // For getting the user info
-
-    // this.getSingleAddress('13XXaBufpMvqRqLkyDty1AXqueZHVe6iyy')
-    //   .subscribe((data) => {
-    //     this.address = data;
-    //     this.user.address = this.address;
-    //   },
-    /*       // Error Handling
-          (error) => {
-            console.log('Error :' + error);
-          },
-        ); */
   }
 
   // Retrieves the latest BlockChain data
   public getBlockchain(): Observable<IBlockchain> {
-      this.loadService.showLoader('Recuperando Información');
-      return this.http.get(URL + 'latestblock', this.options)
-        .map((res: Response) => {
-          this.blockChain = res.json();
-          console.log(this.blockChain);
-          return <IBlockchain>res.json();
-        })
-        .catch(this.handleError)
-        .finally(() => {
-          this.loadService.dismissLoader();
-        },
-      );
+    this.loadService.showLoader('Recuperando Información');
+    return this.http.get(URL + 'latestblock', this.options)
+      .map((res: Response) => {
+        this.blockChain = res.json();
+        return res.json() as IBlockchain;
+      })
+      .catch(this.handleError)
+      .finally(() => {
+        this.loadService.dismissLoader();
+      },
+    );
   }
 
   // Gets a Single Address data
   public getSingleAddress(bitcoin_address): Observable<IAddress> {
     return this.http.get(URL + 'rawaddr/' + bitcoin_address, this.options)
       .map((res: Response) => {
-        return <IAddress>res.json();
+        return res.json() as IAddress;
       })
       .catch(this.handleError);
   }
@@ -110,12 +100,53 @@ export class RestService {
     return this.alertService.showAlert(msg, title);
   }
 
-  public  getChart(): any {
-    throw new Error('Method not implemented.');
+  public createData(email: string, password: string, uid: string): Observable<Observable<IWallet>> {
+    // Main Blockchain Info
+    const body = {
+      $password: password,
+      $api_code: API_KEY,
+      $label: 'Main BTC Wallet',
+      $email: email,
+    };
+
+    /*     return this.http.post(WALLET_URL, body, this.options)
+          .map((res: Response) => {
+            console.log(res);
+            console.log(res.json());
+            return <IWallet>res.json();
+          })
+          .catch(this.handleError); */
+
+    // Testnet Blockcypher
+    return this.createAddress()
+      .map((address) => {
+        this.address = address;
+        const data = {
+          name: uid.substring(0, 25),
+          addresses: [
+            this.address.address,
+          ],
+        };
+        return this.createWallet(JSON.stringify(data));
+      }).catch(this.handleError);
   }
 
-  public createWallet() {
-    return "3GWcdf6F9ssYJAx31qubnv46aYbcsdffds";
+  // Returns a wallet to be used on BlockCypher Testnet API
+  public createWallet(data): Observable<IWallet> {
+    return this.http.post(TESTING_URL + '/wallets?token=' + TOKEN, data)
+      .map((res: Response) => {
+        return res.json() as IWallet;
+      })
+      .catch(this.handleError);
+  }
+
+  // Returns a random generated address form the BlockCypher Testnet API
+  public createAddress(): Observable<IAddress> {
+    return this.http.post(TESTING_URL + '/addrs', null, this.options)
+      .map((res: Response) => {
+        return res.json() as IAddress;
+      })
+      .catch(this.handleError);
   }
 
   // Error Handling for HTTP Errors

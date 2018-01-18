@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { HomePage } from '../../pages/home/home';
 import { RegisterPage } from '../register/register';
 import { AuthService } from '../../app/services/auth.service';
@@ -18,7 +18,7 @@ export class LoginPage {
   private loginForm: FormGroup;
   private error: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
+  constructor(public navCtrl: NavController, public navParams: NavParams, private events: Events,
               private authService: AuthService, private formBuilder: FormBuilder) {
 
     this.loginForm = formBuilder.group({
@@ -37,6 +37,7 @@ export class LoginPage {
   private loginGoogle() {
     this.authService.loginGoogle().then((success) => {
       this.navCtrl.setRoot(HomePage);
+      this.events.publish('user:loggedIn', this.authService.user);
     }).catch((error) => {
       this.error = 'Ha ocurrido un error, intente nuevamente';
     });
@@ -46,6 +47,7 @@ export class LoginPage {
     this.authService.login(loginForm.value.email, loginForm.value.password)
       .then((success) => {
         this.navCtrl.setRoot(HomePage);
+        this.events.publish('user:loggedIn', this.authService.user);
       }).catch((error) => {
         this.error = error.message;
       });

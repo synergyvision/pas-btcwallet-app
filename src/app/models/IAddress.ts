@@ -9,4 +9,8 @@ export interface IAddress {
     total_received: number;
     total_sent: number;
     final_balance: number;
+    //only for testing purposes
+    private: string;
+    public: string;
+    wif: string;
 }

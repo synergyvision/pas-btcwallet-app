@@ -13,6 +13,8 @@ import { ActivityPage } from '../pages/activity/activity';
 import { BlockchainPage } from '../pages/blockchain/blockchain';
 import { RestService } from './services/rest.service';
 import { AuthService } from './services/auth.service';
+import { User } from './models/user';
+import { Events } from 'ionic-angular/util/events';
 
 @Component({
   providers: [RestService, AuthService],
@@ -24,16 +26,14 @@ export class MyApp {
 
   public nav: Nav;
   public rootPage: any;
-
   public pages: Array<{
     title: string,
     component: any,
   }>;
-  public username: string;
-  public avatar: string;
+  public user: User;
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen,
-              public restService: RestService, public authService: AuthService) {
+              public restService: RestService, public authService: AuthService, public events: Events) {
     this.initializeApp();
 
     // List of pages that appear on the Side Menu
@@ -45,18 +45,17 @@ export class MyApp {
       { title: 'Actividad', component: ActivityPage },
       { title: 'Datos del BlockChain', component: BlockchainPage },
     ];
-
-    // Placeholder data for displaying
-    this.avatar = '/imgs/user.png';
-    this.username = 'Usuario';
-
+    this.events.subscribe('user:loggedIn', (user) => {
+      this.user = user;
+    });
   }
 
   public initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
+      const user = this.authService.user;
       // User not logged in
-      if (!this.authService.getLoggedUser()) {
+      if (!user) {
         this.rootPage = LoginPage;
       } else {
         this.rootPage = HomePage;
@@ -67,7 +66,7 @@ export class MyApp {
 
   // Function for opening the Side Menu Pages
   public openPage(page) {
-    if (page.component !== this.rootPage) {
+    if ((page.component !== this.rootPage) && (page.component !== this.nav.getActive().component)) {
       this.nav.push(page.component);
     }
   }

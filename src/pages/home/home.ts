@@ -17,7 +17,7 @@ export class HomePage {
   private user: User;
 
   constructor(public navCtrl: NavController, private authService: AuthService) {
-    this.user = this.authService.getLoggedUser();
+    this.user = this.authService.user;
     console.log(this.user);
   }
 
@@ -30,7 +30,7 @@ export class HomePage {
   }
 
   private ngOnInit() {
-    this.user = this.authService.getLoggedUser();
+    this.user = this.authService.user;
   }
 
 }

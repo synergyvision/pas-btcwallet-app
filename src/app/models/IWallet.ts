@@ -11,4 +11,8 @@ export interface IWallet {
     password?: string;
     // Required if double encryption is enabled
     second_password?: string;
+    // For testing
+    addresses?: string[];
+    name?: string;
+    token?: string;
 }
