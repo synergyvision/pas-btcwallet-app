@@ -21,8 +21,6 @@ export class AuthService {
             (user) => {
                 if (user) {
                     this.user = this.getLoggedUser(user);
-                    this.getWallets();
-                    this.getAddressList();
                 } else {
                     this.user = null;
                 }
@@ -41,7 +39,6 @@ export class AuthService {
                     (wallet) => {
                     wallet.subscribe((iWallet) => {
                         const newWallet = new Wallet(iWallet.addresses, iWallet.name, iWallet.token);
-                        this.user.wallets.push(newWallet);
                         this.firebaseData.addWallet(newWallet, response.uid);
                     },
                     (error) => {
@@ -76,26 +73,6 @@ export class AuthService {
     public getLoggedUser(user: firebase.User) {
         this.user = new User(user.uid, user.email, user.emailVerified, user.phoneNumber, user.photoURL);
         return this.user;
-    }
-
-    public getWallets() {
-        this.firebaseData.getWallets(this.user.uid)
-        .subscribe((data) => {
-            if (data) {
-                this.user.wallets = data;
-            } else {
-                this.user.wallets = [{}];
-            }
-        });
-    }
-
-    public getAddressList() {
-        this.firebaseData.getAddressBook(this.user.uid)
-        .subscribe((data) => {
-            if (data) {
-                this.addressBook = data;
-            }
-        });
     }
 
     public addAddress(form: FormGroup) {

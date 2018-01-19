@@ -14,12 +14,12 @@
       </ion-item>
       <ion-item>
         <ion-label>
-          Wallet:
+          Email:
         </ion-label>
-        <ion-input type="text" formControlName="address" required></ion-input>
+        <ion-input type="email" formControlName="email" required></ion-input>
       </ion-item>
       <button ion-button color="secondary" block>
-        Escanear Código QR
+        Seleccionar Imagen
       </button>
       <button ion-button type="submit" color="primary" block [disabled]="!addressForm.valid">
         Guardar

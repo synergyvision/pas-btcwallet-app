@@ -22,8 +22,14 @@ export class AddressPage {
               public formBuilder: FormBuilder, private authService: AuthService) {
     // Form Builder
     this.addressForm = formBuilder.group({
-      address: ['', Validators.compose([Validators.minLength(26), Validators.required])],
-      alias: ['', Validators.compose([Validators.required])],
+      email: ['', Validators.compose([
+        Validators.email,
+        Validators.maxLength(30),
+        Validators.required])],
+      alias: ['', Validators.compose([
+        Validators.required,
+        Validators.maxLength(30),
+        ])],
       id: [{value: null, disabled: true}],
       img: [{value: 'http://icons.iconarchive.com/icons/icons8/ios7/256/Users-User-Male-2-icon.png'}],
     });
@@ -31,10 +37,7 @@ export class AddressPage {
 
   // Save changes to the address
   private onSubmit(form) {
-    //CHECK THIS
-    form.value.id = this.navParams.data;
-    this.event.publish('added:address', form.value);
-    this.authService.addAddress(form);
+    console.log(this.authService.addAddress(form));
     this.navCtrl.pop();
   }
 }

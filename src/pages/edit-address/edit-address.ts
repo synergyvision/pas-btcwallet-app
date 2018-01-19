@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Events, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Address } from '../../app/models/address';
+import { FirebaseProvider } from '../../providers/firebase/firebase';
+import { AuthService } from '../../app/services/auth.service';
 
 @IonicPage()
 @Component({
@@ -13,21 +15,27 @@ export class EditAddressPage {
   private address: Address;
   private action: string;
   private addressForm: FormGroup;
+  private key: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
-              public formBuilder: FormBuilder) {
+              public formBuilder: FormBuilder, public dataProvider: FirebaseProvider, public authService: AuthService) {
+    this.key = this.navParams.get('key');
     this.address = this.navParams.data;
     this.addressForm = formBuilder.group({
-      address: [this.address.wallet, Validators.compose([Validators.minLength(26), Validators.required])],
-      alias: [this.address.alias, Validators.compose([Validators.required])],
-      id: [{value: this.address.uid, disabled: true}],
-      img: [this.address.img],
+      email: ['', Validators.compose([
+        Validators.email,
+        Validators.maxLength(30),
+        Validators.required])],
+      alias: ['', Validators.compose([
+        Validators.required,
+        Validators.maxLength(30),
+      ])],
+      img: [{ value: 'http://icons.iconarchive.com/icons/icons8/ios7/256/Users-User-Male-2-icon.png' }],
     });
   }
 
   private onSubmit(form) {
-      form.value.id = this.navParams.data;
-      this.event.publish('edited:address', form.value);
-      this.navCtrl.pop();
+    this.dataProvider.editAddressFromAddressBook(this.authService.user.uid, this.key, form.value);
+    this.navCtrl.pop();
   }
 }

@@ -10,16 +10,16 @@
         <ion-label>
           Nombre
         </ion-label>
-        <ion-input type="text" formControlName="alias" required></ion-input>
+        <ion-input type="text" value="{{address.alias}}" formControlName="alias"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>
-          Dirección
+          Email
         </ion-label>
-        <ion-input type="text" formControlName="address" required></ion-input>
+        <ion-input type="text" formControlName="email" value="{{address.email}}" required></ion-input>
       </ion-item>
       <button ion-button color="secondary" block>
-        Escanear Código QR
+        Cambiar Imagen
       </button>
       <button ion-button type="submit" color="primary" block [disabled]="!addressForm.valid">
         Guardar

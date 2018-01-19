@@ -51,12 +51,7 @@ export class RestService {
     headers.append('Content-Type', 'application/json');
     this.options = new RequestOptions({ headers: headers });
 
-    this.addressBook = [
-      new Address(1, this.avatar, 'alias 1', '42sdsvgf93ghg823'),
-      new Address(2, this.avatar, 'alias 2', 'acnjsdnjwsdsjdsd'),
-      new Address(3, this.avatar, 'alias 3', 'dfje4y7837yjsdcx'),
-    ];
-
+    
     this.activityList = [
       new Activity(1, '12/12/2017', 'Acceso desde dispositivo Android NG-7800'),
       new Activity(2, '06/11/2017', 'Cambio de clave'),

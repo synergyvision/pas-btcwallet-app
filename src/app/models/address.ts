@@ -4,22 +4,16 @@ import { IAddress } from './IAddress';
 // Used for Sending BTC or CC to an user that has a wallet
 
 export class Address {
-  public uid: number;
   public alias: string;
-  public wallet?: string;
+  public email: string;
   public img?: string;
 
-  constructor(id: number, alias: string, wallet?: string, img?: string) {
-    this.uid = id;
+  constructor(alias: string, email: string, img?: string) {
     this.img = img;
     this.alias = alias;
-    this.wallet = wallet;
+    this.email = email;
   }
-
-  public setWallet(wallet: string) {
-    this.wallet = wallet;
-  }
-
+  
   public setAlias(alias: string) {
     this.alias = alias;
   }

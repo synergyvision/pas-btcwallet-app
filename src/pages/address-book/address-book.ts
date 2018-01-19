@@ -19,27 +19,15 @@ import { Observable } from 'rxjs';
 export class AddressBookPage {
 
   public addressBook: Observable<any>;
+  public uid;
   private selectAddress: boolean;
   private zone: NgZone;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
               public fireService: FirebaseProvider, public authService: AuthService) {
-
-    // Listener for event for updating the list
-    // Comes from AddressPage, and the data is the new Address data
     this.zone = new NgZone({ enableLongStackTrace: false });
-    this.addressBook = fireService.getAddressBook(this.authService.user.uid);
-
-    this.event.subscribe('added:address', (addressData) => {
-      console.log(addressData);
-      // fireService.addAddressToAddressBook(this.authService.user.uid, addressData);
-    });
-
-    this.event.subscribe('edited:address', (addressData) => {
-      // Not updating currently because of model
-      this.addressBook[addressData.id] = addressData;
-      console.log(this.addressBook);
-    });
+    this.uid = this.authService.user.uid;
+    this.addressBook = fireService.getAddressBook(this.uid);
 
     // If this view parent is SendPage, then we select an Address for sending BTC or CC
     if (this.navCtrl.last().name === 'SendPage') {
@@ -49,8 +37,7 @@ export class AddressBookPage {
 
   // Pushes a new Address to the Address List
   private addAddress() {
-    let id = this.addressBook.length + 1;
-    this.navCtrl.push(AddressPage, id);
+    this.navCtrl.push(AddressPage);
   }
 
   // Opens AddressPage or selects an Address for SendPage
@@ -67,10 +54,6 @@ export class AddressBookPage {
 
   // Deletes an Address from the Address List
   private removeAddress(address) {
-    this.fire
-    let index = this.addressBook.indexOf(address);
-    if (index > -1) {
-      this.addressBook.splice(index, 1);
-    }
+    this.fireService.removeAddressFromAddressBook(this.uid, address);
   }
 }

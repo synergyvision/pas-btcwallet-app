@@ -9,7 +9,6 @@ export class User {
   public uid: string;
   public email: string;
   public emailVerified: boolean;
-  public wallets?: [{}];
   public phoneNumber?: number;
   public photoURL?: string;
 
@@ -31,9 +30,5 @@ export class User {
 
   public setPhotoURL(photo: string) {
     this.photoURL = photo;
-  }
-
-  public setWallets(wallets: [{}]) {
-    this.wallets = wallets;
   }
 }

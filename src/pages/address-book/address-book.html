@@ -14,11 +14,11 @@
         <img src="{{a.img}}"/>
       </ion-avatar>
       <h2>
-        #{{a.id}} {{a.alias}}
+        {{a.alias}}
       </h2>
     </ion-item>
     <ion-item-options>
-        <button ion-button color="danger" (click)="removeAddress(a)" icon-start>
+        <button ion-button color="danger" (click)="removeAddress(a.key)" icon-start>
           <ion-icon name="trash"></ion-icon> Eliminar </button>
       </ion-item-options>
     </ion-item-sliding>

@@ -3,21 +3,16 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-// Side Menu Pages
 import { HomePage } from '../pages/home/home';
-import { AccountPage } from '../pages/account/account';
 import { LoginPage } from '../pages/login/login';
-import { AddressBookPage } from '../pages/address-book/address-book';
-import { TransactionsPage } from '../pages/transactions/transactions';
-import { ActivityPage } from '../pages/activity/activity';
-import { BlockchainPage } from '../pages/blockchain/blockchain';
 import { RestService } from './services/rest.service';
 import { AuthService } from './services/auth.service';
 import { User } from './models/user';
 import { Events } from 'ionic-angular/util/events';
+import { AppSettings } from './app.settings';
 
 @Component({
-  providers: [RestService, AuthService],
+  providers: [RestService, AuthService, AppSettings],
   templateUrl: 'app.html',
 })
 
@@ -33,18 +28,12 @@ export class MyApp {
   public user: User;
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen,
-              public restService: RestService, public authService: AuthService, public events: Events) {
+              public restService: RestService, public authService: AuthService, public events: Events, 
+              public appSetting: AppSettings) {
     this.initializeApp();
 
     // List of pages that appear on the Side Menu
-    this.pages = [
-      { title: 'Inicio', component: HomePage },
-      { title: 'Cuenta', component: AccountPage },
-      { title: 'Libreta de Contactos', component: AddressBookPage },
-      { title: 'Transacciones', component: TransactionsPage },
-      { title: 'Actividad', component: ActivityPage },
-      { title: 'Datos del BlockChain', component: BlockchainPage },
-    ];
+    this.pages = appSetting.pagesMenu;
     this.events.subscribe('user:loggedIn', (user) => {
       this.user = user;
     });

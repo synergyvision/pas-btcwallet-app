@@ -10,44 +10,48 @@ import { IAddress } from '../../app/models/IAddress';
 import { IWallet } from '../../app/models/IWallet';
 import { Wallet } from '../../app/models/wallet';
 import { Address } from '../../app/models/address';
+import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
 
 @Injectable()
 export class FirebaseProvider {
 
-  public database = firebase.database();
   public wallets: Observable<any>;
 
-  //Lists of refs
   constructor(private angularFire: AngularFireDatabase) {
 
   }
 
-  // Placehoder function to test with BlockCypher
-  public addAddressToWallet(address: IAddress, uid: string) {
-    // Since a Wallet is just an array of addressess
-    firebase.database().ref('user/' + uid + '/wallet/' + uid.substring(0, 25) + 'address/').set(address)
-      .catch((err) => {
-        console.log('ERROR ADDING ADDRESS TO FIREBASE:' + err);
-      });
-  }
-
   public addWallet(wallet: Wallet, uid: string) {
-    firebase.database().ref('user/' + uid + '/wallet/').set(wallet)
-      .catch((err) => {
-        console.log('ERROR ADDING WALLET TO FIREBASE:' + err);
-      });
+    this.angularFire.list('user/' + uid + '/wallet/').push(wallet);
   }
 
-  // Returns all Wallets from a user
   public getWallets(uid: string): Observable<any> {
-    return this.angularFire.object('user/' + uid + '/wallet/').valueChanges();
+    return this.angularFire.list('user/' + uid + '/wallet/')
+      .snapshotChanges().map((changes) => {
+        return changes.map((c) => ({
+          key: c.payload.key, ...c.payload.val(),
+        }));
+      });
   }
 
   public getAddressBook(uid: string): Observable<any> {
-    return this.angularFire.list('user/' + uid + '/addressBook/').valueChanges();
+    return this.angularFire.list('user/' + uid + '/addressBook/').
+      snapshotChanges().map((changes) => {
+      return changes.map((c) => ({
+        key: c.payload.key, ...c.payload.val(),
+      }));
+    });
   }
 
   public addAddressToAddressBook(uid: string, address: Address) {
     this.angularFire.list('user/' + uid + '/addressBook/').push(address);
+  }
+
+  public removeAddressFromAddressBook(uid: string, address: string) {
+    this.angularFire.list('user/' + uid + '/addressBook/').remove(address);
+  }
+
+  public editAddressFromAddressBook(uid: string, key: string, address: Address) {
+    this.angularFire.list('user/' + uid + '/addressBook/').update(key, address);
   }
 }
