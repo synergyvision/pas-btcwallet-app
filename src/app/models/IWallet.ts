@@ -1,17 +1,7 @@
 // Interface for the Wallet Object
-// Info on https://blockchain.info/api/blockchain_api
+// Info on https://www.blockcypher.com/api
 
 export interface IWallet {
-    guid: string;
-    address: string;
-    label?: string;
-    // Required for importing wallets
-    priv_key?: string;
-    // Required to do transactions
-    password?: string;
-    // Required if double encryption is enabled
-    second_password?: string;
-    // For testing
     addresses?: string[];
     name?: string;
     token?: string;

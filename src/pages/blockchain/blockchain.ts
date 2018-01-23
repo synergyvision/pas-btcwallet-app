@@ -30,8 +30,8 @@ export class BlockchainPage {
     if (this.restService.blockChain === undefined) {
       this.restService.getBlockchain()
         .subscribe((data) => {
+          console.log(data);
           this.blockchain = data;
-          this.restService.blockChain = data;
         },
         // Error Handling
         (error) => {

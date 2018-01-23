@@ -9,18 +9,24 @@ import { RestService } from './rest.service';
 import { User } from '../models/user';
 import { Wallet } from '../models/wallet';
 import { database } from 'firebase/app';
+import { IBalance } from '../models/IBalance';
 
 @Injectable()
 export class AuthService {
     public user: User;
     public addressBook: AngularFireList<any>;
+    public balance: IBalance;
 
     constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider,
-                private restService: RestService) {
+               private restService: RestService) {
         this.firebaseAuth.authState.subscribe(
             (user) => {
                 if (user) {
                     this.user = this.getLoggedUser(user);
+                    this.firebaseData.getWallets(user.uid)
+                        .subscribe((data) => {
+                            this.restService.getBalanceFromWallet(data[0]);
+                        });
                 } else {
                     this.user = null;
                 }
@@ -36,19 +42,19 @@ export class AuthService {
             // We create the user wallet
             this.restService.createData(user.value.email, user.value.password, response.uid)
                 .subscribe(
-                    (wallet) => {
+                (wallet) => {
                     wallet.subscribe((iWallet) => {
                         const newWallet = new Wallet(iWallet.addresses, iWallet.name, iWallet.token);
                         this.firebaseData.addWallet(newWallet, response.uid);
                     },
-                    (error) => {
-                        console.log(error);
-                    });
+                        (error) => {
+                            console.log(error);
+                        });
                 });
         })
-        .catch((error) => {
+            .catch((error) => {
                 console.log('ERROR ON CREATE USER' + error);
-        });
+            });
         // User Created! We Log him out
         this.logout();
         return res;
@@ -80,7 +86,7 @@ export class AuthService {
         // If it does we add it to the list
         this.firebaseData.addAddressToAddressBook(this.user.uid, form.value);
         console.log(this.firebaseData.getAddressBook(this.user.uid));
-     }
+    }
 
     public sendVerificationEmail() {
         this.firebaseAuth.auth.currentUser.sendEmailVerification();

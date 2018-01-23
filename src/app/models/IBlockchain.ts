@@ -1,10 +1,9 @@
 // Interface for the Blockchain Object
-// Info on https://blockchain.info/api/blockchain_api
 
 export interface IBlockchain {
+    name: string;
     hash: string;
-    time: number;
-    block_index: number;
     height: number;
-    txIndexes: number[];
+    time: number;
+    peer_count: number;
 }

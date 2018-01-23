@@ -13,19 +13,15 @@ import { Transaction } from '../models/transaction';
 import { AlertService } from './alert.service';
 import { FormGroup } from '@angular/forms';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
+import { Wallet } from '../models/wallet';
+import { IBalance } from '../models/IBalance';
 
 // REST Service for getting data from APIs and the Database
-// Currently using the Blockchain Data API
 
-// API Base URL
-const URL = 'https://blockchain.info/es/';
-// Must have BlockchainInfo Wallet Service Running on same environment
-const WALLET_URL = 'http://localhost:300/api/v2/Create';
 // API Base URL for the Testnet
+const URL = 'https://api.blockcypher.com/v1/btc/main';
 const TESTING_URL = 'https://api.blockcypher.com/v1/bcy/test';
 const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
-// API KEY issued to Synergy Vision
-const API_KEY = 'd08f9cd-268e-4875-a881-495a0a3aeb65';
 
 @Injectable()
 
@@ -40,10 +36,11 @@ export class RestService {
   public activityList: Activity[];
   public transactionList: Transaction[];
   public public: string;
+  public balance: Observable<IBalance>;
   private options: RequestOptions;
 
-  constructor(private http: Http, private loadService: LoaderService, private alertService: AlertService, 
-              private firebaseData: FirebaseProvider) {
+  constructor(private http: Http, private loadService: LoaderService, private alertService: AlertService,
+              private databaseProvider: FirebaseProvider) {
 
     // Headers for get
     const headers = new Headers();
@@ -51,7 +48,6 @@ export class RestService {
     headers.append('Content-Type', 'application/json');
     this.options = new RequestOptions({ headers: headers });
 
-    
     this.activityList = [
       new Activity(1, '12/12/2017', 'Acceso desde dispositivo Android NG-7800'),
       new Activity(2, '06/11/2017', 'Cambio de clave'),
@@ -70,7 +66,7 @@ export class RestService {
   // Retrieves the latest BlockChain data
   public getBlockchain(): Observable<IBlockchain> {
     this.loadService.showLoader('Recuperando Información');
-    return this.http.get(URL + 'latestblock', this.options)
+    return this.http.get(URL, this.options)
       .map((res: Response) => {
         this.blockChain = res.json();
         return res.json() as IBlockchain;
@@ -82,42 +78,45 @@ export class RestService {
     );
   }
 
-  // Gets a Single Address data
+  // Gets an Address Information
   public getSingleAddress(bitcoin_address): Observable<IAddress> {
-    return this.http.get(URL + 'rawaddr/' + bitcoin_address, this.options)
+    return this.http.get(TESTING_URL + '/addrs/' + bitcoin_address + '/balance', this.options)
       .map((res: Response) => {
         return res.json() as IAddress;
-      })
-      .catch(this.handleError);
+      }).catch(this.handleError);
   }
 
-  public showAlert(msg?, title?): Promise<any> {
-    return this.alertService.showAlert(msg, title);
+  // Checks if an address was used
+  public verifyAddress(wallet: Wallet, uid: string): Observable<any> {
+    const bitcoin_address = wallet.addresses.pop();
+    return this.getSingleAddress(bitcoin_address)
+      .map((data) => {
+        const address = data;
+        // If it was used, we create a new address
+        if ((address.balance > 0) || (address.n_tx > 0)) {
+          return this.addAddressToWallet(wallet, uid);
+        } else {
+          return bitcoin_address;
+        }
+      });
   }
 
+    // Creates an Address
+    public createAddress(): Observable<IAddress> {
+      return this.http.post(TESTING_URL + '/addrs', null, this.options)
+        .map((res: Response) => {
+          return res.json() as IAddress;
+        })
+        .catch(this.handleError);
+    }
+
+  // Creates a new Wallet
   public createData(email: string, password: string, uid: string): Observable<Observable<IWallet>> {
-    // Main Blockchain Info
-    const body = {
-      $password: password,
-      $api_code: API_KEY,
-      $label: 'Main BTC Wallet',
-      $email: email,
-    };
-
-    /*     return this.http.post(WALLET_URL, body, this.options)
-          .map((res: Response) => {
-            console.log(res);
-            console.log(res.json());
-            return <IWallet>res.json();
-          })
-          .catch(this.handleError); */
-
-    // Testnet Blockcypher
     return this.createAddress()
       .map((address) => {
         this.address = address;
         const data = {
-          name: uid.substring(0, 25),
+          name: 'W' + uid.substring(0, 24),
           addresses: [
             this.address.address,
           ],
@@ -126,7 +125,7 @@ export class RestService {
       }).catch(this.handleError);
   }
 
-  // Returns a wallet to be used on BlockCypher Testnet API
+  // Returns a new wallet
   public createWallet(data): Observable<IWallet> {
     return this.http.post(TESTING_URL + '/wallets?token=' + TOKEN, data)
       .map((res: Response) => {
@@ -135,17 +134,39 @@ export class RestService {
       .catch(this.handleError);
   }
 
-  // Returns a random generated address form the BlockCypher Testnet API
-  public createAddress(): Observable<IAddress> {
-    return this.http.post(TESTING_URL + '/addrs', null, this.options)
-      .map((res: Response) => {
-        return res.json() as IAddress;
+  // Adds an Address to a wallet
+  public addAddressToWallet(wallet: Wallet, uid: string): Observable<IAddress> {
+    return this.createAddress()
+      .map((newAddress) => {
+        const address = newAddress;
+        const body = { 'addresses': [address] };
+        return this.http.post(TESTING_URL + '/wallets/' + wallet.name + '/addresses?token=' + TOKEN,
+          JSON.stringify(body), this.options)
+          .map((res: Response) => {
+            this.databaseProvider.addAddressToWallet(wallet, uid, res.json());
+            return address;
+          })
+          .catch(this.handleError);
       })
       .catch(this.handleError);
   }
 
+  // Gets a Wallet Balance
+  public getBalanceFromWallet(wallet: Wallet) {
+    this.balance = this.http.get(TESTING_URL + '/addrs/' + wallet.name + '/balance?token=' + TOKEN)
+    .map((res: Response) => {
+      return res.json() as IBalance;
+    })
+    .catch(this.handleError);
+  }
+
+  public showAlert(msg?, title?): Promise<any> {
+    return this.alertService.showAlert(msg, title);
+  }
+
   // Error Handling for HTTP Errors
   private handleError(error: Response) {
+    console.log(error);
     return Observable.throw(error.statusText);
   }
 

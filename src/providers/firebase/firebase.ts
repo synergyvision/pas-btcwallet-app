@@ -34,6 +34,10 @@ export class FirebaseProvider {
       });
   }
 
+  public addAddressToWallet(wallet: Wallet, uid: string, address: string) {
+    this.angularFire.list('user/' + uid + '/wallet/' + wallet.key + '/addresses').push(address);
+  }
+
   public getAddressBook(uid: string): Observable<any> {
     return this.angularFire.list('user/' + uid + '/addressBook/').
       snapshotChanges().map((changes) => {

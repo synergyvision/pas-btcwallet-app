@@ -24,10 +24,10 @@ export class AddressBookPage {
   private zone: NgZone;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
-              public fireService: FirebaseProvider, public authService: AuthService) {
+              public dataProvider: FirebaseProvider, public authService: AuthService) {
     this.zone = new NgZone({ enableLongStackTrace: false });
     this.uid = this.authService.user.uid;
-    this.addressBook = fireService.getAddressBook(this.uid);
+    this.addressBook = dataProvider.getAddressBook(this.uid);
 
     // If this view parent is SendPage, then we select an Address for sending BTC or CC
     if (this.navCtrl.last().name === 'SendPage') {
@@ -54,6 +54,6 @@ export class AddressBookPage {
 
   // Deletes an Address from the Address List
   private removeAddress(address) {
-    this.fireService.removeAddressFromAddressBook(this.uid, address);
+    this.dataProvider.removeAddressFromAddressBook(this.uid, address);
   }
 }

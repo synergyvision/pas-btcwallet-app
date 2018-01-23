@@ -4,6 +4,9 @@ import { ReceivePage } from '../receive/receive';
 import { SendPage } from '../send/send';
 import { User } from '../../app/models/user';
 import { AuthService } from '../../app/services/auth.service';
+import { RestService } from '../../app/services/rest.service';
+import { Observable } from 'rxjs/Observable';
+import { IBalance } from '../../app/models/IBalance';
 
 // Component for the Home Page, displays user balance, and options
 
@@ -15,10 +18,15 @@ import { AuthService } from '../../app/services/auth.service';
 export class HomePage {
 
   private user: User;
+  private balance: IBalance;
 
-  constructor(public navCtrl: NavController, private authService: AuthService) {
+  constructor(public navCtrl: NavController, private authService: AuthService, private restService: RestService) {
     this.user = this.authService.user;
-    console.log(this.user);
+    this.restService.balance
+    .subscribe((balance) => {
+      this.balance = balance;
+    });
+
   }
 
   private goToReceive() {

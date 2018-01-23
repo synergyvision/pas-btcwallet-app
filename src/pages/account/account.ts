@@ -19,9 +19,9 @@ export class AccountPage {
   public pages: Array<{title: string, component: any}>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService,
-              private dataService: FirebaseProvider) {
+              private dataProvider: FirebaseProvider) {
     this.user = this.authService.user;
-    this.wallets = this.dataService.getWallets(this.user.uid);
+    this.wallets = this.dataProvider.getWallets(this.user.uid);
     this.pages = [
       // { title: 'Usuario', component: HomePage },
       // { title: 'Contraseña', component: ListPage },

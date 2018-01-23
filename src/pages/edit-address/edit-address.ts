@@ -16,6 +16,7 @@ export class EditAddressPage {
   private action: string;
   private addressForm: FormGroup;
   private key: string;
+  private uid: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
               public formBuilder: FormBuilder, public dataProvider: FirebaseProvider, public authService: AuthService) {
@@ -32,10 +33,11 @@ export class EditAddressPage {
       ])],
       img: [{ value: 'http://icons.iconarchive.com/icons/icons8/ios7/256/Users-User-Male-2-icon.png' }],
     });
+    this.uid = this.authService.user.uid;
   }
 
   private onSubmit(form) {
-    this.dataProvider.editAddressFromAddressBook(this.authService.user.uid, this.key, form.value);
+    this.dataProvider.editAddressFromAddressBook(this.uid, this.key, form.value);
     this.navCtrl.pop();
   }
 }

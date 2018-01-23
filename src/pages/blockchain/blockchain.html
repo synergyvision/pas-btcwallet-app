@@ -7,18 +7,16 @@
 <ion-content padding>
   <ion-list *ngIf="blockchain!==undefined">
     <ion-item>
+      Name: {{blockchain.name}}
+      <br>
       Hash: {{blockchain.hash}}
       <br>
       Tiempo: {{blockchain.time}}
       <br>
-      Indice: {{blockchain.block_index}}
-      <br>
       Height: {{blockchain.height}}
       <br>
-      Indice de Transacciones: 
-      <ion-list *ngFor="let i of blockchain.txIndexes">
-        <ion-item>{{i}}</ion-item>
-      </ion-list>
+      Peer_Count:
+      {{blockchain.peer_count}}
     </ion-item>
   </ion-list>
 </ion-content>

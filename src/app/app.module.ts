@@ -6,6 +6,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { MyApp } from './app.component';
 import { HttpModule } from '@angular/http';
 import { QRScanner } from '@ionic-native/qr-scanner';
+import { QRCodeModule } from 'angularx-qrcode';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 // i18n Imports
@@ -35,6 +36,7 @@ import { LoaderService } from './services/loader.service';
 import { AlertService } from './services/alert.service';
 import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
+
 import { ConfirmEmailPage } from '../pages/confirm-email/confirm-email';
 
 export function createTranslateLoader(http: HttpClient) {
@@ -92,6 +94,7 @@ const firebaseConfig = {
     IonicModule.forRoot(MyApp),
     HttpModule,
     HttpClientModule,
+    QRCodeModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

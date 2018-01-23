@@ -10,23 +10,19 @@
 </ion-header>
 
 <ion-content padding id="inicio">
-  <span *ngIf="(!user.emailVerified)">
-    <h5>Su cuenta no se encuentra verificada</h5>
-    <button ion-button clear color="positive" block>
-      Enviar correo de verificación
-    </button>
 
-  </span>
-  <span *ngIf="(user.wallet!==undefined) && (user.wallet!==null)">
-    <div class="balance" *ngIf="user.wallet.guid">
+  <span *ngIf="(balance!==undefined) && (balance!==null)">
+    <div class="balance">
       <h5>Billetera</h5>
-      {{user.wallet.guid}}
+      {{balance.wallet.name}}
     </div>
     <div class="header">
-      <h5>Cuenta</h5>
-      <div *ngIf="user.wallet.address">
-        <p>{{user.wallet.address}}</p>
-      </div>
+      <br>
+      <h5>Balance</h5>
+      <p>{{balance.balance}}</p>
+      <p>Transacciones: {{balance.n_tx}}</p>
+      <p>Total Recibido: {{balance.total_received}}</p>
+      <p>Total Enviado: {{balance.total_sent}}</p>
     </div>
   </span>
   <ion-row class="botonera">
@@ -41,4 +37,10 @@
       </button>
     </ion-col>
   </ion-row>
+  <span *ngIf="(!user.emailVerified)">
+    <p>Su cuenta no se encuentra verificada</p>
+    <button ion-button clear color="positive" block>
+      Enviar correo de verificación
+    </button>
+  </span>
 </ion-content>
