@@ -8,23 +8,20 @@
   <ion-content>
     <ion-list>
       <div *ngIf="user">
-        <ion-item color="light">
-          <ion-avatar item-start>
-            <img src="{{user.photoURL}}">
+        <ion-item class="menu-user">
+          <ion-avatar >
+            <img class="menu-img" src="{{user.photoURL}}">
           </ion-avatar>
-          <h2>{{user.email}}</h2>
+          {{user.email}}
         </ion-item>
       </div>
-      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{p.title}}
+      <button class="menu-option"ion-item  menuClose *ngFor="let p of pages" (click)="openPage(p)">
+        <ion-icon [name]="p.icon" item-left></ion-icon>{{p.title}}
       </button>
-      <div padding-vertical>
-        <button ion-item menuClose (click)="logOut()">
-          Cerrar Sesión
-        </button>
-      </div>
+      <button class="menu-option" ion-item menuClose (click)="logOut()">
+        <ion-icon name="wallet-logout" item-left></ion-icon>Cerrar Sesión
+      </button>
     </ion-list>
   </ion-content>
-
 </ion-menu>
 <ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>

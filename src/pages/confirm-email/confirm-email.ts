@@ -17,7 +17,7 @@ import { ViewController } from 'ionic-angular/navigation/view-controller';
 })
 export class ConfirmEmailPage {
 
-  private message = 'Se ha enviado un correo de verificación a: ';
+  private message = 'Se ha enviado un correo de verificación a';
   private email: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
@@ -33,6 +33,7 @@ export class ConfirmEmailPage {
 
   private goBack() {
     this.navCtrl.popToRoot();
+    this.authService.logout();
   }
 
 }

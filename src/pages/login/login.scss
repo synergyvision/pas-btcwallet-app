@@ -1,11 +1,26 @@
-.logo img{
-    display:block;
-    width:50%;
-    height:auto;
-    margin-left:auto;
-    margin-right:auto
-}
-.recuperar{
-    color:#3664A3;
-    float:left;
-}
+
+  .logo img {
+    display: block;
+    width: 50%;
+    height: auto;
+    margin-top: 50px;
+    margin-bottom: 40px;
+    margin-left: auto;
+    margin-right: auto
+  }
+  .login-button {
+    background: $primary;
+    border-radius: $button-radius; // width: $button-width-lg;
+  }
+  .login-recover-button {
+    height: $button-height-sm;
+    font-size: $font-size-login-recover;
+    color: $secondary;
+    background-color: $clear;
+  }
+  .login-register-button {
+    font-size: $font-size-login;
+    height: $button-height-sm;
+    color: $secondary;
+    background-color: $clear;
+  }

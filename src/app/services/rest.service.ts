@@ -46,6 +46,7 @@ export class RestService {
     const headers = new Headers();
     headers.append('Access-Control-Allow-Credentials', 'true');
     headers.append('Content-Type', 'application/json');
+
     this.options = new RequestOptions({ headers: headers });
 
     this.activityList = [
@@ -57,9 +58,9 @@ export class RestService {
       new Activity(6, '28/12/2016', 'Acceso desde dispositivo iPhone 6c'),
     ];
     this.transactionList = [
-      new Transaction(1, '12/12/2017', '34ryjhgcs35hjkjl3125lk34324s0944klnfcsjdfdsofkdofkdskfofssf', 0.3423, 0),
-      new Transaction(2, '11/12/2017', '343sdsd12sed5jh343jhjhjh839281fhn19403nc903i3iencjdiofw0w24', 0.00023, 9.20),
-      new Transaction(3, '09/12/2017', 'acbvy34fds353125ghgda3432sd24rewfwdqw432|7684rerqecxz231414', 0.00000232, 3.40),
+      new Transaction(1, '12/12/2017', 0.3423, 'C4iXKfquu1pBp3Xzw612iTgaHPSK7V7cH6', null),
+      new Transaction(2, '11/12/2017', 0.00023, 'A3gYLgpvv2qCq4Yax723hLhbIQTL8W8dI7', 'Luis Carlos' ),
+      new Transaction(3, '09/12/2017', 0.00000232, 'R4ncLtujcA42uFsxSEW31lVCxsrqe51dsa', 'María'),
     ];
   }
 
@@ -94,7 +95,7 @@ export class RestService {
         const address = data;
         // If it was used, we create a new address
         if ((address.balance > 0) || (address.n_tx > 0)) {
-          return this.addAddressToWallet(wallet, uid);
+          return this.addAddressToWallet(wallet);
         } else {
           return bitcoin_address;
         }
@@ -135,8 +136,8 @@ export class RestService {
   }
 
   // Adds an Address to a wallet
-  public addAddressToWallet(wallet: Wallet, uid: string): Observable<IAddress> {
-    return this.createAddress()
+  public addAddressToWallet(wallet: Wallet): Observable<any> {
+/*     return this.createAddress()
       .map((newAddress) => {
         const address = newAddress;
         const body = { 'addresses': [address] };
@@ -148,7 +149,12 @@ export class RestService {
           })
           .catch(this.handleError);
       })
-      .catch(this.handleError);
+      .catch(this.handleError); */
+      return this.http.post(TESTING_URL + '/wallets' + wallet.name +
+            'addresses/generate?token=' + TOKEN, this.options)
+            .map((data) => {
+              console.log(data);
+            });
   }
 
   // Gets a Wallet Balance

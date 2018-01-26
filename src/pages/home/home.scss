@@ -1,13 +1,43 @@
-.balance {
-    display:block;
-    width:100%;
-    height:auto;
-    margin-left:auto;
-    margin-right:auto;
-    text-align:center;
+.home-info{
+    font-size: $font-size-info-text;
+    color: $dark;
+    text-align: center;
+    margin-top: $padding-lg;
+    margin-bottom: $padding-lg;
 }
 
-.codigo img{
+.home-balance {
+    font-family: "Wallet-Bold";
+    font-size: $font-size-home-balance;
+    color: $clear;
+}
+
+.home-wallet {
+    font-family: "Wallet";
+    font-size: $font-size-home-wallet;
+    color: $secondary;
+    text-align: center;
+}
+
+.home-button {
+    width: $home-button-width;
+    height: $home-button-height;
+    border-radius: $home-button-radius;
+    font-size: $font-size-buttons;
+    margin-top: 10px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.receive-button{
+    background: $secondary;
+}
+
+.send-button{
+    background: $terciary;
+}
+
+.code-sm img{
     display:block;
     width: 50%;
     height:auto;

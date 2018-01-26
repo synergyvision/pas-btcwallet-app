@@ -1,1 +1,49 @@
+.account-header-background{
+    background-color: $terciary;
+}
+
+img.account-img {
+    height: $account-img-height;
+    width: $account-img-width;
+    max-width: 100%;
+    max-height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display:block;
+
+}
+.account-header{
+    font-size: $font-size-menu-lg;
+    text-align: center;
+}
+
+.account-info{
+    font-size: $font-size-info-text;
+    color: $secondary;
+    margin-top: $padding-md;
+    text-align: center;
+}
+
+button.account-options {
+    border-radius: $account-options-radius;
+    border-color: $secondary;
+    width: $account-options-width;
+    height: $account-options-height;
+    font-size: $font-size-account-options;
+    color:$dark;
+    background:$clear;
+}
+
+.wallet-info{
+    color: $secondary;
+    font-size: $font-size-account-options;
+    text-align: center;
+}
+
+.wallet-info-detail{
+    color: $dark;
+    font-size: $font-size-info-text;
+}
+
+
 

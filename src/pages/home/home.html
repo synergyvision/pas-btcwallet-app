@@ -9,38 +9,27 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding id="inicio">
-
+<ion-content no-bounce overflow-scroll="false">
   <span *ngIf="(balance!==undefined) && (balance!==null)">
-    <div class="balance">
-      <h5>Billetera</h5>
+    <div class="display-img home-balance">
+      {{balance.balance}} BTC
+    </div>
+    <div class="page-title">
+      Billetera
+    </div>
+    <div class="home-wallet">
       {{balance.wallet.name}}
     </div>
-    <div class="header">
-      <br>
-      <h5>Balance</h5>
-      <p>{{balance.balance}}</p>
+    <div class="home-info">
       <p>Transacciones: {{balance.n_tx}}</p>
       <p>Total Recibido: {{balance.total_received}}</p>
       <p>Total Enviado: {{balance.total_sent}}</p>
     </div>
   </span>
-  <ion-row class="botonera">
-    <ion-col col-6>
-      <button id="recibir" full ion-button on-click="goToReceive()">
-        Recibir
-      </button>
-    </ion-col>
-    <ion-col col-6>
-      <button id="enviar" full ion-button color="secondary" on-click="goToSend()">
-        Enviar
-      </button>
-    </ion-col>
-  </ion-row>
-  <span *ngIf="(!user.emailVerified)">
-    <p>Su cuenta no se encuentra verificada</p>
-    <button ion-button clear color="positive" block>
-      Enviar correo de verificación
-    </button>
-  </span>
+  <button class="home-button receive-button" block ion-button on-click="goToReceive()">
+    Recibir
+  </button>
+  <button class="home-button send" block ion-button on-click="goToSend()">
+    Enviar
+  </button>
 </ion-content>

@@ -44,7 +44,11 @@ export class AuthService {
                 .subscribe(
                 (wallet) => {
                     wallet.subscribe((iWallet) => {
-                        const newWallet = new Wallet(iWallet.addresses, iWallet.name, iWallet.token);
+                        const newWallet = {
+                            addresses: iWallet.addresses,
+                            name: iWallet.name,
+                            toke: iWallet.token,
+                        };
                         this.firebaseData.addWallet(newWallet, response.uid);
                     },
                         (error) => {

@@ -5,45 +5,38 @@
   </ion-header>
   
   <ion-content padding>
+    <div class="page-title">
+      Seleccionar monto
+    </div>
     <ion-list>
-      <div class="header">
-        <h5>
-          Seleccionar monto
-        </h5>
-      </div>
       <form>
-        <ion-item>
+        <ion-item class="thin-input">
           <ion-input type="number" placeholder="Monto"></ion-input>
         </ion-item>
-        <p>
-          Disponible: {{availableBTC}}
-        </p>
-        <p>
-          {{availableUSD}}
-        </p>
-        <p>
-          {{availableBsF}}
-        </p>
-        <ion-item>
-          <ion-label stacked>
-            Token
-          </ion-label>
-          <ion-input type="text" placeholder=""></ion-input>
+        <div class="send-confirm-info">
+            Disponible: {{availableBTC}}
+            {{availableUSD}}
+            {{availableBsF}}
+        </div>
+        <ion-item class="thin-input">
+          <ion-input type="text" placeholder="Token"></ion-input>
         </ion-item>
-        <p>
+        <div class="send-confirm-info">
           Dirección Seleccionada
-        </p>
-        <ion-item color="none">
-          <ion-avatar item-left>
-            <img />
-          </ion-avatar>
-          <h2>
-            Contacto
-          </h2>
-        </ion-item>
+        </div>
+        <ion-item no-lines class="address-container">
+            <img class="address-img" src="{{address.img}}" />
+            <div class="address-alias">
+              {{address.alias}}
+            </div>
+            <div class="address-email">
+              {{address.email}}
+            </div>
+          </ion-item>
         <button ion-button color="balanced" block on-click="goToInicio()">
           Enviar
         </button>
       </form>
     </ion-list>
   </ion-content>
+  

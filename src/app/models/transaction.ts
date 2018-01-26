@@ -4,15 +4,15 @@
 export class Transaction {
     public id: number;
     public date: string;
+    public alias?: string;
     public address: string;
     public amount: number;
-    public fee: number;
 
-    constructor(id: number, date: string, address: string, amount: number, fee: number) {
+    constructor(id: number, date: string, amount: number, address: string, alias?: string) {
       this.id = id;
       this.date = date;
       this.address = address;
+      this.alias = alias;
       this.amount = amount;
-      this.fee = fee;
     }
 }

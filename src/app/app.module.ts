@@ -38,6 +38,7 @@ import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
 import { AuthService } from './services/auth.service';
 
 import { ConfirmEmailPage } from '../pages/confirm-email/confirm-email';
+import { SendConfirmPage } from '../pages/send-confirm/send-confirm';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -69,6 +70,7 @@ const firebaseConfig = {
     BlockchainPage,
     EditAddressPage,
     ConfirmEmailPage,
+    SendConfirmPage,
   ],
   entryComponents: [
     MyApp,
@@ -85,6 +87,7 @@ const firebaseConfig = {
     BlockchainPage,
     EditAddressPage,
     ConfirmEmailPage,
+    SendConfirmPage,
   ],
   imports: [
     AngularFireDatabaseModule,

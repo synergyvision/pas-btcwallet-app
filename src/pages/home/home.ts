@@ -7,6 +7,7 @@ import { AuthService } from '../../app/services/auth.service';
 import { RestService } from '../../app/services/rest.service';
 import { Observable } from 'rxjs/Observable';
 import { IBalance } from '../../app/models/IBalance';
+import { LoaderService } from '../../app/services/loader.service';
 
 // Component for the Home Page, displays user balance, and options
 
@@ -20,11 +21,14 @@ export class HomePage {
   private user: User;
   private balance: IBalance;
 
-  constructor(public navCtrl: NavController, private authService: AuthService, private restService: RestService) {
+  constructor(public navCtrl: NavController, private authService: AuthService, private restService: RestService,
+              private loaderService: LoaderService) {
+    this.loaderService.showFullLoader('Espere');
     this.user = this.authService.user;
     this.restService.balance
     .subscribe((balance) => {
       this.balance = balance;
+      this.loaderService.dismissLoader();
     });
 
   }

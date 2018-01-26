@@ -1,3 +1,249 @@
-.header {
-    text-align:center;
+// Font Sizes
+$font-size-header: 1.375em;
+$font-size-input: 1.1em;
+$font-size-input-thin: 1em;
+$font-size-menu: 0.84em;
+$font-size-menu-lg: 0.87em;
+$font-size-title:1.375em;
+$font-size-buttons: 1.26em;
+$font-size-info-text: 0.9em;
+$font-size-email: 1.25em;
+$font-size-address-alias: 1em;
+$font-size-address-email:0.77em;
+$font-size-home-balance: 2.7em;
+$font-size-home-wallet: 1.25em;
+$font-size-login-recover: 0.85em;
+$font-size-login: 1em;
+$font-size-button-address-delete: 0.77em;
+$font-size-account-options: 1.05em;
+$font-size-transactions: 1em;
+$font-size-transactions-date: 0.6em;
+
+
+// Colors
+$primary: map-get($colors, primary);
+$secondary: map-get($colors, secondary);
+$terciary: map-get($colors, terciary);
+$clear: map-get($colors, clear);
+$light: map-get($colors, light);
+$dark: map-get($colors, dark);
+
+// Container sizes
+$height-balance: 8.5em;
+$container-height-md: 25%;
+$container-height-lg: 30%;
+$account-img-height: 72px;
+$account-img-width: 72px;
+$confirm-email-img: 144px;
+
+// Transactions Styles
+$transactions-img-height: 62px;
+$transactions-img-width: 62px;
+$transactions-container-width: 18em;
+$transactions-container-height: 4.35em;
+$transactions-container-radius: 34.858px;
+
+// Button Styles
+$button-height: 2.5em;
+$button-height-sm: 1.875em;
+$button-radius: 26.945px;
+$button-width-md: 13.75em;
+$button-width-lg: 16.45em;
+$home-button-width: 16em;
+$home-button-height: 3em;
+$home-button-radius: 26.07px;
+$login-recover-button-height: 0.85em;
+$account-options-radius: 1.4em;
+$account-options-width: 15.6em;
+$account-options-height: 2.8em;
+
+// Address Styles
+$address-container-width: 18em;
+$address-container-height: 3.4em;
+$address-container-radius: 34.858px;
+$address-img-height: 74px;
+$address-img-width: 74px;
+
+// Input Styles
+$input-width: 16.45em;
+$input-height: 3.36em;
+$input-radius: 17.906px;
+$input-thin-width: 19.3em;
+$input-thin-height: 2.8em;
+$input-thin-radius: 26.07px;
+
+// Padding and Distances
+$padding-lg: 2.5em;
+$padding-md: 1.25em;
+$padding-sm: 0.625em;
+$padding-address: 1em;
+* {
+  font-family: 'Wallet';
+}
+
+.no-scroll .scroll-content {
+  overflow-y: auto;
+}
+
+.header-md::after,
+.header-ios::after {
+  display: none !important;
+}
+
+.footer-md::before {
+  background-image: none;
+}
+
+.md ion-list>.item:last-child,
+.md ion-list>.item-wrapper:last-child .item,
+.wp ion-list>.item:last-child,
+.wp ion-list>.item-wrapper:last-child .item,
+.ios ion-list>.item:last-child,
+.ios ion-list>.item-wrapper:last-child .item {
+  border-bottom: none;
+}
+
+.full-loader{
+  background: $primary;
+}
+
+.button {
+  height: $button-height;
+  border-radius: $button-radius;
+  margin: auto;
+  margin-top: $padding-sm;
+  margin-bottom: $padding-sm;
+  font-size: $font-size-buttons;
+}
+
+.footer-button {
+  width: $button-width-lg;
+  margin: auto;
+  margin-bottom: $padding-sm;
+
+}
+
+ion-title {
+  text-transform: capitalize; // For Centering text on Android Devices
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+.toolbar-title {
+  font-family: 'Wallet-Bold';
+  font-size: $font-size-header;
+}
+
+.page-title {
+  font-family: 'Wallet-Bold';
+  font-size: $font-size-title;
+  color: $primary;
+  text-align: center;
+  padding-top: $padding-md;
+}
+
+.display-img {
+  display: flex;
+  width: 100%;
+  height: $container-height-md;
+  background-color: $primary;
+  align-items: center;
+  justify-content: center;
+  color: map-get($colors, clear);
+}
+
+.img.circular {
+  border-radius: 50%;
+}
+
+.address-container {
+  background-color: $light;
+  border-radius: $address-container-radius;
+  height: $address-img-height;
+  width: $address-container-width;
+  box-shadow: inset 0px 0px 0px $padding-sm $clear;
+  margin: auto;
+  margin-top: $padding-sm;
+  margin-bottom: $padding-sm;
+  border-style: none;
+}
+
+.address-alias {
+  padding-top: $padding-address;
+  font-size: $font-size-address-alias;
+  color: $secondary;
+}
+
+.address-email {
+  font-size: $font-size-address-email;
+  color: $dark;
+}
+
+img.address-img {
+  max-width: $address-img-width;
+  max-height: $address-img-height;
+  float: left;
+  align-content: left;
+}
+
+ion-item.input {
+  color: $dark;
+  margin: auto;
+  background: $light;
+  border-radius: $input-radius;
+  min-height: $input-height;
+  width: $input-width;
+  margin-top: $padding-sm;
+  font-size: $font-size-input;
+}
+
+ion-item.thin-input {
+  margin: auto;
+  background: $light;
+  border-radius: $input-thin-radius;
+  min-height: $input-thin-height;
+  width: $input-thin-width;
+  margin-bottom: $padding-md;
+  color: $secondary;
+  font-size: $font-size-input-thin;
+}
+
+.error-message{
+  font-size: $font-size-info-text;
+  color: $dark;
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+// app.component.ts Style 
+ion-item.menu-user {
+  text-align: center;
+  font-size: $font-size-menu-lg;
+  color: $primary;
+}
+
+ion-icon.icon-arrow {
+  float: right;
+  background-color: $dark;
+  width: 1.25em;
+  height: 1.25em;
+}
+
+button.menu-option {
+  font-size: $font-size-menu;
+  color: $secondary;
+}
+
+img.menu-img {
+  widows: 62px;
+  height: 62px;
+  max-width: 100%;
+  max-height: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }

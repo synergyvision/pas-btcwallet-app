@@ -29,14 +29,16 @@ $app-direction: ltr;
 
 $colors: ( 
   primary : #d56930, 
-  secondary : #c56126, 
-  terciary : #243156, 
+  secondary: #243156, 
+  terciary : #c56126, 
   dark : #686868,
   light: #e4e5e4,
   clear: #ffffff,
 );
 
 $toolbar-background: map-get($colors, primary);
+$toolbar-border-color: map-get($colors, primary);
+$grid-padding-width: 5px !default;
 
 
 @font-face {
@@ -63,22 +65,34 @@ ion-icon {
     height: 1em;
   } // custom icons
   &[class*="wallet-activity"] {
-    mask-image: url(../assets/icon/wallet-activity.svg);
+    mask-image: url(../assets/icons/wallet-activity.svg);
   }
   &[class*="wallet-home"] {
-    mask-image: url(../assets/icon/wallet-home.svg);
+    mask-image: url(../assets/icons/wallet-home.svg);
   }
   &[class*="wallet-address-book"] {
-    mask-image: url(../assets/icon/wallet-address-book.svg);
+    mask-image: url(../assets/icons/wallet-address-book.svg);
   }
   &[class*="wallet-transactions"] {
-    mask-image: url(../assets/icon/wallet-transactions.svg);
+    mask-image: url(../assets/icons/wallet-transactions.svg);
   }
   &[class*="wallet-account"] {
-    mask-image: url(../assets/icon/wallet-account.svg);
+    mask-image: url(../assets/icons/wallet-account.svg);
   }
   &[class*="wallet-logout"] {
-    mask-image: url(../assets/icon/wallet-logout.svg);
+    mask-image: url(../assets/icons/wallet-logout.svg);
+  }
+  &[class*="wallet-email"] {
+    mask-image: url(../assets/icons/wallet-email.svg);
+  }
+  &[class*="wallet-password"] {
+    mask-image: url(../assets/icons/wallet-password.svg);
+  }
+  &[class*="wallet-user"] {
+    mask-image: url(../assets/icons/wallet-user.svg);
+  }
+  &[class*="wallet-arrow"] {
+    mask-image: url(../assets/icons/wallet-arrow.svg);
   }
 }
 
@@ -86,6 +100,8 @@ ion-icon {
 // --------------------------------------------------
 // iOS only Sass variables can go here
 
+$toolbar-ios-border-color: map-get($colors, primary );
+$item-ios-detail-push-show: none;
 
 // App Material Design Variables
 // --------------------------------------------------
@@ -93,7 +109,7 @@ ion-icon {
 
 $button-md-text-transform: none;
 $button-md-box-shadow: none;
-
+$toolbar-md-border-color: map-get($colors, primary);
 
 // App Windows Variables
 // --------------------------------------------------

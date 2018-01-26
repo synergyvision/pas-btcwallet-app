@@ -1,38 +1,30 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>Iniciar Sesión</ion-title>
-  </ion-navbar>
-</ion-header>
 <ion-content padding>
   <div class="logo">
-    <img src="assets/imgs/Logo.png">
+    <img src="assets/imgs/logo.svg">
   </div>
-  <span *ngIf="error">{{error}}</span>
-  <form [formGroup]="loginForm" (ngSubmit)="loginEmail(loginForm)">
-    <ion-list>
-      <ion-item>
-        <ion-input type="email" formControlName="email" placeholder="Correo Electrónico"></ion-input>
+  <span *ngIf="error" class="error-message">{{error}}</span>
+  <ion-list no-lines>
+    <form [formGroup]="loginForm" (ngSubmit)="loginEmail(loginForm)">
+      <ion-item *ngFor="let i of inputs" class="input">
+        <ion-label>
+          <ion-icon [name]="i.icon"></ion-icon>
+        </ion-label>
+        <ion-input type="{{i.type}}" formControlName="{{i.name}}" placeholder="{{i.placeholder}}">
+        </ion-input>
       </ion-item>
-      <ion-item>
-        <ion-input type="password" formControlName="password" placeholder="Contraseña"></ion-input>
-      </ion-item>
-    </ion-list>
-    <div class="recuperar">
-      <button ion-button clear block small>
+      <button ion-button block class="login-recover-button">
         Recuperar Contraseña
       </button>
-    </div>
-    <div>
-      <button ion-button color="positive" block [disabled]="!loginForm.valid" type="submit">
+      <button ion-button block [disabled]="!loginForm.valid" type="submit" class="login-button">
         Iniciar Sesión
       </button>
-    </div>
-    <button ion-button clear color="positive" block on-click="goToRegister()">
+    </form>
+    <button ion-button block class="login-register-button" (click)="goToRegister()">
       Registrarse
     </button>
-    <button ion-button block color="danger" (click)="loginGoogle()">
+    <button ion-button block color="terciary" (click)="loginGoogle()">
       <ion-icon name="logo-googleplus"></ion-icon>
       Google
     </button>
-  </form>
+  </ion-list>
 </ion-content>

@@ -15,7 +15,14 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class SendConfirmPage {
 
+  private address;
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {
+    this.address = this.navParams.data;
+  }
+
+  private goToInicio() {
+    this.navCtrl.popToRoot();
   }
 
 }

@@ -1,3 +1,11 @@
-page-address-book {
+button.button-delete-address{
+    height: $address-container-height;
+    width: auto;
+}
+
+ion-icon{
+    font-size: $font-size-button-address-delete;
 
 }
+
+

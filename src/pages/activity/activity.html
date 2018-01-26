@@ -5,17 +5,20 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-list no-lines>
+    <ion-item class="thin-input date">
+      Fecha
+    </ion-item>
     <ion-item-sliding *ngFor="let a of activityList" text-wrap>
-      <ion-item>
-        <h6>
-          <strong>Fecha: </strong>{{a.date}}
-        </h6>
-        <br> {{a.description}}
+
+      <ion-item class="thin-input">
+        <div class="activity-date">{{a.date}}</div>
+        {{a.description}}
       </ion-item>
       <ion-item-options>
-          <button ion-button color="danger" (click)="removeActivity(a)" icon-start><ion-icon name="trash"></ion-icon> Delete </button>
-        </ion-item-options>
+        <button ion-button color="danger" (click)="removeActivity(a)" icon-start>
+          <ion-icon name="trash"></ion-icon> Delete </button>
+      </ion-item-options>
     </ion-item-sliding>
   </ion-list>
 </ion-content>

@@ -1,3 +1,27 @@
-page-confirm-email {
+.confirm-email-info{
+    text-align: center;
+    padding-top: $padding-md; 
+    font-size: $font-size-info-text;
+    color: $secondary;
+}
 
+.confirm-email-email{
+    margin: $padding-md; 
+    font-size: $font-size-email;
+    font-weight: bold;
+    border-bottom: 1px solid $secondary;
+    margin-bottom: $padding-md;
+}
+
+.confirm-email-button{
+    color: $secondary;
+    font-weight: bold;
+}
+
+.confirm-email-img{
+    width: 100%;
+    height: $container-height-lg;
+    display: flex;
+    align-content: center;
+    justify-content: center;
 }

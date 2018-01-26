@@ -21,7 +21,7 @@ export class FirebaseProvider {
 
   }
 
-  public addWallet(wallet: Wallet, uid: string) {
+  public addWallet(wallet: any, uid: string) {
     this.angularFire.list('user/' + uid + '/wallet/').push(wallet);
   }
 

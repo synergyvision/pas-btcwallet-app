@@ -1,22 +1,30 @@
 <ion-header>
-
   <ion-navbar>
     <ion-title>Registrarse</ion-title>
   </ion-navbar>
-
 </ion-header>
 
 
 <ion-content padding>
-  <h4>{{message}} {{email}}</h4>
-  <div>
-    <p>¿No ha recibido ningún correo?</p>
-    <button ion-button clear block small text-capitalize (click)="resendEmail" type="submit">
-      Reenviar Correo
-    </button>
-    <button ion-button block (click)="goBack()">
+  <img class="confirm-email-img" src="../assets/icons/menu-icon.svg">
+  <div class="page-title">
+    Debe confirmar su cuenta
+  </div>
+  <div class="confirm-email-info">
+    {{message}}
+    <div class="confirm-email-email">
+      {{email}}
+    </div>
+  </div>
+  <div class="confirm-email-info">
+    ¿No ha recibido ningún correo?
+  </div>
+  <button ion-button outline block class="confirm-email-button" (click)="resendEmail" type="submit">
+    Reenviar Correo
+  </button>
+  <ion-footer>
+    <button ion-button class="footer-button" block (click)="goBack()">
       Volver
     </button>
-  </div>
-
+  </ion-footer>
 </ion-content>

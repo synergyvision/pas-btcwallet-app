@@ -28,12 +28,11 @@ export class MyApp {
   public user: User;
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen,
-              public restService: RestService, public authService: AuthService, public events: Events, 
-              public appSetting: AppSettings) {
+              public restService: RestService, public authService: AuthService, public events: Events) {
     this.initializeApp();
 
     // List of pages that appear on the Side Menu
-    this.pages = appSetting.pagesMenu;
+    this.pages = AppSettings.pagesMenu;
     this.events.subscribe('user:loggedIn', (user) => {
       this.user = user;
     });
@@ -42,9 +41,9 @@ export class MyApp {
   public initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      const user = this.authService.user;
       // User not logged in
-      if (!user) {
+      console.log(this.user);
+      if (!this.user) {
         this.rootPage = LoginPage;
       } else {
         this.rootPage = HomePage;

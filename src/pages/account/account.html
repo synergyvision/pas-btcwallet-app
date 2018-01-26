@@ -9,38 +9,45 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding id="cuenta">
-  <ion-list>
-    <ion-item>
-      <ion-avatar item-start>
-        <img src="{{user.photoURL}}">
-      </ion-avatar>
-      <h2>{{user.email}}</h2>
+<ion-content>
+  <ion-list no-lines>
+    <ion-item class="display-img account-header-background">
+      <img class="account-img" src="../assets/icons/wallet-icon.svg">
+      <div class="account-header">
+        {{user.email}}
+      </div>
     </ion-item>
-    <div padding-top>
-      <p>
-        <strong>Configuración</strong>
-      </p>
-    </div>
-    <ion-item>
-      Correo: {{user.email}}
+    <ion-item class="account-info">
+      Configuración
     </ion-item>
-    <div *ngIf="wallets">
+    <button ion-button block outline *ngFor="let o of options" class="account-options">
+      {{o.title}}
+      <ion-label>
+        <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
+      </ion-label>
+    </button>
+    <div *ngIf="wallets" class="wallet-info">
+      Información de las Billetera
       <div *ngFor="let w of wallets | async">
-        <ion-item text-wrap>
-          Wallet: {{w.name}}
+        <ion-item class="wallet-info" text-wrap>
+          Wallet:
+          <div class="wallet-info-detail">
+            {{w.name}}
+          </div>
         </ion-item>
-        <ion-item>
+        <ion-item class="wallet-info">
           Direcciones:
-        </ion-item>
-        <ion-item *ngFor="let address of w.addresses" text-wrap>
-          {{address}}
+          <div *ngFor="let address of w.addresses" class="wallet-info-detail" text-wrap>
+            - {{address}}
+        </div>
         </ion-item>
       </div>
     </div>
-    <button ion-item *ngFor="let p of pages" (click)="openPage(p)">
-      {{p.title}}
-      <ion-icon name="arrow-dropright" item-right></ion-icon>
-    </button>
+    <span *ngIf="(!user.emailVerified)" class="error-message">
+      Su cuenta no se encuentra verificada
+      <button ion-button clear color="positive" block>
+        Enviar correo de verificación
+      </button>
+    </span>
   </ion-list>
 </ion-content>

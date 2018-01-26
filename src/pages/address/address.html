@@ -3,24 +3,23 @@
     <ion-title>Agregar Dirección</ion-title>
   </ion-navbar>
 </ion-header>
+
 <ion-content padding>
-  <form [formGroup]="addressForm" (ngSubmit)="onSubmit(addressForm)"> 
-    <ion-list>
-      <ion-item>
-        <ion-label>
-          Nombre:
-        </ion-label>
-        <ion-input type="text" formControlName="alias" required></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>
-          Email:
-        </ion-label>
-        <ion-input type="email" formControlName="email" required></ion-input>
-      </ion-item>
-      <button ion-button color="secondary" block>
-        Seleccionar Imagen
-      </button>
+  <form [formGroup]="addressForm" (ngSubmit)="onSubmit(addressForm)">
+    <ion-list no-lines>
+      <ng-container *ngFor="let i of inputs">
+        <ion-item class="input" *ngIf="i.name!=='id' && i.name!=='img'">
+          <ion-label>
+            {{i.placeholder}}
+          </ion-label>
+          <ion-input type="{{i.type}}" formControlName="{{i.name}}" required></ion-input>
+        </ion-item>
+        <div *ngIf="i.name==='img'">
+          <button ion-button color="secondary" block>
+            Seleccionar Imagen
+          </button>
+        </div>
+      </ng-container>
       <button ion-button type="submit" color="primary" block [disabled]="!addressForm.valid">
         Guardar
       </button>

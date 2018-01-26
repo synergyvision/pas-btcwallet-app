@@ -9,7 +9,23 @@ export class LoaderService {
     constructor(private loadingCtrl: LoadingController) {}
 
     public showLoader(msg: string) {
-        this.loadingSpinner = this.loadingCtrl.create({content : msg});
+        this.loadingSpinner = this.loadingCtrl
+        .create({
+            content : msg,
+            showBackdrop: false,
+            spinner: 'crescent',
+        });
+        this.loadingSpinner.present();
+    }
+
+    public showFullLoader(msg: string) {
+        this.loadingSpinner = this.loadingCtrl
+        .create({
+            content : msg,
+            showBackdrop: false,
+            spinner: 'crescent',
+            cssClass: 'full-loader',
+        });
         this.loadingSpinner.present();
     }
 

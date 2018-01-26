@@ -6,6 +6,7 @@ import { Address } from '../../app/models/address';
 import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner';
 import { AlertService } from '../../app/services/alert.service';
 import { RestService } from '../../app/services/rest.service';
+import { SendConfirmPage } from '../send-confirm/send-confirm';
 
 @IonicPage()
 @Component({
@@ -31,7 +32,7 @@ export class SendPage {
     this.qrScanner.prepare()
       .then((status: QRScannerStatus) => {
         if (status.authorized) {
-          let scanSub = this.qrScanner.scan().subscribe((text: string) => {
+          const scanSub = this.qrScanner.scan().subscribe((text: string) => {
             // We must do something here with the address provided
             this.qrScanner.hide();
             scanSub.unsubscribe();
@@ -59,8 +60,12 @@ export class SendPage {
         });
       });
   }
-  private duplicateAddress(object) {
-    return new Address(object.id, object.img, object.alias, object.address);
+  private duplicateAddress(object: Address) {
+    return new Address(object.alias, object.email, object.img );
+  }
+
+  private goToSendConfirm(address) {
+    this.navCtrl.push(SendConfirmPage, address);
   }
 
 }

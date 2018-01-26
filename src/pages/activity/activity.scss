@@ -1,3 +1,12 @@
-page-activity {
 
-}
+  .thin-input.date {
+
+    margin-top: $padding-lg;
+    background-color:$secondary;
+    color: $clear;
+  }
+  .activity-date {
+    color: $secondary;
+    font-size: $font-size-input-thin;
+  }
+

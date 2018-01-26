@@ -13,7 +13,7 @@ export class Address {
     this.alias = alias;
     this.email = email;
   }
-  
+
   public setAlias(alias: string) {
     this.alias = alias;
   }

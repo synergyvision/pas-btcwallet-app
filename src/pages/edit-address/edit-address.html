@@ -4,21 +4,17 @@
   </ion-navbar>
 </ion-header>
 <ion-content padding>
-  <form [formGroup]="addressForm" (ngSubmit)="onSubmit(addressForm)"> 
+  <form [formGroup]="addressForm" (ngSubmit)="onSubmit(addressForm)">
     <ion-list>
-      <ion-item>
-        <ion-label>
-          Nombre
-        </ion-label>
-        <ion-input type="text" value="{{address.alias}}" formControlName="alias"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>
-          Email
-        </ion-label>
-        <ion-input type="text" formControlName="email" value="{{address.email}}" required></ion-input>
-      </ion-item>
-      <button ion-button color="secondary" block>
+      <ng-container *ngFor="let i of inputs">
+        <ion-item class="input" *ngIf="(i.name!=='key') && (i.name!=='img')">
+          <ion-label>
+            {{i.placeholder}}
+          </ion-label>
+          <ion-input type="{{i.type}}" value={{i.value}} formControlName="{{i.name}}" required></ion-input>
+        </ion-item>
+      </ng-container>
+      <button ion-button color="secondary" block (click)="goBack()">
         Cambiar Imagen
       </button>
       <button ion-button type="submit" color="primary" block [disabled]="!addressForm.valid">

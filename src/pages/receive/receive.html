@@ -7,17 +7,13 @@
 
 </ion-header>
 <ion-content padding>
-  <div class="header">
-    <h5>
+  <div class="page-title">
       Dirección Bitcoin
-    </h5>
   </div>
-  <div class="code" *ngIf="address">
-    <qrcode [qrdata]="address" [size]="256" [level]="'M'"></qrcode>
-    <div class="direction">
-      <p>
-        {{address}}
-      </p>
+  <div class="receive-code" *ngIf="address">
+    <qrcode [qrdata]="address" [level]="'M'"></qrcode>
+    <div class="receive-address">
+      {{address}}
     </div>
   </div>
 </ion-content>
