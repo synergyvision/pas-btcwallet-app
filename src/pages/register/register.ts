@@ -18,6 +18,7 @@ import { AppSettings } from '../../app/app.settings';
 
 export class RegisterPage {
 
+  private errorTitle: string;
   private error: string;
   private inputs;
   private registerForm: FormGroup;
@@ -40,11 +41,13 @@ export class RegisterPage {
   private registerUser(registerForm: FormGroup) {
     this.loaderService.showLoader('Espere');
     this.authService.signup(registerForm).
-      then((success) => {
+      then((data) => {
         this.loaderService.dismissLoader();
-        this.navCtrl.push(ConfirmEmailPage);
-      }).catch((error) => {
+        this.navCtrl.push(ConfirmEmailPage, registerForm.value.email);
+      })
+      .catch((error) => {
         this.loaderService.dismissLoader();
+        this.errorTitle = error.title;
         this.error = error.message;
       });
   }

@@ -15,6 +15,7 @@ import { FormGroup } from '@angular/forms';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
 import { Wallet } from '../models/wallet';
 import { IBalance } from '../models/IBalance';
+import { ErrorService } from './error.service';
 
 // REST Service for getting data from APIs and the Database
 
@@ -44,11 +45,8 @@ export class RestService {
 
     // Headers for get
     const headers = new Headers();
-    headers.append('Access-Control-Allow-Credentials', 'true');
     headers.append('Content-Type', 'application/json');
-
     this.options = new RequestOptions({ headers: headers });
-
     this.activityList = [
       new Activity(1, '12/12/2017', 'Acceso desde dispositivo Android NG-7800'),
       new Activity(2, '06/11/2017', 'Cambio de clave'),
@@ -112,9 +110,10 @@ export class RestService {
     }
 
   // Creates a new Wallet
-  public createData(email: string, password: string, uid: string): Observable<Observable<IWallet>> {
+  public createData(email: string, uid: string): Observable<IWallet> {
     return this.createAddress()
-      .map((address) => {
+    .first()
+    .flatMap((address) => {
         this.address = address;
         const data = {
           name: 'W' + uid.substring(0, 24),
@@ -131,8 +130,7 @@ export class RestService {
     return this.http.post(TESTING_URL + '/wallets?token=' + TOKEN, data)
       .map((res: Response) => {
         return res.json() as IWallet;
-      })
-      .catch(this.handleError);
+      });
   }
 
   // Adds an Address to a wallet
@@ -159,21 +157,29 @@ export class RestService {
 
   // Gets a Wallet Balance
   public getBalanceFromWallet(wallet: Wallet) {
-    this.balance = this.http.get(TESTING_URL + '/addrs/' + wallet.name + '/balance?token=' + TOKEN)
+    return this.http.get(TESTING_URL + '/addrs/' + wallet.name + '/balance?token=' + TOKEN)
     .map((res: Response) => {
       return res.json() as IBalance;
     })
     .catch(this.handleError);
   }
 
-  public showAlert(msg?, title?): Promise<any> {
-    return this.alertService.showAlert(msg, title);
+  public showAlert(error: ErrorService): Promise<any> {
+    return this.alertService.showAlert(error.message, error.title, error.subTitle);
+  }
+
+  public showFullAlert(error: ErrorService): Promise<any> {
+    return this.alertService.showFullAlert(error.message, error.title, error.subTitle);
   }
 
   // Error Handling for HTTP Errors
-  private handleError(error: Response) {
-    console.log(error);
-    return Observable.throw(error.statusText);
+  private handleError(er) {
+    if (er.title) {
+      // Error already created
+      return Observable.throw(er);
+    } else {
+      const error = new ErrorService(er.status);
+      return Observable.throw(error);
+    }
   }
-
 }

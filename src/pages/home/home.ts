@@ -24,7 +24,6 @@ export class HomePage {
   constructor(public navCtrl: NavController, private authService: AuthService, private restService: RestService,
               private loaderService: LoaderService) {
     this.loaderService.showFullLoader('Espere');
-    this.user = this.authService.user;
     this.restService.balance
     .subscribe((balance) => {
       this.balance = balance;
@@ -40,9 +39,4 @@ export class HomePage {
   private goToSend() {
     this.navCtrl.push(SendPage);
   }
-
-  private ngOnInit() {
-    this.user = this.authService.user;
-  }
-
 }

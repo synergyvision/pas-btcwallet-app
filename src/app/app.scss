@@ -103,9 +103,10 @@ $padding-address: 1em;
   border-bottom: none;
 }
 
-.full-loader{
+.full-loader, .full-alert{
   background: $primary;
 }
+
 
 .button {
   height: $button-height;

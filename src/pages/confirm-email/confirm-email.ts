@@ -20,9 +20,8 @@ export class ConfirmEmailPage {
   private message = 'Se ha enviado un correo de verificación a';
   private email: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
-              private authService: AuthService) {
-    this.email = authService.user.email;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController) {
+    this.email = this.navParams.data;
     this.navCtrl.swipeBackEnabled = false;
     this.viewCtrl.showBackButton(false);
   }
@@ -33,7 +32,6 @@ export class ConfirmEmailPage {
 
   private goBack() {
     this.navCtrl.popToRoot();
-    this.authService.logout();
   }
 
 }

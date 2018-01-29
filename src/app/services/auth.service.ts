@@ -18,14 +18,14 @@ export class AuthService {
     public balance: IBalance;
 
     constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider,
-               private restService: RestService) {
+                private restService: RestService) {
         this.firebaseAuth.authState.subscribe(
             (user) => {
                 if (user) {
                     this.user = this.getLoggedUser(user);
                     this.firebaseData.getWallets(user.uid)
                         .subscribe((data) => {
-                            this.restService.getBalanceFromWallet(data[0]);
+                            this.restService.balance = this.restService.getBalanceFromWallet(data[0]);
                         });
                 } else {
                     this.user = null;
@@ -34,34 +34,56 @@ export class AuthService {
         );
     }
 
-    public signup(user: FormGroup) {
-        const res = this.firebaseAuth.auth.createUserWithEmailAndPassword(user.value.email, user.value.password);
-        // The Firebase service has created the user and automatically logged them
-        res.then((response) => {
-            // this.user.sendEmailVerification();
-            // We create the user wallet
-            this.restService.createData(user.value.email, user.value.password, response.uid)
-                .subscribe(
-                (wallet) => {
-                    wallet.subscribe((iWallet) => {
-                        const newWallet = {
-                            addresses: iWallet.addresses,
-                            name: iWallet.name,
-                            toke: iWallet.token,
-                        };
-                        this.firebaseData.addWallet(newWallet, response.uid);
-                    },
-                        (error) => {
-                            console.log(error);
-                        });
+    public signup(user: FormGroup): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.firebaseAuth.auth.createUserWithEmailAndPassword(user.value.email, user.value.password)
+            .then((response) => {
+                this.restService.createData(user.value.email, response.uid)
+                .subscribe((iWallet) => {
+                    const newWallet = {
+                        addresses: iWallet.addresses,
+                        name: iWallet.name,
+                        toke: iWallet.token,
+                    };
+                    this.firebaseData.addWallet(newWallet, response.uid);
+                    this.logout();
+                    resolve(response);
+                },
+                (error) => {
+                    this.firebaseAuth.auth.currentUser.delete();
+                    reject(error);
                 });
-        })
+            })
             .catch((error) => {
                 console.log('ERROR ON CREATE USER' + error);
+                reject(error);
             });
-        // User Created! We Log him out
-        this.logout();
-        return res;
+        });
+       /*  const res = this.firebaseAuth.auth.createUserWithEmailAndPassword(user.value.email, user.value.password);
+        // The Firebase service has created the user and automatically logged them
+        Observable.fromPromise(res)
+        .first()
+        .subscribe((response) => {
+            // this.user.sendEmailVerification();
+            // We create the user wallet
+            this.restService.createData(user.value.email, response.uid)
+                .subscribe((iWallet) => {
+                    const newWallet = {
+                        addresses: iWallet.addresses,
+                        name: iWallet.name,
+                        toke: iWallet.token,
+                    };
+                    this.firebaseData.addWallet(newWallet, response.uid);
+                    this.logout();
+                    console.log('here');
+                    return response;
+                },
+                (error) => {
+                    this.firebaseAuth.auth.currentUser.delete();
+                    return error;
+                });
+        }, (
+        }); */
     }
 
     public login(email: string, password: string) {
