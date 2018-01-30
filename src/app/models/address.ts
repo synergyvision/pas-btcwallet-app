@@ -7,11 +7,13 @@ export class Address {
   public alias: string;
   public email: string;
   public img?: string;
+  public uid?: string;
 
-  constructor(alias: string, email: string, img?: string) {
+  constructor(alias: string, email: string, img?: string, uid?: string) {
     this.img = img;
     this.alias = alias;
     this.email = email;
+    this.uid= uid;
   }
 
   public setAlias(alias: string) {

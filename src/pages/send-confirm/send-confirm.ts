@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { RestService } from '../../app/services/rest.service';
+import { LoaderService } from '../../app/services/loader.service';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { AuthService } from '../../app/services/auth.service';
+import { Address } from '../../app/models/address';
+
 
 /**
  * Generated class for the SendConfirmPage page.
@@ -15,14 +21,29 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class SendConfirmPage {
 
-  private address;
+  private address: Address;
+  private balance;
+  private sendForm: FormGroup;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private loaderService: LoaderService,
+              private restService: RestService, private formBuilder: FormBuilder, private authService: AuthService) {
+    this.loaderService.showFullLoader('Espere');
+    this.sendForm = this.formBuilder.group({
+      amount: [1000, Validators.compose([Validators.required, Validators.min(10000)])],
+    });
     this.address = this.navParams.data;
+    this.restService.balance
+    .subscribe((balance) => {
+      this.balance = balance;
+      this.loaderService.dismissLoader();
+    });
   }
 
-  private goToInicio() {
-    this.navCtrl.popToRoot();
+  private sendPayment(form: FormGroup) {
+    // First we get an address from the recipient of the money
+    this.authService.getWalletAddress(this.address.email).subscribe((wallet) => {
+      this.restService.sendPayment(wallet.addresses.pop, form.value.amount);
+    });
   }
 
 }

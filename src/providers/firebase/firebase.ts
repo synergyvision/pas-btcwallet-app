@@ -21,6 +21,10 @@ export class FirebaseProvider {
 
   }
 
+  public addUser(user: string, uid: string) {
+    this.angularFire.list('user/' + uid).set('userEmail', user);
+  }
+
   public addWallet(wallet: any, uid: string) {
     this.angularFire.list('user/' + uid + '/wallet/').push(wallet);
   }
@@ -45,6 +49,21 @@ export class FirebaseProvider {
         key: c.payload.key, ...c.payload.val(),
       }));
     });
+  }
+
+  public getWalletByEmail(email: string) {
+    return this.angularFire.list('/user', (ref) =>
+      ref.orderByChild('userEmail').equalTo(email))
+      .snapshotChanges()
+      .map((changes) => {;
+        return changes.map((c) => ({
+          key: c.payload.key, ...c.payload.val(),
+        }));
+      });
+  }
+
+  public updateWallet(wallet: Wallet, uid: string, key: string) {
+      this.angularFire.list('user/' + uid + '/wallet/').update(key, wallet);
   }
 
   public addAddressToAddressBook(uid: string, address: Address) {

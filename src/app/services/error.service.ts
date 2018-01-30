@@ -10,6 +10,8 @@ export class ErrorService {
             this.subTitle = 'Intente mas tarde';
             this.message = 'No se pudo establecer conexión al servidor';
         }
-
+        if (errorText === 'CAMARA_ERROR') {
+            this.message = 'Debe darle permisos a la aplicación para usar la cámara';
+        }
     }
 }

@@ -150,12 +150,19 @@ ion-title {
 
 .display-img {
   display: flex;
-  width: 100%;
+  width: 100%; 
   height: $container-height-md;
   background-color: $primary;
   align-items: center;
   justify-content: center;
   color: map-get($colors, clear);
+  flex-wrap: wrap;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -moz-flex;
+  display: -webkit-flex;
+  flex-direction: column;
 }
 
 .img.circular {

@@ -9,7 +9,10 @@
 .home-balance {
     font-family: "Wallet-Bold";
     font-size: $font-size-home-balance;
-    color: $clear;
+}
+
+.home-btc-balance {
+    font-size: 30%;
 }
 
 .home-wallet {

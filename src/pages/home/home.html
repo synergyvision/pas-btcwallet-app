@@ -12,7 +12,10 @@
 <ion-content no-bounce overflow-scroll="false">
   <span *ngIf="(balance!==undefined) && (balance!==null)">
     <div class="display-img home-balance">
-      {{balance.balance}} BTC
+      {{balance.balance}} sat
+      <div class="home-btc-balance">
+        {{balance.balance * 0.00000001}} BTC
+      </div>
     </div>
     <div class="page-title">
       Billetera
@@ -22,8 +25,10 @@
     </div>
     <div class="home-info">
       <p>Transacciones: {{balance.n_tx}}</p>
-      <p>Total Recibido: {{balance.total_received}}</p>
-      <p>Total Enviado: {{balance.total_sent}}</p>
+      <p>Total Recibido: {{balance.total_received}} sat</p>
+      <p>Total Enviado: {{balance.total_sent}} sat</p>
+      <p>Balance por Confirmar: {{balance.unconfirmed_balance}} sat</p>
+      <p>Transacciones por Confirmar: {{balance.unconfirmed_n_tx}}</p>
     </div>
   </span>
   <button class="home-button receive-button" block ion-button on-click="goToReceive()">

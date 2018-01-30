@@ -15,7 +15,7 @@ import { IBalance } from '../models/IBalance';
 export class AuthService {
     public user: User;
     public addressBook: AngularFireList<any>;
-    public balance: IBalance;
+    public wallet: Wallet;
 
     constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider,
                 private restService: RestService) {
@@ -25,7 +25,8 @@ export class AuthService {
                     this.user = this.getLoggedUser(user);
                     this.firebaseData.getWallets(user.uid)
                         .subscribe((data) => {
-                            this.restService.balance = this.restService.getBalanceFromWallet(data[0]);
+                            this.wallet = data[0];
+                            this.restService.getBalanceFromWallet(data[0]);
                         });
                 } else {
                     this.user = null;
@@ -43,8 +44,9 @@ export class AuthService {
                     const newWallet = {
                         addresses: iWallet.addresses,
                         name: iWallet.name,
-                        toke: iWallet.token,
+                        token: iWallet.token,
                     };
+                    this.firebaseData.addUser(user.value.email, response.uid);
                     this.firebaseData.addWallet(newWallet, response.uid);
                     this.logout();
                     resolve(response);
@@ -59,31 +61,6 @@ export class AuthService {
                 reject(error);
             });
         });
-       /*  const res = this.firebaseAuth.auth.createUserWithEmailAndPassword(user.value.email, user.value.password);
-        // The Firebase service has created the user and automatically logged them
-        Observable.fromPromise(res)
-        .first()
-        .subscribe((response) => {
-            // this.user.sendEmailVerification();
-            // We create the user wallet
-            this.restService.createData(user.value.email, response.uid)
-                .subscribe((iWallet) => {
-                    const newWallet = {
-                        addresses: iWallet.addresses,
-                        name: iWallet.name,
-                        toke: iWallet.token,
-                    };
-                    this.firebaseData.addWallet(newWallet, response.uid);
-                    this.logout();
-                    console.log('here');
-                    return response;
-                },
-                (error) => {
-                    this.firebaseAuth.auth.currentUser.delete();
-                    return error;
-                });
-        }, (
-        }); */
     }
 
     public login(email: string, password: string) {
@@ -99,6 +76,7 @@ export class AuthService {
     }
     public logout() {
         this.user = null;
+        this.restService.balance = null;
         this.firebaseAuth.auth.signOut();
     }
 
@@ -108,13 +86,37 @@ export class AuthService {
     }
 
     public addAddress(form: FormGroup) {
-        // We need to check if this address exist
-        // If it does we add it to the list
         this.firebaseData.addAddressToAddressBook(this.user.uid, form.value);
-        console.log(this.firebaseData.getAddressBook(this.user.uid));
     }
 
     public sendVerificationEmail() {
         this.firebaseAuth.auth.currentUser.sendEmailVerification();
+    }
+
+    public updateBalance() {
+        if (this.wallet !== undefined) {
+            this.restService.getBalanceFromWallet(this.wallet);
+        }
+    }
+
+    public getWallets() {
+        return this.firebaseData.getWallets(this.user.uid);
+    }
+
+    public getWalletAddress(email: string): Observable<Wallet> {
+        return this.firebaseData.getWalletByEmail(email)
+        .map((userData) => {
+            let wallet = (userData[0].wallet ? Object.values(userData[0].wallet) : null)[0];
+            // this.restService.addAddressToWallet(wallet)
+            // .subscribe((response) => {
+            //    wallet = response;
+            //    console.log(wallet);
+            // });
+            const key = Object.keys(userData[0].wallet)[0];
+            this.firebaseData.updateWallet(wallet, userData[0].key, key);
+            return wallet;
+        }, (error) => {
+            console.log(error);
+        });
     }
 }

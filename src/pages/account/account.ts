@@ -18,21 +18,21 @@ export class AccountPage {
 
   public user: User;
   public wallets: Observable<any>;
-  public wallet;
   public options;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService,
               private dataProvider: FirebaseProvider, private restService: RestService) {
     this.user = this.authService.user;
-    this.wallets = this.dataProvider.getWallets(this.user.uid);
-    let test = this.wallets;
+    this.wallets = this.authService.getWallets();
+    const test = this.wallets;
     test.subscribe((data) => {
-      this.wallet = data[0];
-      this.restService.addAddressToWallet(this.wallet).subscribe((da) => {
-        console.log(da);
+      this.restService.addFundsTestnet(data[0].addresses[0], 56000)
+      .subscribe((response) => {
+        console.log(response);
+      }, (error) => {
+        console.log(error);
       });
     });
-
     this.options = AppSettings.accountOptions;
   }
 }

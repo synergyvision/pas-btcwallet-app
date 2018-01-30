@@ -28,25 +28,16 @@ const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
 
 export class RestService {
 
-  public avatar = '../../assets/imgs/user.png';
-  public address: IAddress;
-  public user: User;
-  public addressBook: Address[];
-  public wallet: IWallet;
   public blockChain: IBlockchain;
   public activityList: Activity[];
   public transactionList: Transaction[];
-  public public: string;
   public balance: Observable<IBalance>;
+  public walletFunds: number;
   private options: RequestOptions;
 
   constructor(private http: Http, private loadService: LoaderService, private alertService: AlertService,
               private databaseProvider: FirebaseProvider) {
 
-    // Headers for get
-    const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-    this.options = new RequestOptions({ headers: headers });
     this.activityList = [
       new Activity(1, '12/12/2017', 'Acceso desde dispositivo Android NG-7800'),
       new Activity(2, '06/11/2017', 'Cambio de clave'),
@@ -65,7 +56,7 @@ export class RestService {
   // Retrieves the latest BlockChain data
   public getBlockchain(): Observable<IBlockchain> {
     this.loadService.showLoader('Recuperando Información');
-    return this.http.get(URL, this.options)
+    return this.http.get(URL)
       .map((res: Response) => {
         this.blockChain = res.json();
         return res.json() as IBlockchain;
@@ -79,7 +70,7 @@ export class RestService {
 
   // Gets an Address Information
   public getSingleAddress(bitcoin_address): Observable<IAddress> {
-    return this.http.get(TESTING_URL + '/addrs/' + bitcoin_address + '/balance', this.options)
+    return this.http.get(TESTING_URL + '/addrs/' + bitcoin_address + '/balance')
       .map((res: Response) => {
         return res.json() as IAddress;
       }).catch(this.handleError);
@@ -102,7 +93,7 @@ export class RestService {
 
     // Creates an Address
     public createAddress(): Observable<IAddress> {
-      return this.http.post(TESTING_URL + '/addrs', null, this.options)
+      return this.http.post(TESTING_URL + '/addrs', null)
         .map((res: Response) => {
           return res.json() as IAddress;
         })
@@ -114,11 +105,10 @@ export class RestService {
     return this.createAddress()
     .first()
     .flatMap((address) => {
-        this.address = address;
         const data = {
           name: 'W' + uid.substring(0, 24),
           addresses: [
-            this.address.address,
+            address.address,
           ],
         };
         return this.createWallet(JSON.stringify(data));
@@ -135,29 +125,16 @@ export class RestService {
 
   // Adds an Address to a wallet
   public addAddressToWallet(wallet: Wallet): Observable<any> {
-/*     return this.createAddress()
-      .map((newAddress) => {
-        const address = newAddress;
-        const body = { 'addresses': [address] };
-        return this.http.post(TESTING_URL + '/wallets/' + wallet.name + '/addresses?token=' + TOKEN,
-          JSON.stringify(body), this.options)
-          .map((res: Response) => {
-            this.databaseProvider.addAddressToWallet(wallet, uid, res.json());
-            return address;
-          })
-          .catch(this.handleError);
-      })
-      .catch(this.handleError); */
-      return this.http.post(TESTING_URL + '/wallets' + wallet.name +
-            'addresses/generate?token=' + TOKEN, this.options)
-            .map((data) => {
-              console.log(data);
-            });
+    return this.http.post(TESTING_URL + '/wallets' + wallet.name +
+      'addresses/generate?token=' + TOKEN, {})
+      .map((res) => {
+      return res.json() as Wallet;
+    });
   }
 
   // Gets a Wallet Balance
   public getBalanceFromWallet(wallet: Wallet) {
-    return this.http.get(TESTING_URL + '/addrs/' + wallet.name + '/balance?token=' + TOKEN)
+    this.balance = this.http.get(TESTING_URL + '/addrs/' + wallet.name + '/balance?token=' + TOKEN)
     .map((res: Response) => {
       return res.json() as IBalance;
     })
@@ -172,8 +149,46 @@ export class RestService {
     return this.alertService.showFullAlert(error.message, error.title, error.subTitle);
   }
 
+  // Testing Faucet
+
+  public addFundsTestnet(address: string, amount: number): Observable<any> {
+    const data = {
+      address: address,
+      amount: amount,
+    };
+    console.log(data);
+    return this.http.post(TESTING_URL + '/faucet?token=' + TOKEN, JSON.stringify(data))
+    .map((res: Response) => {
+      console.log(res.json());
+      return res.json();
+    })
+    .catch(this.handleError);
+  }
+
+  // Send Paymentys
+
+  public sendPayment(address: string, amount: number, wallet: Wallet): Observable<any> {
+    const data = {
+      inputs: [{
+        wallet_name: wallet.name,
+        wallet_token: wallet.token,
+        }],
+      outputs: [{
+        addresses: [address],
+        value: amount,
+      }],
+    };
+    return this.http.post(TESTING_URL + '/txs/new/', JSON.stringify(data))
+      .map((res) => {
+        console.log(res.json());
+        return res.json();
+      })
+      .catch(this.handleError);
+  }
+
   // Error Handling for HTTP Errors
   private handleError(er) {
+    console.log(er);
     if (er.title) {
       // Error already created
       return Observable.throw(er);

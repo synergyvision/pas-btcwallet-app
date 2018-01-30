@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { ReceivePage } from '../receive/receive';
 import { SendPage } from '../send/send';
@@ -21,15 +21,25 @@ export class HomePage {
   private user: User;
   private balance: IBalance;
 
-  constructor(public navCtrl: NavController, private authService: AuthService, private restService: RestService,
-              private loaderService: LoaderService) {
+  constructor(public navCtrl: NavController, private restService: RestService, private authService: AuthService,
+              private loaderService: LoaderService, private zone: NgZone) {
     this.loaderService.showFullLoader('Espere');
     this.restService.balance
     .subscribe((balance) => {
       this.balance = balance;
       this.loaderService.dismissLoader();
     });
+  }
 
+  private ionViewWillEnter() {
+    this.authService.updateBalance();
+    this.restService.balance
+    .subscribe((balance) => {
+      this.zone.run(() => {
+        this.balance = balance;
+        console.log(balance);
+      });
+    });
   }
 
   private goToReceive() {

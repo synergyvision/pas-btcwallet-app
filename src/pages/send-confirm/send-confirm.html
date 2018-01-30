@@ -9,14 +9,16 @@
       Seleccionar monto
     </div>
     <ion-list>
-      <form>
+      <form [formGroup]="sendForm" (ngSubmit)="sendPayment(sendForm)" *ngIf ="balance">
         <ion-item class="thin-input">
-          <ion-input type="number" placeholder="Monto"></ion-input>
+          <ion-input type="number" formControlName="amount" placeholder="amount.value" min="10000" [max]="balance.balance"></ion-input>
         </ion-item>
+        <div *ngIf ="balance" class="send-confirm-info">
+            Disponible: {{balance.balance}} sat <br>
+            USD: {{balance.balance * 0.000105392}} USD
+        </div>
         <div class="send-confirm-info">
-            Disponible: {{availableBTC}}
-            {{availableUSD}}
-            {{availableBsF}}
+          Restante: {{balance.balance - sendForm.value.amount}} sat <br>
         </div>
         <ion-item class="thin-input">
           <ion-input type="text" placeholder="Token"></ion-input>
@@ -33,7 +35,7 @@
               {{address.email}}
             </div>
           </ion-item>
-        <button ion-button color="balanced" block on-click="goToInicio()">
+        <button ion-button block type="submit">
           Enviar
         </button>
       </form>

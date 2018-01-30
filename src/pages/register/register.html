@@ -19,7 +19,7 @@
         <ion-input type="{{i.type}}" formControlName="{{i.name}}" placeholder="{{i.placeholder}}">
         </ion-input>
       </ion-item>
-      <button ion-button block color="positive" [disabled]="!registerForm.valid" type="submit">
+      <button ion-button block [disabled]="!registerForm.valid" type="submit">
         Continuar
       </button>
     </ion-list>
