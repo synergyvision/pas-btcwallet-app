@@ -7,10 +7,11 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
 import { IAddress } from '../../app/models/IAddress';
-import { IWallet } from '../../app/models/IWallet';
+import { IHDWallet } from '../../app/models/IHDWallet';
 import { Wallet } from '../../app/models/wallet';
 import { Address } from '../../app/models/address';
 import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
+import { Keys } from '../../app/models/Keys';
 
 @Injectable()
 export class FirebaseProvider {
@@ -21,7 +22,7 @@ export class FirebaseProvider {
 
   }
 
-  public addUser(user: string, uid: string) {
+  public addUser(user: string, uid: string, keys?: Keys) {
     this.angularFire.list('user/' + uid).set('userEmail', user);
   }
 
@@ -51,11 +52,11 @@ export class FirebaseProvider {
     });
   }
 
-  public getWalletByEmail(email: string) {
+  public getWalletByEmail(email: string): Observable<any> {
     return this.angularFire.list('/user', (ref) =>
       ref.orderByChild('userEmail').equalTo(email))
       .snapshotChanges()
-      .map((changes) => {;
+      .map((changes) => {
         return changes.map((c) => ({
           key: c.payload.key, ...c.payload.val(),
         }));

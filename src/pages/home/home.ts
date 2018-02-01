@@ -24,26 +24,31 @@ export class HomePage {
   constructor(public navCtrl: NavController, private restService: RestService, private authService: AuthService,
               private loaderService: LoaderService, private zone: NgZone) {
     this.loaderService.showFullLoader('Espere');
-    this.restService.balance
-    .subscribe((balance) => {
-      this.balance = balance;
-      this.loaderService.dismissLoader();
+    this.getBalance();
+  }
+
+  public getBalance() {
+    this.authService.authState().subscribe(() => {
+      this.authService.balance
+      .subscribe((balance) => {
+        this.balance = balance;
+        this.loaderService.dismissLoader();
+      });
     });
   }
 
   private ionViewWillEnter() {
     this.authService.updateBalance();
-    this.restService.balance
+    this.authService.balance
     .subscribe((balance) => {
       this.zone.run(() => {
         this.balance = balance;
-        console.log(balance);
       });
     });
   }
 
   private goToReceive() {
-    this.navCtrl.push(ReceivePage);
+    this.navCtrl.push(ReceivePage, this.balance);
   }
 
   private goToSend() {

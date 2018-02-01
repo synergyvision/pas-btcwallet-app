@@ -1,4 +1,4 @@
-// Interface for Address Data
+// Interface for Address Data received by the API
 // Info on https://www.blockcypher.com/api
 
 export interface IAddress {

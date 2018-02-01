@@ -1,5 +1,5 @@
-// Interface for a Transaction Object
-// Info on https://blockchain.info/api/blockchain_api
+// Interface for the Transaction Object received by the API
+// Info on https://www.blockcypher.com/dev/bitcoin/?javascript#tx
 
 export interface Itransaction {
     hash: string;

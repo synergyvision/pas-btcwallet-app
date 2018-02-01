@@ -1,14 +1,13 @@
+import { Activity } from '../models/activity';
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, Response } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Rx';
 import { LoaderService } from './loader.service';
 import { IAddress } from '../models/IAddress';
 import { User } from '../models/user';
 import { Address } from '../models/address';
-import { IWallet } from '../models/IWallet';
 import { IBlockchain } from '../models/IBlockchain';
-import { Activity } from '../models/activity';
+import { Headers, Http, RequestMethod, RequestOptions, Response } from '@angular/http';
 import { Transaction } from '../models/transaction';
 import { AlertService } from './alert.service';
 import { FormGroup } from '@angular/forms';
@@ -16,6 +15,8 @@ import { FirebaseProvider } from '../../providers/firebase/firebase';
 import { Wallet } from '../models/wallet';
 import { IBalance } from '../models/IBalance';
 import { ErrorService } from './error.service';
+import { KeyService } from './key.service';
+import { IHDWallet } from '../models/IHDWallet';
 
 // REST Service for getting data from APIs and the Database
 
@@ -31,13 +32,13 @@ export class RestService {
   public blockChain: IBlockchain;
   public activityList: Activity[];
   public transactionList: Transaction[];
-  public balance: Observable<IBalance>;
   public walletFunds: number;
   private options: RequestOptions;
 
   constructor(private http: Http, private loadService: LoaderService, private alertService: AlertService,
-              private databaseProvider: FirebaseProvider) {
-
+              private databaseProvider: FirebaseProvider, private keyService: KeyService) {
+    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' });
+    this.options = new RequestOptions( {method: RequestMethod.Post, headers: headers });
     this.activityList = [
       new Activity(1, '12/12/2017', 'Acceso desde dispositivo Android NG-7800'),
       new Activity(2, '06/11/2017', 'Cambio de clave'),
@@ -68,75 +69,36 @@ export class RestService {
     );
   }
 
-  // Gets an Address Information
-  public getSingleAddress(bitcoin_address): Observable<IAddress> {
-    return this.http.get(TESTING_URL + '/addrs/' + bitcoin_address + '/balance')
+  // Create an HD Wallet
+  public createWalletHD(data): Observable<IHDWallet> {
+     // Then, we make a API call to create an HD Wallet
+     return this.http.post(TESTING_URL + '/wallets/hd?token=' + TOKEN, JSON.stringify(data), this.options)
+     .map((res: Response) => {
+       return res.json() as IHDWallet;
+     }).catch(this.handleError);
+  }
+
+  // Derive an address from an HD Wallet
+  public deriveAddress(walletName: string) {
+    return this.http.post(TESTING_URL + '/wallets/hd/' + walletName + '/addresses/derive?token=' + TOKEN,
+    {} , this.options)
       .map((res: Response) => {
-        return res.json() as IAddress;
+        return res.json() as IHDWallet;
       }).catch(this.handleError);
-  }
-
-  // Checks if an address was used
-  public verifyAddress(wallet: Wallet, uid: string): Observable<any> {
-    const bitcoin_address = wallet.addresses.pop();
-    return this.getSingleAddress(bitcoin_address)
-      .map((data) => {
-        const address = data;
-        // If it was used, we create a new address
-        if ((address.balance > 0) || (address.n_tx > 0)) {
-          return this.addAddressToWallet(wallet);
-        } else {
-          return bitcoin_address;
-        }
-      });
-  }
-
-    // Creates an Address
-    public createAddress(): Observable<IAddress> {
-      return this.http.post(TESTING_URL + '/addrs', null)
-        .map((res: Response) => {
-          return res.json() as IAddress;
-        })
-        .catch(this.handleError);
-    }
-
-  // Creates a new Wallet
-  public createData(email: string, uid: string): Observable<IWallet> {
-    return this.createAddress()
-    .first()
-    .flatMap((address) => {
-        const data = {
-          name: 'W' + uid.substring(0, 24),
-          addresses: [
-            address.address,
-          ],
-        };
-        return this.createWallet(JSON.stringify(data));
-      }).catch(this.handleError);
-  }
-
-  // Returns a new wallet
-  public createWallet(data): Observable<IWallet> {
-    return this.http.post(TESTING_URL + '/wallets?token=' + TOKEN, data)
-      .map((res: Response) => {
-        return res.json() as IWallet;
-      });
-  }
-
-  // Adds an Address to a wallet
-  public addAddressToWallet(wallet: Wallet): Observable<any> {
-    return this.http.post(TESTING_URL + '/wallets' + wallet.name +
-      'addresses/generate?token=' + TOKEN, {})
-      .map((res) => {
-      return res.json() as Wallet;
-    });
   }
 
   // Gets a Wallet Balance
   public getBalanceFromWallet(wallet: Wallet) {
-    this.balance = this.http.get(TESTING_URL + '/addrs/' + wallet.name + '/balance?token=' + TOKEN)
+    return this.http.get(TESTING_URL + '/addrs/' + wallet.name + '/balance?token=' + TOKEN)
     .map((res: Response) => {
       return res.json() as IBalance;
+    })
+    .catch(this.handleError);
+  }
+  public getAddressBalance(address: string) {
+    return this.http.get(TESTING_URL + '/addrs/' + address + '/balance')
+    .map((res: Response) => {
+      return res.json() as IAddress;
     })
     .catch(this.handleError);
   }
@@ -156,10 +118,8 @@ export class RestService {
       address: address,
       amount: amount,
     };
-    console.log(data);
     return this.http.post(TESTING_URL + '/faucet?token=' + TOKEN, JSON.stringify(data))
     .map((res: Response) => {
-      console.log(res.json());
       return res.json();
     })
     .catch(this.handleError);
@@ -168,19 +128,19 @@ export class RestService {
   // Send Paymentys
 
   public sendPayment(address: string, amount: number, wallet: Wallet): Observable<any> {
+    console.log(address);
     const data = {
       inputs: [{
         wallet_name: wallet.name,
-        wallet_token: wallet.token,
+        wallet_token: TOKEN,
         }],
       outputs: [{
         addresses: [address],
         value: amount,
       }],
     };
-    return this.http.post(TESTING_URL + '/txs/new/', JSON.stringify(data))
+    return this.http.post(TESTING_URL + '/txs/new?token=' + TOKEN, JSON.stringify(data))
       .map((res) => {
-        console.log(res.json());
         return res.json();
       })
       .catch(this.handleError);

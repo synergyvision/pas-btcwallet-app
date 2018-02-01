@@ -39,6 +39,7 @@ import { AuthService } from './services/auth.service';
 
 import { ConfirmEmailPage } from '../pages/confirm-email/confirm-email';
 import { SendConfirmPage } from '../pages/send-confirm/send-confirm';
+import { KeyService } from './services/key.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -111,6 +112,7 @@ const firebaseConfig = {
     AlertService,
     FirebaseProvider,
     LoaderService,
+    KeyService,
     QRScanner,
     SplashScreen,
     {

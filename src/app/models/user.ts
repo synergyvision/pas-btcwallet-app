@@ -1,5 +1,3 @@
-import { IAddress } from './IAddress';
-import { Wallet } from './wallet';
 
 // Placeholder Class/Interface for the data of the logged user
 // Using the firebase.User Interface

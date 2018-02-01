@@ -32,7 +32,7 @@ export class SendConfirmPage {
       amount: [1000, Validators.compose([Validators.required, Validators.min(10000)])],
     });
     this.address = this.navParams.data;
-    this.restService.balance
+    this.authService.balance
     .subscribe((balance) => {
       this.balance = balance;
       this.loaderService.dismissLoader();
@@ -41,9 +41,17 @@ export class SendConfirmPage {
 
   private sendPayment(form: FormGroup) {
     // First we get an address from the recipient of the money
-    this.authService.getWalletAddress(this.address.email).subscribe((wallet) => {
-      this.restService.sendPayment(wallet.addresses.pop, form.value.amount);
-    });
+    if (this.balance) {
+      // If it is another wallet user
+      // this.authService.getWalletAddress(this.address.email).subscribe((wallet) => {
+      //  this.restService.sendPayment(this.balance.chains.chain_address.pop().address,
+      //  form.value.amount, this.balance.wallet)
+      //  .subscribe((response) => {
+      //    console.log(response);
+      //  });
+      // });
+      // If it is a QR Code or manually inputted address
+    }
   }
 
 }

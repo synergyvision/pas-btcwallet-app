@@ -25,14 +25,6 @@ export class AccountPage {
     this.user = this.authService.user;
     this.wallets = this.authService.getWallets();
     const test = this.wallets;
-    test.subscribe((data) => {
-      this.restService.addFundsTestnet(data[0].addresses[0], 56000)
-      .subscribe((response) => {
-        console.log(response);
-      }, (error) => {
-        console.log(error);
-      });
-    });
     this.options = AppSettings.accountOptions;
   }
 }

@@ -1,15 +1,19 @@
-import { IWallet } from './IWallet';
+import { Keys } from './keys';
+
+// Object to be Stored on the Firebase RealTime DB
+
+export interface IChainAddress {
+    address: string;
+    path: string;
+}
 
 export class Wallet {
-    public addresses: string[];
-    public name: string;
-    public token: string;
     public key?: string;
+    public name: string;
+    public keys?: Keys;
 
-    constructor(addresses: string[], name: string, token: string, key?: string) {
-        this.addresses = addresses;
+    constructor(name: string, key?: Keys) {
         this.name = name;
-        this.token = token;
-        this.key = key;
+        this.keys = key;
     }
 }

@@ -36,9 +36,9 @@
           </div>
         </ion-item>
         <ion-item class="wallet-info">
-          Direcciones:
-          <div *ngFor="let address of w.addresses" class="wallet-info-detail" text-wrap>
-            - {{address}}
+          Mnemonic:
+          <div class="wallet-info-detail" text-wrap>
+            - {{w.keys.mnemonics}}
         </div>
         </ion-item>
       </div>

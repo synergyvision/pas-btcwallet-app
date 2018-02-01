@@ -1,7 +1,7 @@
 import { IAddress } from './IAddress';
 
-// Placeholder Class/Interface for the user registered addressess
-// Used for Sending BTC or CC to an user that has a wallet
+// Placeholder Class/Interface for the user registered addresses
+// Used for Sending BTC or CC to an user that also has a Vision Wallet
 
 export class Address {
   public alias: string;
@@ -13,7 +13,7 @@ export class Address {
     this.img = img;
     this.alias = alias;
     this.email = email;
-    this.uid= uid;
+    this.uid = uid;
   }
 
   public setAlias(alias: string) {
