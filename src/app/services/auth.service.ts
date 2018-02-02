@@ -12,6 +12,8 @@ import { database } from 'firebase/app';
 import { IBalance } from '../models/IBalance';
 import { KeyService } from './key.service';
 import { IHDWallet } from '../models/IHDWallet';
+import { Events } from 'ionic-angular';
+import { ITransacionSke } from '../models/ITransaction';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +21,7 @@ export class AuthService {
     public wallet: Wallet;
     public balance: Observable<IBalance>;
 
-    constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider,
+    constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider, private events: Events,
                 private restService: RestService, private keyService: KeyService) {
             this.firebaseAuth.authState.subscribe(
             (user) => {
@@ -31,7 +33,7 @@ export class AuthService {
                             this.balance = this.restService.getBalanceFromWallet(data[0]);
                         });
                 } else {
-                    this.user = null;
+                    this.logout();
                 }
             },
         );
@@ -45,23 +47,6 @@ export class AuthService {
         return new Promise((resolve, reject) => {
             this.firebaseAuth.auth.createUserWithEmailAndPassword(user.value.email, user.value.password)
             .then((response) => {
-               /*  // Wallets
-                this.restService.createData(response.uid)
-                .subscribe((iWallet) => {
-                    const newWallet = {
-                        addresses: iWallet.addresses,
-                        name: iWallet.name,
-                    };
-                    this.firebaseData.addUser(user.value.email, response.uid);
-                    this.firebaseData.addWallet(newWallet, response.uid);
-                    this.logout();
-                    resolve(response);
-                },
-                (error) => {
-                    this.firebaseAuth.auth.currentUser.delete();
-                    reject(error);
-                }); */
-
                 // HD Wallets
                 const keys = this.keyService.createKeys(user.value.password);
                 const data = {
@@ -72,6 +57,7 @@ export class AuthService {
                 .subscribe((hdWallet) => {
                     const newWallet = new Wallet(hdWallet.name, keys);
                     this.firebaseData.addWallet(newWallet, response.uid);
+                    this.firebaseData.addUser(user.value.email, response.uid);
                     this.logout();
                     resolve(response);
                 },
@@ -88,8 +74,7 @@ export class AuthService {
     }
 
     public login(email: string, password: string) {
-        const response = this.firebaseAuth.auth.signInWithEmailAndPassword(email, password);
-        return response;
+        return this.firebaseAuth.auth.signInWithEmailAndPassword(email, password);
     }
 
     public loginGoogle() {
@@ -99,7 +84,6 @@ export class AuthService {
         // Verify the wallet
     }
     public logout() {
-        this.user = null;
         this.firebaseAuth.auth.signOut();
     }
 
@@ -122,24 +106,27 @@ export class AuthService {
         }
     }
 
-    public getWallets() {
+    public getWalletsAsync() {
         return this.firebaseData.getWallets(this.user.uid);
     }
 
-    public getWalletAddress(email: string): Observable<Wallet> {
+    public getWalletAddress(email: string): Observable<any> {
         return this.firebaseData.getWalletByEmail(email)
-        .map((userData) => {
+        .first()
+        .flatMap((userData) => {
             let wallet = (userData[0].wallet ? Object.values(userData[0].wallet) : null)[0];
-            // this.restService.addAddressToWallet(wallet)
-            // .subscribe((response) => {
-            //    wallet = response;
-            //    console.log(wallet);
-            // });
-            const key = Object.keys(userData[0].wallet)[0];
-            this.firebaseData.updateWallet(wallet, userData[0].key, key);
-            return wallet;
-        }, (error) => {
-            return error;
+            console.log(wallet);
+            return this.restService.deriveAddress(wallet.name);
+        })
+        .catch((error) => {
+            console.log('ERROR ON CREATE USER' + error);
+            return Observable.throw(error);
         });
+    }
+
+    public signTransaction(transaction: ITransacionSke) {
+        if (this.wallet) {
+            console.log(this.keyService.signWithPrivKey(transaction, this.wallet.keys));
+        }
     }
 }

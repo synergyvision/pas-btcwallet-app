@@ -13,5 +13,9 @@ export class ErrorService {
         if (errorText === 'CAMARA_ERROR') {
             this.message = 'Debe darle permisos a la aplicación para usar la cámara';
         }
+        if (errorCode === 429){
+            this.message = 'El servidor se encuentra ocupado en este momento';
+            this.subTitle = 'Intente mas tarde';
+        }
     }
 }

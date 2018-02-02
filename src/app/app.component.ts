@@ -35,19 +35,17 @@ export class MyApp {
     this.pages = AppSettings.pagesMenu;
     this.events.subscribe('user:loggedIn', (user) => {
       this.user = user;
+      this.rootPage = HomePage;
+    });
+    this.events.subscribe('user:loggedOut', () => {
+      this.rootPage = LoginPage;
     });
   }
 
   public initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      // User not logged in
-      console.log(this.user);
-      if (!this.user) {
-        this.rootPage = LoginPage;
-      } else {
-        this.rootPage = HomePage;
-      }
+      this.rootPage = LoginPage;
       this.splashScreen.hide();
     });
   }
@@ -62,6 +60,6 @@ export class MyApp {
   // Log Out of the App
   public logOut() {
     this.authService.logout();
-    this.nav.setRoot(LoginPage);
+    this.events.publish('user:loggedOut');
   }
 }

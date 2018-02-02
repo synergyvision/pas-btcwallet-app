@@ -1,33 +1,45 @@
 // Interface for the Transaction Object received by the API
 // Info on https://www.blockcypher.com/dev/bitcoin/?javascript#tx
 
-export interface Itransaction {
+export interface ITransaction {
+    block_height: number;
     hash: string;
+    addresses: string[];
+    total: number;
+    fees: number;
+    size: number;
+    preference: string;
+    relayed_by: string;
+    received: string;
     ver: number;
+    lock_time: number;
+    double_spend: boolean;
     vin_sz: number;
     vout_sz: number;
-    lock_time: string;
-    size: number;
-    relayed_by: string;
-    block_height: number;
-    tx_index: number;
-    inputs: [
-        {
-            prev_out: {
-                 hash: string;
-                 value: string;
-                 tx_index: number;
-                 n: string;
-            };
-            script: string;
-        }
-    ];
-    out: [
-        {
-            value: number;
-            hash: string;
-            script: string;
-        }
+    confirmations: number;
+    inputs: [{
 
-    ];
+    }];
+    outputs: [{
+
+    }];
+    pot_in_rbf?: boolean;
+    confidence?: number;
+    confirmed?: string;
+    receive_count?: number;
+    change_address?: string;
+    block_hash?: string;
+    block_index?: number;
+    double_of?: string;
+    data_protocol?: string;
+    hex?: string;
+}
+
+export interface ITransacionSke {
+    tx: ITransaction;
+    tosign: string[];
+    signatures: string[];
+    pubkeys: string[];
+    tosign_tx: string[];
+    errors?: string[];
 }

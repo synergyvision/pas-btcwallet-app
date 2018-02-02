@@ -5,6 +5,8 @@ import { LoaderService } from '../../app/services/loader.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthService } from '../../app/services/auth.service';
 import { Address } from '../../app/models/address';
+import { ITransacionSke } from '../../app/models/ITransaction';
+import { Transaction } from '../../app/models/transaction';
 
 
 /**
@@ -43,15 +45,27 @@ export class SendConfirmPage {
     // First we get an address from the recipient of the money
     if (this.balance) {
       // If it is another wallet user
-      // this.authService.getWalletAddress(this.address.email).subscribe((wallet) => {
-      //  this.restService.sendPayment(this.balance.chains.chain_address.pop().address,
-      //  form.value.amount, this.balance.wallet)
-      //  .subscribe((response) => {
-      //    console.log(response);
-      //  });
-      // });
+       this.createTransactionWalletUser(form);
       // If it is a QR Code or manually inputted address
     }
+  }
+
+  private createTransactionWalletUser(form: FormGroup) {
+    this.authService.getWalletAddress(this.address.email)
+      .subscribe((receiverAddress) => {
+          console.log(receiverAddress);
+          this.restService.sendPayment(receiverAddress.chains[0].chain_addresses.pop().address, form.value.amount,
+          this.balance.wallet)
+          .subscribe((response) => {
+            this.signPayment(response);
+          });
+        }, (error) => {
+          console.log(error);
+      });
+  }
+
+  private signPayment(transaction: ITransacionSke) {
+    this.authService.signTransaction(transaction);
   }
 
 }

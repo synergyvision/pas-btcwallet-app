@@ -22,7 +22,7 @@ export class FirebaseProvider {
 
   }
 
-  public addUser(user: string, uid: string, keys?: Keys) {
+  public addUser(user: string, uid: string) {
     this.angularFire.list('user/' + uid).set('userEmail', user);
   }
 

@@ -23,8 +23,20 @@ export class AccountPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService,
               private dataProvider: FirebaseProvider, private restService: RestService) {
     this.user = this.authService.user;
-    this.wallets = this.authService.getWallets();
-    const test = this.wallets;
+    this.wallets = this.authService.getWalletsAsync();
+    this.addFunds();
     this.options = AppSettings.accountOptions;
+  }
+
+  // Testing
+  public addFunds() {
+    const test = this.wallets.subscribe((wallets) => {
+      this.restService.deriveAddress(wallets[0].name).subscribe((response) => {
+        this.restService.addFundsTestnet(response.chains[0].chain_addresses.pop().address, 300000)
+        .subscribe((transaction)=>{
+          console.log(transaction);
+        });
+      });
+    });
   }
 }

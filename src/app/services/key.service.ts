@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { Keys } from '../models/keys';
 import * as bip39 from 'bip39';
 import * as HDKey from 'hdkey';
+import * as CryptoJS from 'crypto-js';
+import * as ecdsa from 'ecdsa';
+import { ITransacionSke } from '../models/ITransaction';
 
 @Injectable()
 
@@ -26,4 +29,15 @@ export class KeyService {
         // phrase.trim().split(/\s+/g).length >= 12¿
         return bip39.validateMnemonic(mnemonic);
     }
+
+    public signWithPrivKey(trx: ITransacionSke, keys: Keys) {
+
+        trx.pubkeys = [];
+        trx.signatures = trx.tosign.map((tosign, n) => {
+            trx.pubkeys.push(keys.xpub);
+            return ecdsa.sign(tosign, keys.xpriv);
+        });
+        console.log(ecdsa.verify(trx.tosign[0], trx.signatures[0], keys.xpub));
+    }
+
 }

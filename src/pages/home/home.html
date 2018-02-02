@@ -10,7 +10,11 @@
 </ion-header>
 
 <ion-content no-bounce overflow-scroll="false">
-  <span *ngIf="(balance!==undefined) && (balance!==null)">
+  <span *ngIf="error">
+    {{error.title}}
+    {{error.message}}
+  </span>
+  <span *ngIf="balance">
     <div class="display-img home-balance">
       {{balance.balance}} sat
       <div class="home-btc-balance">

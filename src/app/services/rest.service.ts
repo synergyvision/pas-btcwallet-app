@@ -17,6 +17,7 @@ import { IBalance } from '../models/IBalance';
 import { ErrorService } from './error.service';
 import { KeyService } from './key.service';
 import { IHDWallet } from '../models/IHDWallet';
+import { ITransacionSke } from '../models/ITransaction';
 
 // REST Service for getting data from APIs and the Database
 
@@ -83,6 +84,7 @@ export class RestService {
     return this.http.post(TESTING_URL + '/wallets/hd/' + walletName + '/addresses/derive?token=' + TOKEN,
     {} , this.options)
       .map((res: Response) => {
+        console.log(res.json());
         return res.json() as IHDWallet;
       }).catch(this.handleError);
   }
@@ -95,6 +97,7 @@ export class RestService {
     })
     .catch(this.handleError);
   }
+
   public getAddressBalance(address: string) {
     return this.http.get(TESTING_URL + '/addrs/' + address + '/balance')
     .map((res: Response) => {
@@ -127,7 +130,7 @@ export class RestService {
 
   // Send Paymentys
 
-  public sendPayment(address: string, amount: number, wallet: Wallet): Observable<any> {
+  public sendPayment(address: string, amount: number, wallet: Wallet): Observable<ITransacionSke> {
     console.log(address);
     const data = {
       inputs: [{

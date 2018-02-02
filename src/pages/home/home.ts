@@ -8,6 +8,7 @@ import { RestService } from '../../app/services/rest.service';
 import { Observable } from 'rxjs/Observable';
 import { IBalance } from '../../app/models/IBalance';
 import { LoaderService } from '../../app/services/loader.service';
+import { ErrorService } from '../../app/services/error.service';
 
 // Component for the Home Page, displays user balance, and options
 
@@ -20,6 +21,7 @@ export class HomePage {
 
   private user: User;
   private balance: IBalance;
+  private error: ErrorService;
 
   constructor(public navCtrl: NavController, private restService: RestService, private authService: AuthService,
               private loaderService: LoaderService, private zone: NgZone) {
@@ -28,12 +30,17 @@ export class HomePage {
   }
 
   public getBalance() {
-    this.authService.authState().subscribe(() => {
+    this.authService.authState()
+    .subscribe(() => {
       this.authService.balance
       .subscribe((balance) => {
+        console.log(balance);
         this.balance = balance;
         this.loaderService.dismissLoader();
+        this.error = undefined;
       });
+    }, (error) => {
+      this.error = error;
     });
   }
 
@@ -43,6 +50,7 @@ export class HomePage {
     .subscribe((balance) => {
       this.zone.run(() => {
         this.balance = balance;
+        this.error = undefined;
       });
     });
   }
