@@ -17,14 +17,15 @@ import { IBalance } from '../models/IBalance';
 import { ErrorService } from './error.service';
 import { KeyService } from './key.service';
 import { IHDWallet } from '../models/IHDWallet';
-import { ITransacionSke } from '../models/ITransaction';
+import { ITransactionSke } from '../models/ITransaction';
 
 // REST Service for getting data from APIs and the Database
 
 // API Base URL for the Testnet
 const URL = 'https://api.blockcypher.com/v1/btc/main';
-const TESTING_URL = 'https://api.blockcypher.com/v1/bcy/test';
+const TESTING_URL = 'https://api.blockcypher.com/v1/btc/test3';
 const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
+const TOKEN2 = '5b3df9346d0e4eac88bc17e6cfb636a6';
 
 @Injectable()
 
@@ -55,21 +56,6 @@ export class RestService {
     ];
   }
 
-  // Retrieves the latest BlockChain data
-  public getBlockchain(): Observable<IBlockchain> {
-    this.loadService.showLoader('Recuperando Información');
-    return this.http.get(URL)
-      .map((res: Response) => {
-        this.blockChain = res.json();
-        return res.json() as IBlockchain;
-      })
-      .catch(this.handleError)
-      .finally(() => {
-        this.loadService.dismissLoader();
-      },
-    );
-  }
-
   // Create an HD Wallet
   public createWalletHD(data): Observable<IHDWallet> {
      // Then, we make a API call to create an HD Wallet
@@ -79,12 +65,19 @@ export class RestService {
      }).catch(this.handleError);
   }
 
+  public getWalletAddresses(walletName: string): Observable<any> {
+    return this.http.get(TESTING_URL + '/wallets/hd/' + walletName + '/addresses?token=' + TOKEN)
+    .map((res: Response) => {
+      console.log(res);
+      return res.json();
+    }).catch(this.handleError);
+  }
+
   // Derive an address from an HD Wallet
   public deriveAddress(walletName: string) {
     return this.http.post(TESTING_URL + '/wallets/hd/' + walletName + '/addresses/derive?token=' + TOKEN,
     {} , this.options)
       .map((res: Response) => {
-        console.log(res.json());
         return res.json() as IHDWallet;
       }).catch(this.handleError);
   }
@@ -130,8 +123,7 @@ export class RestService {
 
   // Send Paymentys
 
-  public sendPayment(address: string, amount: number, wallet: Wallet): Observable<ITransacionSke> {
-    console.log(address);
+  public createPayment(address: string, amount: number, wallet: Wallet): Observable<ITransactionSke> {
     const data = {
       inputs: [{
         wallet_name: wallet.name,
@@ -142,18 +134,26 @@ export class RestService {
         value: amount,
       }],
     };
-    return this.http.post(TESTING_URL + '/txs/new?token=' + TOKEN, JSON.stringify(data))
+    return this.http.post(TESTING_URL + '/txs/new?token=' + TOKEN, data)
       .map((res) => {
+        console.log(res.json());
         return res.json();
       })
       .catch(this.handleError);
+  }
+
+  public sendPayment(trx: ITransactionSke): Observable<ITransactionSke> {
+    return this.http.post(TESTING_URL + '/txs/send', JSON.stringify(trx))
+    .map((res: Response) => {
+      return res.json() as ITransactionSke;
+    })
+    .catch(this.handleError);
   }
 
   // Error Handling for HTTP Errors
   private handleError(er) {
     console.log(er);
     if (er.title) {
-      // Error already created
       return Observable.throw(er);
     } else {
       const error = new ErrorService(er.status);

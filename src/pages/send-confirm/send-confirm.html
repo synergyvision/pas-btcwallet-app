@@ -1,44 +1,49 @@
 <ion-header>
-    <ion-navbar>
-      <ion-title>Enviar</ion-title>
-    </ion-navbar>
-  </ion-header>
-  
-  <ion-content padding>
-    <div class="page-title">
-      Seleccionar monto
-    </div>
-    <ion-list>
-      <form [formGroup]="sendForm" (ngSubmit)="sendPayment(sendForm)" *ngIf ="balance">
-        <ion-item class="thin-input">
-          <ion-input type="number" formControlName="amount" placeholder="amount.value" min="10000" [max]="balance.balance"></ion-input>
-        </ion-item>
-        <div *ngIf ="balance" class="send-confirm-info">
-            Disponible: {{balance.balance}} sat <br>
-            USD: {{balance.balance * 0.000105392}} USD
+  <ion-navbar>
+    <ion-title>Enviar</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-title">
+    Seleccionar monto
+  </div>
+  <ion-list no-lines>
+    <form [formGroup]="sendForm" (ngSubmit)="sendPayment(sendForm)" *ngIf="balance">
+      <ion-item class="thin-input">
+        <ion-input type="number" formControlName="amount" placeholder="amount.value" min="10000" [max]="balance.balance"></ion-input>
+      </ion-item>
+      <div *ngIf="balance" class="send-confirm-info">
+        Disponible: {{balance.balance}} sat
+        <br> USD: {{balance.balance * 0.000105392}} USD
+      </div>
+      <div class="send-confirm-info">
+        Restante: {{balance.balance - sendForm.value.amount}} sat
+        <br>
+      </div>
+      <ion-item class="thin-input">
+        <ion-input type="text" placeholder="Token"></ion-input>
+      </ion-item>
+      <div class="send-confirm-info">
+        Dirección Seleccionada
+      </div>
+      <ion-item *ngIf="!inputAddress" class="address-container">
+        <img class="address-img" src="{{address.img}}" />
+        <div class="address-alias">
+          {{address.alias}}
         </div>
-        <div class="send-confirm-info">
-          Restante: {{balance.balance - sendForm.value.amount}} sat <br>
+        <div class="address-email">
+          {{address.email}}
         </div>
-        <ion-item class="thin-input">
-          <ion-input type="text" placeholder="Token"></ion-input>
-        </ion-item>
-        <div class="send-confirm-info">
-          Dirección Seleccionada
+      </ion-item>
+      <ion-item *ngIf="inputAddress" class="address-container">
+        <div class="address-address">
+          {{address}}
         </div>
-        <ion-item no-lines class="address-container">
-            <img class="address-img" src="{{address.img}}" />
-            <div class="address-alias">
-              {{address.alias}}
-            </div>
-            <div class="address-email">
-              {{address.email}}
-            </div>
-          </ion-item>
-        <button ion-button block type="submit">
-          Enviar
-        </button>
-      </form>
-    </ion-list>
-  </ion-content>
-  
+      </ion-item>
+      <button class="send-button button-continue" ion-button block type="submit">
+        Enviar
+      </button>
+    </form>
+  </ion-list>
+</ion-content>

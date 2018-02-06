@@ -2,19 +2,11 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { RestService } from '../../app/services/rest.service';
 import { LoaderService } from '../../app/services/loader.service';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../app/services/auth.service';
 import { Address } from '../../app/models/address';
-import { ITransacionSke } from '../../app/models/ITransaction';
+import { ITransactionSke } from '../../app/models/ITransaction';
 import { Transaction } from '../../app/models/transaction';
-
-
-/**
- * Generated class for the SendConfirmPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -23,17 +15,22 @@ import { Transaction } from '../../app/models/transaction';
 })
 export class SendConfirmPage {
 
-  private address: Address;
+  private address;
   private balance;
   private sendForm: FormGroup;
+  private inputAddress = true;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private loaderService: LoaderService,
               private restService: RestService, private formBuilder: FormBuilder, private authService: AuthService) {
     this.loaderService.showFullLoader('Espere');
     this.sendForm = this.formBuilder.group({
-      amount: [1000, Validators.compose([Validators.required, Validators.min(10000)])],
+      amount: [10000, Validators.compose([Validators.required, Validators.min(10000)])],
     });
     this.address = this.navParams.data;
+    if (this.address.alias) {
+      this.inputAddress = false;
+    }
+    console.log(this.address);
     this.authService.balance
     .subscribe((balance) => {
       this.balance = balance;
@@ -44,19 +41,40 @@ export class SendConfirmPage {
   private sendPayment(form: FormGroup) {
     // First we get an address from the recipient of the money
     if (this.balance) {
-      // If it is another wallet user
-       this.createTransactionWalletUser(form);
       // If it is a QR Code or manually inputted address
+      if (this.inputAddress) {
+        this.createTransactionInput(form);
+      } else {
+        // If it is another wallet user
+        this.createTransactionWalletUser(form);
+      }
     }
   }
 
+  private createTransactionInput(form: FormGroup) {
+    this.restService.createPayment(this.address, form.value.amount, this.balance.wallet)
+    .subscribe((transaction) => {
+      this.signPayment(transaction);
+    }, (error) => {
+      console.log(error);
+    });
+  }
+
   private createTransactionWalletUser(form: FormGroup) {
-    this.authService.getWalletAddress(this.address.email)
+    this.authService.getWalletByEmail(this.address.email)
       .subscribe((receiverAddress) => {
-          console.log(receiverAddress);
-          this.restService.sendPayment(receiverAddress.chains[0].chain_addresses.pop().address, form.value.amount,
+        console.log("Monto a transferir");
+        console.log(form.value.amount);
+        console.log('Billetera que va a pagar');
+        console.log('this.balance.wallet');
+        console.log('Recipiente');
+        console.log(receiverAddress);
+        console.log(receiverAddress.chains[0].chain_addresses.pop().address);
+        this.restService.createPayment(receiverAddress.chains[0].chain_addresses.pop().address, form.value.amount,
           this.balance.wallet)
           .subscribe((response) => {
+            console.log('TX Skeleton de la transaccion');
+            console.log(response);
             this.signPayment(response);
           });
         }, (error) => {
@@ -64,8 +82,8 @@ export class SendConfirmPage {
       });
   }
 
-  private signPayment(transaction: ITransacionSke) {
-    this.authService.signTransaction(transaction);
+  private signPayment(transaction: ITransactionSke) {
+    this.authService.sendPayment(transaction);
   }
 
 }

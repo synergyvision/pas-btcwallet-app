@@ -32,7 +32,7 @@ export class LoginPage {
 
   private loginGoogle() {
     this.authService.loginGoogle().then((success) => {
-      this.events.publish('user:loggedIn', this.authService.user);
+      this.events.publish('user:loggedIn');
     }).catch((error) => {
       this.error = 'Ha ocurrido un error, intente nuevamente';
     });
@@ -41,7 +41,7 @@ export class LoginPage {
   private loginEmail(loginForm: FormGroup) {
     this.authService.login(loginForm.value.email, loginForm.value.password)
       .then((success) => {
-        this.events.publish('user:loggedIn', this.authService.user);
+        this.events.publish('user:loggedIn');
       }).catch((error) => {
         this.error = error.message;
       });

@@ -30,7 +30,6 @@ import { AddressBookPage } from '../pages/address-book/address-book';
 import { AddressPage } from '../pages/address/address';
 import { TransactionsPage } from '../pages/transactions/transactions';
 import { ActivityPage } from '../pages/activity/activity';
-import { BlockchainPage } from '../pages/blockchain/blockchain';
 import { EditAddressPage } from '../pages/edit-address/edit-address';
 import { LoaderService } from './services/loader.service';
 import { AlertService } from './services/alert.service';
@@ -68,7 +67,6 @@ const firebaseConfig = {
     AddressPage,
     TransactionsPage,
     ActivityPage,
-    BlockchainPage,
     EditAddressPage,
     ConfirmEmailPage,
     SendConfirmPage,
@@ -85,7 +83,7 @@ const firebaseConfig = {
     AddressPage,
     TransactionsPage,
     ActivityPage,
-    BlockchainPage,
+
     EditAddressPage,
     ConfirmEmailPage,
     SendConfirmPage,

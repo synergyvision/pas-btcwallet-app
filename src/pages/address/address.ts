@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Events, IonicPage, NavController, NavParams } from 'ionic-angular';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Address } from '../../app/models/address';
 import { AuthService } from '../../app/services/auth.service';
 import { AppSettings } from '../../app/app.settings';
@@ -19,13 +19,14 @@ export class AddressPage {
   private action: string;
   private addressForm: FormGroup;
   private inputs;
+  private error: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
               public formBuilder: FormBuilder, private authService: AuthService) {
     // Form Builder
     this.inputs = [
       {
-        placeholder: 'Correo Electrónico', name: 'email', value: '', type: 'email',
+        placeholder: 'Correo', name: 'email', value: '', type: 'email',
         validators: [Validators.email, Validators.maxLength(30), Validators.required],
       },
       {
@@ -50,8 +51,28 @@ export class AddressPage {
 
   // Save changes to the address
   private onSubmit(form) {
-    this.authService.addAddress(form);
-    console.log(form);
-    this.navCtrl.pop();
+    this.authService.addressExist(form.value.email)
+    .subscribe((response) => {
+      if (response) {
+        this.validateAddress(form);
+      } else {
+        this.error = 'Este usuario no existe';
+      }
+    });
+  }
+
+  private validateAddress(form: FormGroup) {
+    this.authService.isAddressSaved(form.value.email)
+      .subscribe((response) => {
+        if (response.length === 0) {
+          this.authService.addAddress(form);
+          this.navCtrl.pop();
+        } else {
+          // User already exists on the addressBook
+          this.error = 'Este usuario ya se encuentra en su libreta';
+        }
+      }, (error) => {
+        this.error = error;
+      });
   }
 }

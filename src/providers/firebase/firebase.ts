@@ -52,6 +52,17 @@ export class FirebaseProvider {
     });
   }
 
+  public getAddressFromAddressBook(uid: string, email: string): Observable<any> {
+    return this.angularFire.list('user/' + uid + '/addressBook/' , (ref) =>
+      ref.orderByChild('email').equalTo(email))
+      .snapshotChanges()
+      .map((changes) => {
+        return changes.map((c) => ({
+          ...c.payload.val(),
+        }));
+      });
+  }
+
   public getWalletByEmail(email: string): Observable<any> {
     return this.angularFire.list('/user', (ref) =>
       ref.orderByChild('userEmail').equalTo(email))

@@ -9,10 +9,10 @@ export interface IChainAddress {
 
 export class Wallet {
     public key?: string;
-    public name: string;
+    public name?: string;
     public keys?: Keys;
 
-    constructor(name: string, key?: Keys) {
+    constructor(name?: string, key?: Keys) {
         this.name = name;
         this.keys = key;
     }

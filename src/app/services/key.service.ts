@@ -1,26 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Keys } from '../models/keys';
 import * as bip39 from 'bip39';
-import * as HDKey from 'hdkey';
-import * as CryptoJS from 'crypto-js';
-import * as ecdsa from 'ecdsa';
-import { ITransacionSke } from '../models/ITransaction';
+import { ITransactionSke } from '../models/ITransaction';
+import { HDNode, TransactionBuilder, networks } from 'bitcoinjs-lib';
 
+const testnet = networks.testnet;
 @Injectable()
 
 export class KeyService {
 
     public createKeys(passphrase?: string) {
         // We generate 12 random words to be used to generate the master seed
+
         const keys = new Keys();
         keys.passphrase = '';
         keys.mnemonics = bip39.generateMnemonic();
         // We transform the mnemonics to a HEX Seed
         keys.seed = bip39.mnemonicToSeedHex(keys.mnemonics);
         // We generate a HD Wallet Key
-        const hdKey = HDKey.fromMasterSeed(keys.seed);
-        keys.xpriv = hdKey.privateExtendedKey;
-        keys.xpub = hdKey.publicExtendedKey;
+        const hdKeys = HDNode.fromSeedHex(keys.seed, testnet);
+        keys.xpub = hdKeys.neutered().toBase58();
+        keys.xpriv = hdKeys.toBase58();
+        console.log(keys);
         return keys;
     }
 
@@ -30,14 +31,15 @@ export class KeyService {
         return bip39.validateMnemonic(mnemonic);
     }
 
-    public signWithPrivKey(trx: ITransacionSke, keys: Keys) {
-
+    public signWithPrivKey(trx: ITransactionSke, keys: Keys): ITransactionSke {
         trx.pubkeys = [];
+        const signingKeys = HDNode.fromBase58(keys.xpriv, testnet).keyPair;
         trx.signatures = trx.tosign.map((tosign, n) => {
-            trx.pubkeys.push(keys.xpub);
-            return ecdsa.sign(tosign, keys.xpriv);
-        });
-        console.log(ecdsa.verify(trx.tosign[0], trx.signatures[0], keys.xpub));
+            trx.pubkeys.push(signingKeys.getPublicKeyBuffer().toString('hex'));
+            return signingKeys.sign(new Buffer(tosign, 'hex')).toDER().toString('hex');
+          });
+        console.log(trx);
+        return trx;
     }
 
 }

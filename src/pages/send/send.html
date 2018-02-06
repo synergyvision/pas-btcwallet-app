@@ -5,30 +5,40 @@
     </ion-title>
   </ion-navbar>
 </ion-header>
+
 <ion-content>
-  <ion-list>
-    <div class="page-title">
-      Seleccionar destinatario
-    </div>
-    <button ion-button class="send-button button-scan-code" block>
-      Escanear Código QR
-    </button>
-    <button ion-button class="send-button button-select-address" block on-click="goToAddress()">
+  <div class="page-title">
+    Seleccionar destinatario
+  </div>
+  <ion-list no-lines>
+    <button ion-button class="send-button button-select-address" block (click)="goToAddress()">
       Libreta de Contactos
     </button>
-    <ion-item no-lines *ngIf="selectedAddress!=undefined" class="address-container">
-      <img class="address-img" src="{{selectedAddress.img}}" />
-      <div class="address-alias">
-        {{selectedAddress.alias}}
+    <form [formGroup]="selectAddressForm" (ngSubmit)="validateAddress(selectAddressForm)">
+      <button ion-button class="send-button button-scan-code" block (click)="openQRScanner()">
+        Escanear Código QR
+      </button>
+      <div *ngIf="this.inputError" class="error-message">
+        {{this.inputError}}
       </div>
-      <div class="address-email">
-        {{selectedAddress.email}}
-      </div>
-    </ion-item>
+      <ion-item class="input" *ngIf="!selectedAddress">
+        <ion-input type="text" formControlName="inputAddress" [disabled]="selectedAddress" placeholder="Dirección de BTC">
+        </ion-input>
+      </ion-item>
+      <ion-item no-lines *ngIf="selectedAddress!=undefined" class="address-container">
+        <img class="address-img" src="{{selectedAddress.img}}" />
+        <div class="address-alias">
+          {{selectedAddress.alias}}
+        </div>
+        <div class="address-email">
+          {{selectedAddress.email}}
+        </div>
+      </ion-item>
+      <ion-footer>
+        <button [disabled]="!selectedAddress && !selectAddressForm.valid" ion-button block class="send-button button-continue" type="submit">
+          Continuar
+        </button>
+      </ion-footer>
+    </form>
   </ion-list>
-  <ion-footer>
-    <button [disabled]="!selectedAddress" ion-button block class="send-button button-continue" (click)="goToSendConfirm(selectedAddress)">
-      Continuar
-    </button>
-  </ion-footer>
 </ion-content>

@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import { IBalance } from '../../app/models/IBalance';
 import { LoaderService } from '../../app/services/loader.service';
 import { ErrorService } from '../../app/services/error.service';
+import { ITransactionSke } from '../../app/models/ITransaction';
 
 // Component for the Home Page, displays user balance, and options
 
@@ -30,22 +31,30 @@ export class HomePage {
   }
 
   public getBalance() {
-    this.authService.authState()
-    .subscribe(() => {
-      this.authService.balance
-      .subscribe((balance) => {
-        console.log(balance);
-        this.balance = balance;
-        this.loaderService.dismissLoader();
-        this.error = undefined;
-      });
+    this.authService.updateBalance()
+    .subscribe((balance) => {
+      this.balance = balance;
+      this.loaderService.dismissLoader();
+      // this.transactionTest();
+      this.error = undefined;
     }, (error) => {
+      console.log(error);
+      this.loaderService.dismissLoader();
       this.error = error;
     });
   }
 
-  private ionViewWillEnter() {
-    this.authService.updateBalance();
+  public transactionTest() {
+    this.restService.createPayment('ms1B2JHax816JWRY9WUQ7Foojcy7mZ3WCo', 300000, this.balance.wallet)
+      .subscribe((response) => {
+        this.authService.sendPayment(response);
+      }, (error) => {
+        this.error = undefined;
+      });
+  }
+
+ /*  private ionViewWillEnter() {
+    this.authService.getBalance();
     this.authService.balance
     .subscribe((balance) => {
       this.zone.run(() => {
@@ -53,7 +62,7 @@ export class HomePage {
         this.error = undefined;
       });
     });
-  }
+  } */
 
   private goToReceive() {
     this.navCtrl.push(ReceivePage, this.balance);

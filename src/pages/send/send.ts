@@ -8,6 +8,8 @@ import { AlertService } from '../../app/services/alert.service';
 import { RestService } from '../../app/services/rest.service';
 import { SendConfirmPage } from '../send-confirm/send-confirm';
 import { ErrorService } from '../../app/services/error.service';
+import { LoaderService } from '../../app/services/loader.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @IonicPage()
 @Component({
@@ -17,11 +19,20 @@ import { ErrorService } from '../../app/services/error.service';
 export class SendPage {
 
   private selectedAddress: Address;
-  private error = new ErrorService(null, 'CAMARA_ERROR');
+  private cameraError = new ErrorService(null, 'CAMARA_ERROR');
+  private selectAddressForm: FormGroup;
+  private inputError: string;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
-              private qrScanner: QRScanner, private restService: RestService) {
+              private qrScanner: QRScanner, private formBuilder: FormBuilder,
+              private restService: RestService, private loaderService: LoaderService) {
     this.event.subscribe('selected:address', (addressData) => {
       this.selectedAddress = this.duplicateAddress(addressData);
+      this.selectAddressForm.disable();
+      this.selectAddressForm.reset();
+    });
+    this.selectAddressForm = this.formBuilder.group({
+      inputAddress: ['', Validators.compose([Validators.maxLength(34), Validators.minLength(24), Validators.required])],
     });
   }
 
@@ -39,12 +50,9 @@ export class SendPage {
             scanSub.unsubscribe();
           });
           this.qrScanner.show();
-
           // wait for user to scan something, then the observable callback will be called
-
         } else if (status.denied) {
-
-          this.restService.showAlert(this.error)
+          this.restService.showAlert(this.cameraError)
             .then((rest) => {
               // Implement method for getting user permissions on settings
               // camera permission was permanently denied
@@ -57,13 +65,31 @@ export class SendPage {
         }
       })
       .catch((error) => {
-        this.restService.showAlert(this.error).then((rest) => {
+        this.restService.showAlert(error).then((rest) => {
           // Do nothing
         });
       });
   }
+
+  private validateAddress(form: FormGroup) {
+    if (this.selectedAddress === undefined) {
+      this.validateInputedAddress(form.value.inputAddress);
+    } else {
+      this.goToSendConfirm(this.selectedAddress);
+    }
+  }
   private duplicateAddress(object: Address) {
     return new Address(object.alias, object.email, object.img );
+  }
+
+  private validateInputedAddress(address: string) {
+    // We check that the address is a BTC Valid Address
+    this.restService.getAddressBalance(address)
+      .subscribe((response) => {
+        this.navCtrl.push(SendConfirmPage, address);
+      }, (error) => {
+        this.inputError = 'Esta dirección no es válida';
+      });
   }
 
   private goToSendConfirm(address) {

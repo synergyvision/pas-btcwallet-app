@@ -2,6 +2,7 @@
 // https://www.blockcypher.com/dev/bitcoin/?javascript#address
 
 import { IHDWallet } from './IHDWallet';
+import { Wallet } from './wallet';
 
 export interface IBalance {
     balance?: number;
@@ -10,5 +11,6 @@ export interface IBalance {
     total_sent?: number;
     unconfirmed_balance?: number;
     unconfirmed_n_tx?: number;
-    hd_wallet: IHDWallet;
+    hd_wallet?: IHDWallet;
+    wallet?: IHDWallet;
 }

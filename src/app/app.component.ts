@@ -10,9 +10,12 @@ import { AuthService } from './services/auth.service';
 import { User } from './models/user';
 import { Events } from 'ionic-angular/util/events';
 import { AppSettings } from './app.settings';
+import { LoaderService } from './services/loader.service';
+import { ErrorService } from './services/error.service';
+import { AlertService } from './services/alert.service';
 
 @Component({
-  providers: [RestService, AuthService, AppSettings],
+  providers: [RestService, AuthService, LoaderService, AlertService, AppSettings],
   templateUrl: 'app.html',
 })
 
@@ -33,8 +36,8 @@ export class MyApp {
 
     // List of pages that appear on the Side Menu
     this.pages = AppSettings.pagesMenu;
-    this.events.subscribe('user:loggedIn', (user) => {
-      this.user = user;
+    this.events.subscribe('user:loggedIn', () => {
+      this.user = this.authService.user;
       this.rootPage = HomePage;
     });
     this.events.subscribe('user:loggedOut', () => {

@@ -18,10 +18,27 @@ export interface ITransaction {
     vout_sz: number;
     confirmations: number;
     inputs: [{
+        addresses: string[];
+        hd_path: string;
+        output_index: number;
+        output_value: number;
+        prev_hash: string;
+        script_type: string;
+        script: string;
+        sequence: number;
+        age?: number;
+        wallet_name?: string;
+        wallet_token?: string;
 
     }];
     outputs: [{
-
+        addresses: string[];
+        script: string;
+        script_type: string;
+        value: number;
+        spent_by?: string;
+        data_hex?: string;
+        data_string?: string;
     }];
     pot_in_rbf?: boolean;
     confidence?: number;
@@ -35,7 +52,7 @@ export interface ITransaction {
     hex?: string;
 }
 
-export interface ITransacionSke {
+export interface ITransactionSke {
     tx: ITransaction;
     tosign: string[];
     signatures: string[];
