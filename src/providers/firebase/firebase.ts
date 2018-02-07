@@ -26,6 +26,10 @@ export class FirebaseProvider {
     this.angularFire.list('user/' + uid).set('userEmail', user);
   }
 
+  public updateEmail(email: string, uid: string ) {
+    this.angularFire.list('user/' + uid).set('userEmail', email);
+  }
+
   public addWallet(wallet: any, uid: string) {
     this.angularFire.list('user/' + uid + '/wallet/').push(wallet);
   }
@@ -88,5 +92,18 @@ export class FirebaseProvider {
 
   public editAddressFromAddressBook(uid: string, key: string, address: Address) {
     this.angularFire.list('user/' + uid + '/addressBook/').update(key, address);
+  }
+
+  public addActivity(uid: string, activity) {
+    this.angularFire.list('user/' + uid + '/activities/').push(activity);
+  }
+
+  public getActivitiesList(uid: string) {
+    return this.angularFire.list('user/' + uid + '/activities/').
+      snapshotChanges().map((changes) => {
+      return changes.map((c) => ({
+        key: c.payload.key, ...c.payload.val(),
+      }));
+    });
   }
 }

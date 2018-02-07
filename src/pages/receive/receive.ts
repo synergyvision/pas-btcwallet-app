@@ -32,9 +32,12 @@ export class ReceivePage {
   public getAddress() {
     const uid = this.authService.user.uid;
     this.wallet = this.navParams.data.wallet;
-    this.restService.getAddressBalance(this.wallet.addresses.pop())
+    // We get all addresses from the Wallet that are unused
+    this.restService.getUnusedAddressesWallet(this.wallet)
       .subscribe((data) => {
-        if (data.n_tx > 0) {
+        // No unused addresses
+        if (data.chain_addresses.length === 0) {
+          // We derive a new address
           this.restService.deriveAddress(this.wallet.name)
           .subscribe((newAddress) => {
             this.loaderService.dismissLoader();
@@ -43,13 +46,14 @@ export class ReceivePage {
             this.handleError(err);
           });
         } else {
+          // We return oldest unused address
           this.loaderService.dismissLoader();
-          this.address = data.address;
+          this.address = data.chain_addresses[0].address;
         }
       }, (error) => {
         this.handleError(error);
       });
-  }
+    }
 
   public handleError(error) {
     this.loaderService.dismissLoader();

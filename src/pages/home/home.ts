@@ -33,12 +33,12 @@ export class HomePage {
   public getBalance() {
     this.authService.updateBalance()
     .subscribe((balance) => {
+      console.log(balance);
       this.balance = balance;
       this.loaderService.dismissLoader();
       // this.transactionTest();
       this.error = undefined;
     }, (error) => {
-      console.log(error);
       this.loaderService.dismissLoader();
       this.error = error;
     });

@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Billetera
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list no-lines>
+    <ion-item class="display-img account-header-background">
+      <img class="account-img" src="../assets/icons/wallet-icon.svg">
+      <div class="account-header">
+        {{user.email}}
+      </div>
+    </ion-item>
+    <ion-item class="account-info">
+      Configuración de la Billetera
+    </ion-item>
+    <button ion-button block outline *ngFor="let o of walletOptions" class="account-options" (click)="self[o.function]()">
+        {{o.title}}
+        <ion-label>
+          <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
+        </ion-label>
+      </button>
+    <div *ngIf="wallets" class="wallet-info">
+      Información de la Billetera
+      <div *ngFor="let w of wallets | async">
+        <ion-item class="wallet-info" text-wrap>
+          Wallet:
+          <div class="wallet-info-detail">
+            {{w.name}}
+          </div>
+        </ion-item>
+        <ion-item class="wallet-info">
+          Mnemonic:
+          <div class="wallet-info-detail" text-wrap>
+            - {{w.keys.mnemonics}}
+          </div>
+        </ion-item>
+      </div>
+    </div>
+  </ion-list>
+</ion-content>

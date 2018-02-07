@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { NgZone } from '@angular/core';
 import { RestService } from '../../app/services/rest.service';
 import { AppSettings } from '../../app/app.settings';
+import { Events } from 'ionic-angular/util/events';
 
 @IonicPage()
 @Component({
@@ -20,23 +21,19 @@ export class AccountPage {
   public wallets: Observable<any>;
   public options;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService,
-              private dataProvider: FirebaseProvider, private restService: RestService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events,
+              private authService: AuthService, private dataProvider: FirebaseProvider,
+              private restService: RestService) {
     this.user = this.authService.user;
-    this.wallets = this.authService.getWalletsAsync();
-    this.addFunds();
     this.options = AppSettings.accountOptions;
+    this.events.subscribe('user:changedData', () => {
+      this.user = this.authService.user;
+    });
   }
 
-  // Testing
-  public addFunds() {
-    const test = this.wallets.subscribe((wallets) => {
-      this.restService.deriveAddress(wallets[0].name).subscribe((response) => {
-        this.restService.addFundsTestnet(response.chains[0].chain_addresses.pop().address, 300000)
-        .subscribe((transaction)=>{
-          console.log(transaction);
-        });
-      });
-    });
+  public openOption(o) {
+    if ((o.component !== this.navCtrl.getActive().component)) {
+      this.navCtrl.push(o.component);
+    }
   }
 }

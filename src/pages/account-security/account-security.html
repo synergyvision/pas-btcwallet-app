@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Seguridad
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list no-lines>
+    <ion-item class="display-img account-header-background">
+      <img class="account-img" src="../assets/icons/wallet-icon.svg">
+      <div class="account-header">
+        {{user.email}}
+      </div>
+    </ion-item>
+    <ion-item class="account-info">
+      Configuración de seguridad
+    </ion-item>
+    <button ion-button block outline *ngFor="let o of securityOptions" class="account-options" (click)="self[o.function]()">
+      {{o.title}}
+      <ion-label>
+        <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
+      </ion-label>
+    </button>
+    <span *ngIf="(!user.emailVerified)" class="error-message">
+        Su cuenta no se encuentra verificada
+        <button ion-button clear color="positive" block (click)="sendVerificationEmail()">
+          Enviar correo de verificación
+        </button>
+      </span>
+    <div class="error-message" *ngIf="message">
+      {{message}}
+    </div>
+    <span *ngIf="showEmailInput">
+      <form [formGroup]="changeEmailForm" (ngSubmit)="changeEmail(changeEmailForm)">
+        <ion-item class="input">
+          <ion-input type="text" formControlName="email" placeholder="Nuevo Correo">
+          </ion-input>
+        </ion-item>
+        <button ion-button block class="send-button button-continue" type="submit">
+          Confirmar
+        </button>
+      </form>
+    </span>
+  </ion-list>
+</ion-content>

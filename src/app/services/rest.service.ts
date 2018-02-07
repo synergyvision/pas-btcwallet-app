@@ -18,6 +18,7 @@ import { ErrorService } from './error.service';
 import { KeyService } from './key.service';
 import { IHDWallet } from '../models/IHDWallet';
 import { ITransactionSke } from '../models/ITransaction';
+import { IHDChain } from '../models/IHDChain';
 
 // REST Service for getting data from APIs and the Database
 
@@ -91,6 +92,17 @@ export class RestService {
     .catch(this.handleError);
   }
 
+  // Gets all Addresses of an HDWallet (NO SPENT)
+  public getUnusedAddressesWallet(wallet: Wallet) {
+    return this.http.get(TESTING_URL + '/wallets/hd/' + wallet.name + '/addresses?token=' + TOKEN + '?used=false' )
+    .map((res: Response) => {
+      console.log(res);
+      return res.json() as IHDChain;
+    })
+    .catch(this.handleError);
+  }
+ 
+  // Gets an Address Balance
   public getAddressBalance(address: string) {
     return this.http.get(TESTING_URL + '/addrs/' + address + '/balance')
     .map((res: Response) => {

@@ -26,6 +26,7 @@ export class AuthService {
         this.firebaseAuth.authState.first()
         .subscribe((user) => {
             if (user) {
+                console.log(user);
                 this.user = this.getLoggedUser(user);
             } else {
                 this.logout();
@@ -69,9 +70,8 @@ export class AuthService {
 
     public loginGoogle() {
         return new Promise((resolve, reject) => {
-            this.firebaseAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+            this.firebaseAuth.auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider())
                 .then((response) => {
-                    console.log(response);
                     if (response.additionalUserInfo.isNewUser) {
                         // HD Wallets
                         const keys = this.keyService.createKeys();
@@ -114,7 +114,16 @@ export class AuthService {
     }
 
     public sendVerificationEmail() {
-        this.firebaseAuth.auth.currentUser.sendEmailVerification();
+        return this.firebaseAuth.auth.currentUser.sendEmailVerification();
+    }
+
+    public updateUser() {
+        this.user = this.getLoggedUser(firebase.auth().currentUser);
+    }
+
+    public restorePassword() {
+        const user = firebase.auth().currentUser;
+        return firebase.auth().sendPasswordResetEmail(user.email);
     }
 
     public updateBalance(): Observable<IBalance> {

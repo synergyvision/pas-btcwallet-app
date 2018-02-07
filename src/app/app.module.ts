@@ -39,6 +39,8 @@ import { AuthService } from './services/auth.service';
 import { ConfirmEmailPage } from '../pages/confirm-email/confirm-email';
 import { SendConfirmPage } from '../pages/send-confirm/send-confirm';
 import { KeyService } from './services/key.service';
+import { AccountSecurityPage } from '../pages/account-security/account-security';
+import { AccountWalletPage } from '../pages/account-wallet/account-wallet';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -70,6 +72,8 @@ const firebaseConfig = {
     EditAddressPage,
     ConfirmEmailPage,
     SendConfirmPage,
+    AccountSecurityPage,
+    AccountWalletPage,
   ],
   entryComponents: [
     MyApp,
@@ -83,10 +87,11 @@ const firebaseConfig = {
     AddressPage,
     TransactionsPage,
     ActivityPage,
-
     EditAddressPage,
     ConfirmEmailPage,
     SendConfirmPage,
+    AccountSecurityPage,
+    AccountWalletPage,
   ],
   imports: [
     AngularFireDatabaseModule,

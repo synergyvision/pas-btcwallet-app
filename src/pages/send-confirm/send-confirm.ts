@@ -30,8 +30,7 @@ export class SendConfirmPage {
     if (this.address.alias) {
       this.inputAddress = false;
     }
-    console.log(this.address);
-    this.authService.balance
+    this.authService.updateBalance()
     .subscribe((balance) => {
       this.balance = balance;
       this.loaderService.dismissLoader();

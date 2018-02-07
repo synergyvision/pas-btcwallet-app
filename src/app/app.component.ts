@@ -43,6 +43,9 @@ export class MyApp {
     this.events.subscribe('user:loggedOut', () => {
       this.rootPage = LoginPage;
     });
+    this.events.subscribe('user:changedData', () => {
+      this.user = this.authService.user;
+    });
   }
 
   public initializeApp() {

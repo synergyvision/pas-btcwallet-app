@@ -20,34 +20,14 @@
     <ion-item class="account-info">
       Configuración
     </ion-item>
-    <button ion-button block outline *ngFor="let o of options" class="account-options">
+    <button ion-button block outline *ngFor="let o of options" class="account-options" (click)="openOption(o)">
       {{o.title}}
       <ion-label>
         <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
       </ion-label>
     </button>
-    <div *ngIf="wallets" class="wallet-info">
-      Información de la Billetera
-      <div *ngFor="let w of wallets | async">
-        <ion-item class="wallet-info" text-wrap>
-          Wallet:
-          <div class="wallet-info-detail">
-            {{w.name}}
-          </div>
-        </ion-item>
-        <ion-item class="wallet-info">
-          Mnemonic:
-          <div class="wallet-info-detail" text-wrap>
-            - {{w.keys.mnemonics}}
-        </div>
-        </ion-item>
-      </div>
-    </div>
-    <span *ngIf="(!user.emailVerified)" class="error-message">
-      Su cuenta no se encuentra verificada
-      <button ion-button clear color="positive" block>
-        Enviar correo de verificación
-      </button>
-    </span>
   </ion-list>
+  <ion-footer>
+    <a src=''>Términos del Servicio</a>
+  </ion-footer>
 </ion-content>

@@ -15,11 +15,8 @@
       </ion-item>
       <div *ngIf="balance" class="send-confirm-info">
         Disponible: {{balance.balance}} sat
-        <br> USD: {{balance.balance * 0.000105392}} USD
-      </div>
-      <div class="send-confirm-info">
-        Restante: {{balance.balance - sendForm.value.amount}} sat
-        <br>
+        <br> USD: {{balance.balance / 12044}} USD
+        <br> Restante: {{balance.balance - sendForm.value.amount}} sat
       </div>
       <ion-item class="thin-input">
         <ion-input type="text" placeholder="Token"></ion-input>

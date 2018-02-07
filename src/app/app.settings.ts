@@ -4,6 +4,8 @@ import { AddressBookPage } from '../pages/address-book/address-book';
 import { TransactionsPage } from '../pages/transactions/transactions';
 import { ActivityPage } from '../pages/activity/activity';
 import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
+import { AccountSecurityPage } from '../pages/account-security/account-security';
+import { AccountWalletPage } from '../pages/account-wallet/account-wallet';
 
 // Allows to set up Global Static Values thought the App
 
@@ -18,9 +20,18 @@ export class AppSettings {
   ];
 
   public static accountOptions = [
-    { title: 'Correo Electrónico' }, // component}
-    { title: 'Nombre del Usuario' }, // component: HomePage },
-    { title: 'Contraseña' }, // component: ListPage },
+    { title: 'Configuración de Seguridad', component: AccountSecurityPage},
+    { title: 'Información del Wallet', component: AccountWalletPage},
+  ];
+
+  public static securityOptions =  [
+    { title: 'Restablecer Contraseña', function: 'restorePassword' },
+    { title: 'Verificación de dos Pasos', function: 'activateTwoFactorAuth' },
+    { title: 'Unir cuenta de Google', function: 'linkGoogleAccount' },
+  ];
+
+  public static walletOptions = [
+    { title: 'Cambiar Moneda Local', function: 'changeCurrency' },
   ];
 
   public static registerForm = [
