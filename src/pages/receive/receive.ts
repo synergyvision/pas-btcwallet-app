@@ -23,15 +23,17 @@ export class ReceivePage {
               private loaderService: LoaderService, private authService: AuthService) {
 
     // We show a loader while we check the data using the rest service
-    this.loaderService.showFullLoader('Generando Código');
+    // this.loaderService.showFullLoader('Generando Código');
     // We check if last generated address was used for another transaction
-    this.getAddress();
+    this.address = this.navParams.data.addresses.pop();
+    console.log(this.address);
+    // this.getAddress();
 
   }
 
   public getAddress() {
     const uid = this.authService.user.uid;
-    this.wallet = this.navParams.data.wallet;
+    this.wallet = this.navParams.data;
     // We get all addresses from the Wallet that are unused
     this.restService.getUnusedAddressesWallet(this.wallet)
       .subscribe((data) => {

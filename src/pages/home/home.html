@@ -16,7 +16,7 @@
   </span>
   <span *ngIf="balance">
     <div class="display-img home-balance">
-      {{balance.balance}} sat
+      {{balance.balance / 1000 }} <span class="home-balance-unit">mBTC</span>
       <div class="home-btc-balance">
         {{balance.balance / 100000000 }} BTC
       </div>

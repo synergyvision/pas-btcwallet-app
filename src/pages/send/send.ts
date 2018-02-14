@@ -32,7 +32,7 @@ export class SendPage {
       this.selectAddressForm.reset();
     });
     this.selectAddressForm = this.formBuilder.group({
-      inputAddress: ['', Validators.compose([Validators.maxLength(34), Validators.minLength(24), Validators.required])],
+      inputAddress: ['', Validators.compose([Validators.maxLength(36), Validators.minLength(24), Validators.required])],
     });
   }
 

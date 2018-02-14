@@ -11,13 +11,19 @@
   <ion-list no-lines>
     <form [formGroup]="sendForm" (ngSubmit)="sendPayment(sendForm)" *ngIf="balance">
       <ion-item class="thin-input">
-        <ion-input type="number" formControlName="amount" placeholder="amount.value" min="10000" [max]="balance.balance"></ion-input>
+        <ion-input type="number" formControlName="amount" placeholder="amount.value" [min]="fee" [max]="balance.balance - fee"></ion-input>
       </ion-item>
       <div *ngIf="balance" class="send-confirm-info">
-        Disponible: {{balance.balance}} sat
-        <br> USD: {{balance.balance / 12044}} USD
-        <br> Restante: {{balance.balance - sendForm.value.amount}} sat
+        Disponible: {{balance.balance / unit.exchange}} {{unit.name}}
+        <br> {{currency.name}}: {{sendForm.value.amount / currency.exchange}}
+        <br> Restante: {{(balance.balance / unit.exchange)- (sendForm.value.amount / unit.exchange)}} {{unit.name}}
       </div>
+      <div class="send-confirm-info">
+        Tarifa
+      </div>
+      <ion-item class="thin-input">
+        <ion-input type="number" [disabled]="true" formControlName="fee" placeholder="fee" [min]="fee" [max]="balance.balance"></ion-input>
+      </ion-item>
       <ion-item class="thin-input">
         <ion-input type="text" placeholder="Token"></ion-input>
       </ion-item>
@@ -42,5 +48,8 @@
         Enviar
       </button>
     </form>
+    <ion-item *ngIf="message" class="error-message">
+      Error {{message}}
+    </ion-item>
   </ion-list>
 </ion-content>

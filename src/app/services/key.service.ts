@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Keys } from '../models/keys';
 import * as bip39 from 'bip39';
-import { ITransactionSke } from '../models/ITransaction';
+import * as bip32 from 'bip32-utils';
+import { ITInput, ITransaction, ITransactionSke } from '../models/ITransaction';
 import { HDNode, TransactionBuilder, networks } from 'bitcoinjs-lib';
 
 const testnet = networks.testnet;
@@ -32,14 +33,32 @@ export class KeyService {
     }
 
     public signWithPrivKey(trx: ITransactionSke, keys: Keys): ITransactionSke {
+/*         We need to add the relevant information to the toSign, signatures and signingKeys fields
+        to be sent with the Transaction skeleton to BlockCypher */
         trx.pubkeys = [];
-        const signingKeys = HDNode.fromBase58(keys.xpriv, testnet).keyPair;
+        const inputAddress = trx.tx.inputs;
+        // Since we don't store private keys, we need to derive them using the path depth of the input addresses
+        const signingKeys = this.derivePrivKey(keys, inputAddress);
+        // We Sign and add the Public Keys to the Transaction Skeleton
         trx.signatures = trx.tosign.map((tosign, n) => {
-            trx.pubkeys.push(signingKeys.getPublicKeyBuffer().toString('hex'));
-            return signingKeys.sign(new Buffer(tosign, 'hex')).toDER().toString('hex');
+            trx.pubkeys.push(signingKeys[n].getPublicKeyBuffer().toString('hex'));
+            return signingKeys[n].sign(new Buffer(tosign, 'hex')).toDER().toString('hex');
           });
-        console.log(trx);
         return trx;
+    }
+
+    // Function that returns the private keys from addresses (using the depth information)
+    public derivePrivKey(keys: Keys, inputAddress: ITInput[]) {
+        const privKeys  = [];
+        // We create an HDnode object from the private key of the user
+        const hdNode = HDNode.fromBase58(keys.xpriv, testnet);
+        inputAddress.forEach((address) => {
+            // Since ITInput includes the hd path of the address, we can derive the private key
+            const key = hdNode.derivePath(address.hd_path);
+            privKeys.push(key);
+        });
+        // We return the array of private keys
+        return privKeys;
     }
 
 }

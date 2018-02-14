@@ -29,6 +29,10 @@ export class AccountPage {
     this.events.subscribe('user:changedData', () => {
       this.user = this.authService.user;
     });
+    this.events.subscribe('user:loggedIn', () => {
+      this.authService.updateUser();
+      this.user = this.authService.user;
+    });
   }
 
   public openOption(o) {

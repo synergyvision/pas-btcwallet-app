@@ -26,38 +26,65 @@ export class AuthService {
         this.firebaseAuth.authState.first()
         .subscribe((user) => {
             if (user) {
-                console.log(user);
                 this.user = this.getLoggedUser(user);
+                this.getWalletsAsync().subscribe((wallet) => {
+                    this.wallet = wallet[0];
+                });
             } else {
                 this.logout();
             }
         });
     }
 
-    public signup(user: FormGroup): Promise<any> {
+    // Login / Sign Up Functions
+
+    public signup(user: FormGroup) {
         return new Promise((resolve, reject) => {
             this.firebaseAuth.auth.createUserWithEmailAndPassword(user.value.email, user.value.password)
-                .then((response) => {
-                    // HD Wallets
-                    const keys = this.keyService.createKeys(user.value.password);
-                    const data = {
-                        name: 'HDW' + response.uid.substring(0, 22),
-                        extended_public_key: keys.xpub,
-                    };
-                    this.restService.createWalletHD(data)
-                        .subscribe((hdWallet) => {
-                            const newWallet = new Wallet(hdWallet.name, keys);
-                            this.firebaseData.addWallet(newWallet, response.uid);
-                            this.firebaseData.addUser(user.value.email, response.uid);
-                            this.logout();
-                            resolve(response);
-                        },
-                        (error) => {
-                            this.firebaseAuth.auth.currentUser.delete();
-                            reject(error);
-                        });
-                })
-                .catch((error) => {
+            .then((response) => {
+            // HD Wallets
+                resolve(this.createData(response));
+            })
+            .catch((error) => {
+                this.firebaseAuth.auth.currentUser.delete();
+                reject(error);
+             });
+        });
+    }
+
+    public loginGoogle() {
+        return new Promise((resolve, reject) => {
+            this.firebaseAuth.auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider())
+            .then((response) => {
+                if (response.additionalUserInfo.isNewUser) {
+                    resolve(this.createData(response));
+                } else {
+                    resolve(response);
+                }
+            })
+            .catch((error) => {
+                this.firebaseAuth.auth.currentUser.delete();
+                reject(error);
+            });
+        });
+    }
+
+    public createData(response) {
+        return new Promise((resolve, reject) => {
+            const keys = this.keyService.createKeys();
+            const data = {
+                name: 'HDW' + response.uid.substring(0, 22),
+                extended_public_key: keys.xpub,
+            };
+            this.restService.createWalletHD(data)
+                .subscribe((hdWallet) => {
+                    const newWallet = new Wallet(hdWallet.name, keys);
+                    this.firebaseData.addWallet(newWallet, response.uid);
+                    this.firebaseData.addUser(response.email, response.uid);
+                    this.logout();
+                    resolve(response);
+                },
+                (error) => {
                     this.firebaseAuth.auth.currentUser.delete();
                     reject(error);
                 });
@@ -68,62 +95,30 @@ export class AuthService {
         return this.firebaseAuth.auth.signInWithEmailAndPassword(email, password);
     }
 
-    public loginGoogle() {
-        return new Promise((resolve, reject) => {
-            this.firebaseAuth.auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider())
-                .then((response) => {
-                    if (response.additionalUserInfo.isNewUser) {
-                        // HD Wallets
-                        const keys = this.keyService.createKeys();
-                        const data = {
-                            name: 'HDW' + response.user.uid.substring(0, 22),
-                            extended_public_key: keys.xpub,
-                        };
-                        this.restService.createWalletHD(data)
-                            .subscribe((hdWallet) => {
-                                const newWallet = new Wallet(hdWallet.name, keys);
-                                this.firebaseData.addWallet(newWallet, response.user.uid);
-                                this.firebaseData.addUser(response.user.email, response.user.uid);
-                                this.logout();
-                                resolve(response);
-                            },
-                            (error) => {
-                                this.firebaseAuth.auth.currentUser.delete();
-                                reject(error);
-                            });
-                        } else {
-                            resolve(response);
-                        }
-                })
-                .catch((error) => {
-                    console.log('ERROR ON CREATE USER' + error);
-                    this.firebaseAuth.auth.currentUser.delete();
-                    reject(error);
-                });
-        });
-    }
-
     public logout() {
         this.firebaseAuth.auth.signOut();
+        this.updateUser();
         this.events.publish('user:loggedOut');
-    }
-
-    public getLoggedUser(user: firebase.User) {
-        this.user = new User(user.uid, user.email, user.emailVerified, user.phoneNumber, user.photoURL);
-        return this.user;
     }
 
     public sendVerificationEmail() {
         return this.firebaseAuth.auth.currentUser.sendEmailVerification();
     }
 
-    public updateUser() {
-        this.user = this.getLoggedUser(firebase.auth().currentUser);
-    }
-
     public restorePassword() {
         const user = firebase.auth().currentUser;
         return firebase.auth().sendPasswordResetEmail(user.email);
+    }
+
+    // CRUD Operations that require information from the user
+
+    public getLoggedUser(user: firebase.User) {
+        this.user = new User(user.uid, user.email, user.emailVerified, user.phoneNumber, user.photoURL);
+        return this.user;
+    }
+
+    public updateUser() {
+        this.user = this.getLoggedUser(firebase.auth().currentUser);
     }
 
     public updateBalance(): Observable<IBalance> {
@@ -148,7 +143,6 @@ export class AuthService {
                 return Observable.throw(error);
             });
         }
-
     }
 
     public getWalletByEmail(email: string): Observable<any> {
@@ -188,14 +182,17 @@ export class AuthService {
         this.firebaseData.addAddressToAddressBook(this.user.uid, form.value);
     }
 
-    public sendPayment(transaction: ITransactionSke) {
+    public sendPayment(transaction: ITransactionSke): Observable<any> {
         if (this.wallet) {
+            // The transaction Skelleton is incomplete, we need to add pub keys and sign the data
             const trx = this.keyService.signWithPrivKey(transaction, this.wallet.keys);
-            this.restService.sendPayment(trx)
-                .subscribe((response) => {
-                    console.log(response);
-                }, (error) => {
+            return this.restService.sendPayment(trx)
+                .map((response) => {
+                    // The transaction was Created Succesfully
+                    return response;
+                }).catch((error) => {
                     console.log(error);
+                    return error;
                 });
         }
     }

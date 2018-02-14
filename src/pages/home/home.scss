@@ -8,7 +8,12 @@
 
 .home-balance {
     font-family: "Wallet-Bold";
+    text-align: center;
     font-size: $font-size-home-balance;
+}
+
+.home-balance-unit{
+    font-size: 0.5em;
 }
 
 .home-btc-balance {

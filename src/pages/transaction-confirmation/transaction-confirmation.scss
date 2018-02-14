@@ -1,0 +1,23 @@
+.transaction-title{
+    font-size: $font-size-small-title;
+    color: $secondary;
+    font-weight: bold;
+    text-align: left;
+}
+
+.transaction-info{
+    font-size: $font-size-info-text;
+    color: $dark;
+}
+
+.transaction-list{
+    font-size: $font-size-info-text;
+    color: $dark;
+    text-align: left;
+    margin-top: 0;
+}
+ 
+.ul, .label-ios {
+    padding-bottom: 0px!important;
+    margin-bottom: 0px;
+ }

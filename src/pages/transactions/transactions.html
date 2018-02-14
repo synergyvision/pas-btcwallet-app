@@ -5,26 +5,60 @@
 </ion-header>
 
 <ion-content>
-  <ion-list no-line>
-    <ion-item class="transactions-container" *ngFor="let t of transactionList" no-lines>
+  <ion-segment [(ngModel)]="segmentTxs">
+    <ion-segment-button value="all" class="segment-button">
+      Todas
+    </ion-segment-button>
+    <ion-segment-button value="received" class="segment-button">
+      Recibidas
+    </ion-segment-button>
+    <ion-segment-button value="sent" class="segment-button">
+      Enviadas
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-list no-lines *ngIf="segmentTxs === 'all'">
+    <ion-item class="transactions-container" *ngFor="let t of txsList" no-lines>
       <ion-row>
         <ion-col col-9 text-wrap>
-          <div *ngIf="t.alias" class="transactions-alias">
-            {{t.alias}}
-          </div>
-          <div *ngIf="!t.alias" class="transactions-alias">
-              Dirección
-          </div>
           <div class="transactions-date">
-            {{t.address}}
+            {{t.received | date:'MMM dd, y hh:mm a'}}
           </div>
-          <div class="transactions-date">
-            {{t.date}}
+          <div class="transactions-address" *ngIf="t.filtering_value === 'received'">
+            Destino: {{t.inputs[0].addresses[0]}}
+          </div>
+          <div class="transactions-address" *ngIf="t.filtering_value === 'sent'">
+            Destino: {{t.outputs[0].addresses[0]}}
           </div>
         </ion-col>
         <ion-col col-3 text-wrap>
           <div class="transactions-amount">
-            {{t.amount}} <br> BTC
+            {{t.total / 1000 }}
+            <br> mBTC
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+  </ion-list>
+
+  <ion-list no-lines *ngIf="segmentTxs !== 'all'">
+    <ion-item class="transactions-container" *ngFor="let t of txsList | filterBy: ['filtering_value']: segmentTxs" no-lines>
+      <ion-row>
+        <ion-col col-9 text-wrap>
+          <div class="transactions-date">
+            {{t.received | date:'MMM dd, y hh:mm a'}}
+          </div>
+          <div class="transactions-address" *ngIf="segmentTxs === 'received'">
+            Destino: {{t.inputs[0].addresses[0]}}
+          </div>
+          <div class="transactions-address" *ngIf="segmentTxs === 'sent'">
+            Destino: {{t.outputs[0].addresses[0]}}
+          </div>
+        </ion-col>
+        <ion-col col-3 text-wrap>
+          <div class="transactions-amount">
+            {{t.total / 1000 }}
+            <br> mBTC
           </div>
         </ion-col>
       </ion-row>

@@ -17,7 +17,7 @@ import { IBalance } from '../models/IBalance';
 import { ErrorService } from './error.service';
 import { KeyService } from './key.service';
 import { IHDWallet } from '../models/IHDWallet';
-import { ITransactionSke } from '../models/ITransaction';
+import { ITransactionSke, ITransaction } from '../models/ITransaction';
 import { IHDChain } from '../models/IHDChain';
 
 // REST Service for getting data from APIs and the Database
@@ -59,7 +59,6 @@ export class RestService {
 
   // Create an HD Wallet
   public createWalletHD(data): Observable<IHDWallet> {
-     // Then, we make a API call to create an HD Wallet
      return this.http.post(TESTING_URL + '/wallets/hd?token=' + TOKEN, JSON.stringify(data), this.options)
      .map((res: Response) => {
        return res.json() as IHDWallet;
@@ -69,7 +68,6 @@ export class RestService {
   public getWalletAddresses(walletName: string): Observable<any> {
     return this.http.get(TESTING_URL + '/wallets/hd/' + walletName + '/addresses?token=' + TOKEN)
     .map((res: Response) => {
-      console.log(res);
       return res.json();
     }).catch(this.handleError);
   }
@@ -92,16 +90,23 @@ export class RestService {
     .catch(this.handleError);
   }
 
+  public getWalletTransactions(wallet: Wallet): Observable<IAddress> {
+    return this.http.get(TESTING_URL + '/addrs/' + wallet.name + '/full?token=' + TOKEN)
+    .map((res: Response) => {
+      return res.json() as IAddress;
+    })
+    .catch(this.handleError);
+  }
+
   // Gets all Addresses of an HDWallet (NO SPENT)
   public getUnusedAddressesWallet(wallet: Wallet) {
     return this.http.get(TESTING_URL + '/wallets/hd/' + wallet.name + '/addresses?token=' + TOKEN + '?used=false' )
     .map((res: Response) => {
-      console.log(res);
       return res.json() as IHDChain;
     })
     .catch(this.handleError);
   }
- 
+
   // Gets an Address Balance
   public getAddressBalance(address: string) {
     return this.http.get(TESTING_URL + '/addrs/' + address + '/balance')
@@ -136,19 +141,21 @@ export class RestService {
   // Send Paymentys
 
   public createPayment(address: string, amount: number, wallet: Wallet): Observable<ITransactionSke> {
-    const data = {
+    console.log(address);
+    const data = JSON.stringify({
       inputs: [{
         wallet_name: wallet.name,
         wallet_token: TOKEN,
         }],
       outputs: [{
-        addresses: [address],
-        value: amount,
+        addresses: [
+          address,
+        ],
+        value: Number(amount),
       }],
-    };
+    });
     return this.http.post(TESTING_URL + '/txs/new?token=' + TOKEN, data)
       .map((res) => {
-        console.log(res.json());
         return res.json();
       })
       .catch(this.handleError);

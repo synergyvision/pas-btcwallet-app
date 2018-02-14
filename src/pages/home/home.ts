@@ -53,19 +53,18 @@ export class HomePage {
       });
   }
 
- /*  private ionViewWillEnter() {
-    this.authService.getBalance();
-    this.authService.balance
+ private ionViewWillEnter() {
+    this.authService.updateBalance()
     .subscribe((balance) => {
       this.zone.run(() => {
         this.balance = balance;
         this.error = undefined;
       });
     });
-  } */
+  }
 
   private goToReceive() {
-    this.navCtrl.push(ReceivePage, this.balance);
+    this.navCtrl.push(ReceivePage, this.balance.wallet);
   }
 
   private goToSend() {

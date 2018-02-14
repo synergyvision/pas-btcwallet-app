@@ -16,8 +16,8 @@
     float: left;
   }
   
-  .transactions-alias {
-    font-size: $font-size-transactions;
+  .transactions-address {
+    font-size: $font-size-transactions-address;
     color: $secondary;
   }
   
@@ -25,10 +25,11 @@
     font-size: $font-size-transactions-date;
     margin-top: 2px;
     color: $secondary;
+    font-weight: bold;
   }
   
   .transactions-amount {
-    font-size: $font-size-transactions;
+    font-size: $font-size-transactions-amount;
     color: $primary;
     text-align: right;
   }

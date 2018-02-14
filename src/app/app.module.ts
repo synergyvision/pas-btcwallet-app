@@ -7,6 +7,7 @@ import { MyApp } from './app.component';
 import { HttpModule } from '@angular/http';
 import { QRScanner } from '@ionic-native/qr-scanner';
 import { QRCodeModule } from 'angularx-qrcode';
+import { NgPipesModule } from 'ngx-pipes';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 // i18n Imports
@@ -41,6 +42,7 @@ import { SendConfirmPage } from '../pages/send-confirm/send-confirm';
 import { KeyService } from './services/key.service';
 import { AccountSecurityPage } from '../pages/account-security/account-security';
 import { AccountWalletPage } from '../pages/account-wallet/account-wallet';
+import { TransactionConfirmationPage } from '../pages/transaction-confirmation/transaction-confirmation';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -74,6 +76,7 @@ const firebaseConfig = {
     SendConfirmPage,
     AccountSecurityPage,
     AccountWalletPage,
+    TransactionConfirmationPage,
   ],
   entryComponents: [
     MyApp,
@@ -92,6 +95,7 @@ const firebaseConfig = {
     SendConfirmPage,
     AccountSecurityPage,
     AccountWalletPage,
+    TransactionConfirmationPage,
   ],
   imports: [
     AngularFireDatabaseModule,
@@ -101,6 +105,7 @@ const firebaseConfig = {
     IonicModule.forRoot(MyApp),
     HttpModule,
     HttpClientModule,
+    NgPipesModule,
     QRCodeModule,
     TranslateModule.forRoot({
       loader: {

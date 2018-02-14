@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Transacción</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div class="page-title">
+    Datos de la transacción
+  </div>
+  <ion-list no-lines>
+    <ion-item text-wrap class="transaction-info">
+      <span class="transaction-title">Hash: </span>
+      {{transaction.hash}}
+    </ion-item>
+    <ion-item class="transaction-list">
+        <span class="transaction-title">Recipientes: </span>
+      <ul *ngFor="let o of transaction.outputs">
+        <li text-wrap>{{o.addresses}}</li>
+      </ul>
+    </ion-item>
+    <ion-item class="transaction-list">
+        <span class="transaction-title">Salidas:</span>
+      <ul *ngFor="let i of transaction.inputs">
+        <li text-wrap>{{i.addresses}}</li>
+      </ul>
+    </ion-item>
+    <ion-item class="transaction-info">
+        <span class="transaction-title">Monto: </span> {{transaction.total}}
+    </ion-item>
+    <ion-item  class="transaction-info">
+        <span class="transaction-title">Tarifa: </span>{{transaction.fees}}
+    </ion-item>
+    <ion-item class="transaction-info">
+        <span class="transaction-title">Recibido: </span>{{transaction.received | date:'MMM dd, y hh:mm a'}}
+    </ion-item>
+    <button class="send-button button-continue" ion-button block (click)="goBack()">
+      Volver
+    </button>
+  </ion-list>
+</ion-content>
