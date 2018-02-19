@@ -93,7 +93,7 @@ export class SendPage {
   }
 
   private goToSendConfirm(address) {
-    this.navCtrl.push(SendConfirmPage, address);
+    this.navCtrl.push(SendConfirmPage, {address: address, wallet: this.navParams.data});
   }
 
 }

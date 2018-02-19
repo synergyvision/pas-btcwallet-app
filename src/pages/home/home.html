@@ -11,34 +11,37 @@
 
 <ion-content no-bounce overflow-scroll="false">
   <span *ngIf="error">
-    {{error.title}}
-    {{error.message}}
+    {{error.title}} {{error.message}}
   </span>
-  <span *ngIf="balance">
-    <div class="display-img home-balance">
-      {{balance.balance / 1000 }} <span class="home-balance-unit">mBTC</span>
-      <div class="home-btc-balance">
-        {{balance.balance / 100000000 }} BTC
+  <ion-slides class="balances-slides" *ngIf="balances">
+    <ion-slide class="wallet-slide"*ngFor="let b of balances">
+      <div class="display-img home-balance">
+        {{ b.balance / b.crypto.units.exchange }}
+        <span class="home-balance-unit"><b class="crypto"></b>{{b.crypto.units.name}}</span>
+        <div class="home-btc-balance">
+          {{b.balance / b.crypto.difference }} {{b.crypto.coin | uppercase}}
+        </div>
       </div>
-    </div>
-    <div class="page-title">
-      Billetera
-    </div>
-    <div class="home-wallet">
-      {{balance.wallet.name}}
-    </div>
-    <div class="home-info">
-      <p>Transacciones: {{balance.n_tx}}</p>
-      <p>Total Recibido: {{balance.total_received}} sat</p>
-      <p>Total Enviado: {{balance.total_sent}} sat</p>
-      <p>Balance por Confirmar: {{balance.unconfirmed_balance}} sat</p>
-      <p>Transacciones por Confirmar: {{balance.unconfirmed_n_tx}}</p>
-    </div>
-  </span>
-  <button class="home-button receive-button" block ion-button on-click="goToReceive()">
-    Recibir
-  </button>
-  <button class="home-button send" block ion-button on-click="goToSend()">
-    Enviar
-  </button>
+      <div class="page-title">
+        Billetera {{b.crypto.name | uppercase}}
+      </div>
+      <div class="home-wallet">
+        {{b.wallet.name}}
+      </div>
+      <div class="home-info">
+        <p>Transacciones: {{b.n_tx}}</p>
+        <p>Total Recibido: {{b.total_received / b.crypto.units.exchange }} {{ b.crypto.units.name }}</p>
+        <p>Total Enviado: {{b.total_sent  /  b.crypto.units.exchange }} {{ b.crypto.units.name }}</p>
+        <p>Balance por Confirmar: {{ b.unconfirmed_balance / b.crypto.units.exchange }} {{b.crypto.units.name }}</p>
+        <p>Transacciones por Confirmar: {{b.unconfirmed_n_tx}}</p>
+      </div>
+      <button class="home-button receive-button" block ion-button on-click="goToReceive(b.wallet)">
+          Recibir
+        </button>
+        <button class="home-button send" block ion-button on-click="goToSend(b)">
+          Enviar
+        </button>
+    </ion-slide>
+  </ion-slides>
+
 </ion-content>

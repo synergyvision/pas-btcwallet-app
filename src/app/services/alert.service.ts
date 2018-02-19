@@ -13,7 +13,7 @@ export class AlertService {
 
   constructor(private alertCtrl: AlertController, private app: App) { }
 
-  public showAlert(msg?, title?, subtitle?) {
+  public showError(msg?, title?, subtitle?) {
     return new Promise((resolve, reject) => {
       const alert = this.alertCtrl.create({
         title: title || 'Error',
@@ -33,7 +33,46 @@ export class AlertService {
     });
   }
 
+  public showAlert(msg?, title?, subtitle?) {
+    return new Promise((resolve, reject) => {
+      const alert = this.alertCtrl.create({
+        title: title || '',
+        message: msg || '',
+        subTitle: subtitle || '',
+        buttons: [
+          {
+            text: 'Continuar',
+            handler: () => {
+              resolve(true);
+            },
+          },
+        ],
+      });
+      alert.present();
+    });
+  }
+
   public showFullAlert(msg?, title?, subtitle?) {
+    return new Promise((resolve, reject) => {
+      const alert = this.alertCtrl.create({
+        title: title || '',
+        message: msg || '',
+        subTitle: subtitle || '',
+        cssClass: 'fullAlert',
+        buttons: [
+          {
+            text: 'Continuar',
+            handler: () => {
+              resolve(true);
+            },
+          },
+        ],
+      });
+      alert.present();
+    });
+  }
+
+  public showFullError(msg?, title?, subtitle?) {
     return new Promise((resolve, reject) => {
       const alert = this.alertCtrl.create({
         title: title || 'Error',

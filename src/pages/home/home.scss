@@ -1,3 +1,9 @@
+.swiper-slide{
+    display: flex;
+    font-size: 1em;
+    height: auto;
+}
+
 .home-info{
     font-size: $font-size-info-text;
     color: $dark;
@@ -9,11 +15,13 @@
 .home-balance {
     font-family: "Wallet-Bold";
     text-align: center;
+    display: flex;
+    height: 3.5em;
     font-size: $font-size-home-balance;
 }
 
 .home-balance-unit{
-    font-size: 0.5em;
+    font-size: 0.8em;
 }
 
 .home-btc-balance {
@@ -51,4 +59,8 @@
     height:auto;
     margin-left:auto;
     margin-right:auto;
+}
+
+.balances-slides{
+    height: 100%;
 }

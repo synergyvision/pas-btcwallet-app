@@ -15,11 +15,13 @@ import { IHDWallet } from '../models/IHDWallet';
 import { Events } from 'ionic-angular';
 import { ITransactionSke } from '../models/ITransaction';
 import { ErrorService } from './error.service';
+import { AppData } from '../app.data';
 
 @Injectable()
+
 export class AuthService {
     public user: User;
-    public wallet: Wallet;
+    public wallets: Wallet[];
 
     constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider, private events: Events,
                 private restService: RestService, private keyService: KeyService) {
@@ -27,8 +29,8 @@ export class AuthService {
         .subscribe((user) => {
             if (user) {
                 this.user = this.getLoggedUser(user);
-                this.getWalletsAsync().subscribe((wallet) => {
-                    this.wallet = wallet[0];
+                this.getWalletsAsync().subscribe((wallets) => {
+                    this.wallets = wallets;
                 });
             } else {
                 this.logout();
@@ -38,73 +40,82 @@ export class AuthService {
 
     // Login / Sign Up Functions
 
+    // Creates a new user with Firebase Auth using the Email and Password Provider ***
     public signup(user: FormGroup) {
         return new Promise((resolve, reject) => {
             this.firebaseAuth.auth.createUserWithEmailAndPassword(user.value.email, user.value.password)
             .then((response) => {
-            // HD Wallets
-                resolve(this.createData(response));
+                // Stores the user email on Firebase Realtime DB
+                this.firebaseData.addUser(response.email, response.uid);
+                resolve(response);
             })
             .catch((error) => {
-                this.firebaseAuth.auth.currentUser.delete();
+                // There was an error
                 reject(error);
              });
         });
     }
 
+    // Logins an already registered user using Firebase Auth Email and Password Provider
+    public login(email: string, password: string) {
+        return this.firebaseAuth.auth.signInWithEmailAndPassword(email, password);
+    }
+
+    // Logins a user using Firebase Auth with the Google Provider ***
     public loginGoogle() {
         return new Promise((resolve, reject) => {
             this.firebaseAuth.auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider())
             .then((response) => {
-                if (response.additionalUserInfo.isNewUser) {
-                    resolve(this.createData(response));
-                } else {
-                    resolve(response);
-                }
+                this.firebaseData.addUser(response.email, response.uid);
+                resolve(response);
             })
             .catch((error) => {
-                this.firebaseAuth.auth.currentUser.delete();
                 reject(error);
             });
         });
     }
 
-    public createData(response) {
+    // Creates a new wallet for a logged User
+    public createWallet(crypto, passphrase): Promise<Wallet> {
         return new Promise((resolve, reject) => {
-            const keys = this.keyService.createKeys();
+            // We create the crypto information according to the currency selected
+            const keys = this.keyService.createKeys(crypto, passphrase);
             const data = {
-                name: 'HDW' + response.uid.substring(0, 22),
+                name: crypto + this.user.uid.substring(0, 21),
                 extended_public_key: keys.xpub,
             };
+            // The unit of the coin is by default the smallest one
+            let currency = AppData.cryptoUnitList.filter((c) => {
+                return c.value.includes(crypto);
+              }).pop();
+            currency.units = currency.units.pop();
+            // We send the info to the BlockCypher API
             this.restService.createWalletHD(data)
                 .subscribe((hdWallet) => {
-                    const newWallet = new Wallet(hdWallet.name, keys);
-                    this.firebaseData.addWallet(newWallet, response.uid);
-                    this.firebaseData.addUser(response.email, response.uid);
-                    this.logout();
-                    resolve(response);
+                    // Succeed Creating the Wallet, so now we need to store the info on Firebase
+                    const newWallet = new Wallet(hdWallet.name, keys, currency);
+                    this.firebaseData.addWallet(newWallet, this.user.uid);
+                    resolve(newWallet);
                 },
                 (error) => {
-                    this.firebaseAuth.auth.currentUser.delete();
                     reject(error);
                 });
         });
     }
 
-    public login(email: string, password: string) {
-        return this.firebaseAuth.auth.signInWithEmailAndPassword(email, password);
-    }
-
+    // Logs out the current user
     public logout() {
         this.firebaseAuth.auth.signOut();
         this.updateUser();
         this.events.publish('user:loggedOut');
     }
 
+    // Verifies the Email associated with the user (only email and password provider)
     public sendVerificationEmail() {
         return this.firebaseAuth.auth.currentUser.sendEmailVerification();
     }
 
+    // Restores the password by sending an email to the user (only email and password provider)
     public restorePassword() {
         const user = firebase.auth().currentUser;
         return firebase.auth().sendPasswordResetEmail(user.email);
@@ -112,23 +123,48 @@ export class AuthService {
 
     // CRUD Operations that require information from the user
 
+    // Creates the user object from the Auth Service for use on the App
     public getLoggedUser(user: firebase.User) {
         this.user = new User(user.uid, user.email, user.emailVerified, user.phoneNumber, user.photoURL);
         return this.user;
     }
 
+    // Updates the user object from the Auth Service for use on the App
     public updateUser() {
         this.user = this.getLoggedUser(firebase.auth().currentUser);
     }
 
-    public updateBalance(): Observable<IBalance> {
+    // Gets the latest Balance from the User Wallets ***
+    public updateBalances(): Observable<any> {
+        let balances: Array<Observable<any>> = [];
         return this.getWalletsAsync()
         .first()
-        .flatMap((wallet) => {
-            return this.restService.getBalanceFromWallet(wallet[0]);
+        .flatMap((wallets) => {
+            // If the user has wallets, we return the balances
+            if (wallets.length > 0) {
+                wallets.forEach((wallet) => {
+                    balances.push(this.updateBalance(wallet));
+                });
+                return Observable.combineLatest(balances);
+            } else {
+                // The user is new, and has not created a wallet yet
+                const error = new ErrorService(null, 'NO_WALLET');
+                return Observable.throw(error);
+            }
+        })
+        .catch((error) => {
+            // Error either accessing the Firebase Service or with the Rest Service
+            console.log(error);
+            return Observable.throw(error);
         });
     }
 
+    // Returns an IBalance object from a single Wallet
+    public updateBalance(wallet: Wallet): Observable<IBalance> {
+        return this.restService.getBalanceFromWallet(wallet);
+    }
+
+    // Returns an observable with all of the user wallets ***
     public getWalletsAsync(): Observable<any> {
         if (this.user) {
             return this.firebaseData.getWallets(this.user.uid);
@@ -145,11 +181,14 @@ export class AuthService {
         }
     }
 
-    public getWalletByEmail(email: string): Observable<any> {
-        return this.firebaseData.getWalletByEmail(email)
+    // Returns another app user wallet information *** NO MULTI WALLET IMPLEMENTATION
+    public getWalletByEmail(email: string, coin: string): Observable<any> {
+        return this.firebaseData.getWalletByEmail(email, coin)
             .first()
             .flatMap((userData) => {
+                console.log(userData);
                 let wallet = (userData[0].wallet ? Object.values(userData[0].wallet) : null)[0];
+                console.log(wallet);
                 return this.restService.getWalletAddresses(wallet.name);
             })
             .catch((error) => {
@@ -157,10 +196,12 @@ export class AuthService {
             });
     }
 
+    // Checks the user Address Book for duplicate values
     public isAddressSaved(email: string): Observable<any> {
         return this.firebaseData.getAddressFromAddressBook(this.user.uid, email);
     }
 
+    // Checks the application database to see if a user exists ***
     public addressExist(email: string): Observable<any> {
         if (email !== this.user.email) {
         return this.firebaseData.getWalletByEmail(email)
@@ -178,14 +219,16 @@ export class AuthService {
         }
     }
 
+    // Adds another user to the user Address Book
     public addAddress(form: FormGroup) {
         this.firebaseData.addAddressToAddressBook(this.user.uid, form.value);
     }
 
+    // Function for signing an ITransactionSke, needed for Sending money (Payments) ***
     public sendPayment(transaction: ITransactionSke): Observable<any> {
-        if (this.wallet) {
-            // The transaction Skelleton is incomplete, we need to add pub keys and sign the data
-            const trx = this.keyService.signWithPrivKey(transaction, this.wallet.keys);
+        if (this.wallets) {
+            // The transaction Skeleton is incomplete, we need to add pub keys and sign the data
+            const trx = this.keyService.signWithPrivKey(transaction, this.wallets[0].keys);
             return this.restService.sendPayment(trx)
                 .map((response) => {
                     // The transaction was Created Succesfully

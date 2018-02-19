@@ -14,11 +14,15 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-// Firebase
-
+// Firebase And Services
 import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireModule } from 'angularfire2';
 import { FirebaseProvider } from '../providers/firebase/firebase';
+import { AlertService } from './services/alert.service';
+import { LoaderService } from './services/loader.service';
+import { KeyService } from './services/key.service';
+import { AuthService } from './services/auth.service';
 
 // Page List
 import { HomePage } from '../pages/home/home';
@@ -32,17 +36,13 @@ import { AddressPage } from '../pages/address/address';
 import { TransactionsPage } from '../pages/transactions/transactions';
 import { ActivityPage } from '../pages/activity/activity';
 import { EditAddressPage } from '../pages/edit-address/edit-address';
-import { LoaderService } from './services/loader.service';
-import { AlertService } from './services/alert.service';
-import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
-import { AuthService } from './services/auth.service';
-
 import { ConfirmEmailPage } from '../pages/confirm-email/confirm-email';
 import { SendConfirmPage } from '../pages/send-confirm/send-confirm';
-import { KeyService } from './services/key.service';
 import { AccountSecurityPage } from '../pages/account-security/account-security';
 import { AccountWalletPage } from '../pages/account-wallet/account-wallet';
 import { TransactionConfirmationPage } from '../pages/transaction-confirmation/transaction-confirmation';
+import { CreateWalletPage } from '../pages/create-wallet/create-wallet';
+
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -77,6 +77,7 @@ const firebaseConfig = {
     AccountSecurityPage,
     AccountWalletPage,
     TransactionConfirmationPage,
+    CreateWalletPage,
   ],
   entryComponents: [
     MyApp,
@@ -96,6 +97,7 @@ const firebaseConfig = {
     AccountSecurityPage,
     AccountWalletPage,
     TransactionConfirmationPage,
+    CreateWalletPage,
   ],
   imports: [
     AngularFireDatabaseModule,
@@ -116,11 +118,11 @@ const firebaseConfig = {
     }),
   ],
   providers: [
-    AuthService,
-    AlertService,
     FirebaseProvider,
+    AlertService,
     LoaderService,
     KeyService,
+    AuthService,
     QRScanner,
     SplashScreen,
     {

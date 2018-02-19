@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Registrarse</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <img *ngIf="newUser" class="confirm-email-img" src="../assets/icons/menu-icon.svg">
+  <div class="page-title">
+    Creación de Billetera
+  </div>
+  <ion-list no-lines>
+    <div class="new-user">
+      {{message}}
+    </div>
+    <ion-item class="crypto input">
+      <ion-label>Criptomonedas</ion-label>
+      <ion-select class="select-crypto" [(ngModel)]="selectedCrypto">
+        <ion-option *ngFor="let c of crypto" [disabled]="c.value!=='test' && mnemonics!==undefined" value="{{c.value}}">{{c.name}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item class="input">
+      <ion-label class="passphrase-label">Clave</ion-label>
+      <ion-input class="passphrase-input" type="text" [(ngModel)]="passphrase"></ion-input>
+    </ion-item>
+    <ion-item *ngIf="!mnemonics" class="passphrase-info" text-wrap>
+      {{passphraseInfo}}
+    </ion-item>
+    <ion-item *ngIf="mnemonics" class="mnemonics" text-wrap>
+      <div class="mnemonics-title">
+        Mnemonics de la Billetera
+      </div>
+      {{mnemonics}}
+    </ion-item>
+    <ion-item *ngIf="mnemonics" class="mnemonics-info" text-wrap>
+      {{mnemonicsInfo}}
+    </ion-item>
+  </ion-list>
+  <button ion-button class="footer-button" [disabled]="(selectedCrypto===undefined) || (passphrase===undefined)" block (click)="continue()">
+    Continuar
+  </button>
+</ion-content>

@@ -30,29 +30,20 @@ export class SendConfirmPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, private loaderService: LoaderService,
               private restService: RestService, private formBuilder: FormBuilder, private authService: AuthService,
               private alertService: AlertService) {
-    this.loaderService.showFullLoader('Espere');
-    this.unit = {
-      name: 'sat',
-      exchange: 1,
-    };
     this.currency = {
       name: 'USD',
       exchange: 10700,
     };
-    this.fee = 60000;
+    this.fee = this.calculateMinFee();
     this.sendForm = this.formBuilder.group({
       amount: [10000, Validators.compose([Validators.required, Validators.min(this.fee)])],
       fee: [this.fee, null],
     });
-    this.address = this.navParams.data;
+    this.address = this.navParams.get('address');
+    this.balance = this.navParams.get('wallet');
     if (this.address.alias) {
       this.inputAddress = false;
     }
-    this.authService.updateBalance()
-    .subscribe((balance) => {
-      this.balance = balance;
-      this.loaderService.dismissLoader();
-    });
   }
 
   private sendPayment(form: FormGroup) {
@@ -79,8 +70,9 @@ export class SendConfirmPage {
   }
 
   private createTransactionWalletUser(form: FormGroup) {
-    this.authService.getWalletByEmail(this.address.email)
+    this.authService.getWalletByEmail(this.address.email, this.balance.crypto.value)
       .subscribe((receiverAddress) => {
+        console.log(receiverAddress);
         this.restService.createPayment(receiverAddress.chains[0].chain_addresses.pop().address, form.value.amount,
           this.balance.wallet)
           .subscribe((response) => {
@@ -92,6 +84,7 @@ export class SendConfirmPage {
   }
 
   private signPayment(transaction: ITransactionSke) {
+    console.log(transaction);
     this.authService.sendPayment(transaction)
       .subscribe((response) => {
         console.log(response);
@@ -101,6 +94,12 @@ export class SendConfirmPage {
         this.loaderService.dismissLoader();
         this.message = error;
       });
+  }
+
+  private calculateMinFee() {
+    // We calculate the minimun fee
+    // Blockcypher uses 
+    return 50000;
   }
 
 }

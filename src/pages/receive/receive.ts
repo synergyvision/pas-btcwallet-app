@@ -23,11 +23,9 @@ export class ReceivePage {
               private loaderService: LoaderService, private authService: AuthService) {
 
     // We show a loader while we check the data using the rest service
-    // this.loaderService.showFullLoader('Generando Código');
+    this.loaderService.showFullLoader('Generando Código');
     // We check if last generated address was used for another transaction
-    this.address = this.navParams.data.addresses.pop();
-    console.log(this.address);
-    // this.getAddress();
+    this.getAddress();
 
   }
 
@@ -36,30 +34,19 @@ export class ReceivePage {
     this.wallet = this.navParams.data;
     // We get all addresses from the Wallet that are unused
     this.restService.getUnusedAddressesWallet(this.wallet)
-      .subscribe((data) => {
-        // No unused addresses
-        if (data.chain_addresses.length === 0) {
-          // We derive a new address
-          this.restService.deriveAddress(this.wallet.name)
-          .subscribe((newAddress) => {
-            this.loaderService.dismissLoader();
-            this.address = newAddress.address;
-          }, (err) => {
-            this.handleError(err);
-          });
-        } else {
-          // We return oldest unused address
-          this.loaderService.dismissLoader();
-          this.address = data.chain_addresses[0].address;
-        }
+      .subscribe((address) => {
+        console.log(address);
+        this.address = address;
+        this.loaderService.dismissLoader();
       }, (error) => {
         this.handleError(error);
       });
-    }
+  }
 
   public handleError(error) {
     this.loaderService.dismissLoader();
-    this.restService.showAlert(error).then((res) => {
+    this.restService.showAlert(error)
+    .then((res) => {
       this.navCtrl.pop();
     }, (err) => {
       this.navCtrl.pop();

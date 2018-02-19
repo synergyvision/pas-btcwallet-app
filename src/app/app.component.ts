@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { RestService } from './services/rest.service';
@@ -13,6 +12,7 @@ import { AppSettings } from './app.settings';
 import { LoaderService } from './services/loader.service';
 import { ErrorService } from './services/error.service';
 import { AlertService } from './services/alert.service';
+import { CreateWalletPage } from '../pages/create-wallet/create-wallet';
 
 @Component({
   providers: [RestService, AuthService, LoaderService, AlertService, AppSettings],
@@ -40,6 +40,9 @@ export class MyApp {
       this.authService.updateUser();
       this.user = this.authService.user;
       this.rootPage = HomePage;
+    });
+    this.events.subscribe('user:newUser', () => {
+      this.rootPage = CreateWalletPage;
     });
     this.events.subscribe('user:loggedOut', () => {
       this.rootPage = LoginPage;

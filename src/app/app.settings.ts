@@ -21,7 +21,7 @@ export class AppSettings {
 
   public static accountOptions = [
     { title: 'Configuración de Seguridad', component: AccountSecurityPage},
-    { title: 'Información del Wallet', component: AccountWalletPage},
+    { title: 'Configuración de las Billeteras', component: AccountWalletPage},
   ];
 
   public static securityOptions =  [

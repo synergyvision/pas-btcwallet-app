@@ -13,16 +13,16 @@
       <ion-item class="thin-input">
         <ion-input type="number" formControlName="amount" placeholder="amount.value" [min]="fee" [max]="balance.balance - fee"></ion-input>
       </ion-item>
-      <div *ngIf="balance" class="send-confirm-info">
-        Disponible: {{balance.balance / unit.exchange}} {{unit.name}}
-        <br> {{currency.name}}: {{sendForm.value.amount / currency.exchange}}
-        <br> Restante: {{(balance.balance / unit.exchange)- (sendForm.value.amount / unit.exchange)}} {{unit.name}}
-      </div>
       <div class="send-confirm-info">
-        Tarifa
+        <span class="send-confirm-subtitle">Disponible: </span>{{balance.balance / balance.crypto.units.exchange}} {{balance.crypto.units.name}} <br>     
+        <span class="send-confirm-subtitle">{{currency.name}}: </span> {{sendForm.value.amount / currency.exchange}} <br>
+        <span class="send-confirm-subtitle">Restante: </span> {{(balance.balance / balance.crypto.units.exchange)- 
+        (sendForm.value.amount / balance.crypto.units.exchange)}} {{balance.crypto.units.name}}<br> 
+
+        <div class="send-confirm-subtitle"> Tarifa Minima: </div>
       </div>
       <ion-item class="thin-input">
-        <ion-input type="number" [disabled]="true" formControlName="fee" placeholder="fee" [min]="fee" [max]="balance.balance"></ion-input>
+        <ion-input type="number" formControlName="fee" placeholder="fee" [min]="fee" [max]="balance.balance"></ion-input>
       </ion-item>
       <ion-item class="thin-input">
         <ion-input type="text" placeholder="Token"></ion-input>

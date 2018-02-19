@@ -1,5 +1,5 @@
+import { Transaction } from '../models/transaction';
 import { Activity } from '../models/activity';
-import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Rx';
 import { LoaderService } from './loader.service';
@@ -8,7 +8,7 @@ import { User } from '../models/user';
 import { Address } from '../models/address';
 import { IBlockchain } from '../models/IBlockchain';
 import { Headers, Http, RequestMethod, RequestOptions, Response } from '@angular/http';
-import { Transaction } from '../models/transaction';
+import { Injectable } from '@angular/core';
 import { AlertService } from './alert.service';
 import { FormGroup } from '@angular/forms';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
@@ -17,7 +17,7 @@ import { IBalance } from '../models/IBalance';
 import { ErrorService } from './error.service';
 import { KeyService } from './key.service';
 import { IHDWallet } from '../models/IHDWallet';
-import { ITransactionSke, ITransaction } from '../models/ITransaction';
+import { ITransaction, ITransactionSke } from '../models/ITransaction';
 import { IHDChain } from '../models/IHDChain';
 
 // REST Service for getting data from APIs and the Database
@@ -50,11 +50,6 @@ export class RestService {
       new Activity(5, '14/01/2017', 'Cambio de clave'),
       new Activity(6, '28/12/2016', 'Acceso desde dispositivo iPhone 6c'),
     ];
-    this.transactionList = [
-      new Transaction(1, '12/12/2017', 0.3423, 'C4iXKfquu1pBp3Xzw612iTgaHPSK7V7cH6', null),
-      new Transaction(2, '11/12/2017', 0.00023, 'A3gYLgpvv2qCq4Yax723hLhbIQTL8W8dI7', 'Luis Carlos' ),
-      new Transaction(3, '09/12/2017', 0.00000232, 'R4ncLtujcA42uFsxSEW31lVCxsrqe51dsa', 'María'),
-    ];
   }
 
   // Create an HD Wallet
@@ -65,27 +60,30 @@ export class RestService {
      }).catch(this.handleError);
   }
 
-  public getWalletAddresses(walletName: string): Observable<any> {
-    return this.http.get(TESTING_URL + '/wallets/hd/' + walletName + '/addresses?token=' + TOKEN)
+  public getWalletAddresses(wallet: Wallet): Observable<any> {
+    return this.http.get(TESTING_URL + '/wallets/hd/' + wallet.name + '/addresses?token=' + TOKEN)
     .map((res: Response) => {
       return res.json();
     }).catch(this.handleError);
   }
 
   // Derive an address from an HD Wallet
-  public deriveAddress(walletName: string) {
-    return this.http.post(TESTING_URL + '/wallets/hd/' + walletName + '/addresses/derive?token=' + TOKEN,
+  public deriveAddress(wallet: Wallet): Observable<IHDWallet> {
+    return this.http.post(TESTING_URL + '/wallets/hd/' + wallet.name + '/addresses/derive?token=' + TOKEN,
     {} , this.options)
       .map((res: Response) => {
-        return res.json() as IHDWallet;
+        const address = res.json() as IHDWallet;
+        return address.chains[0].chain_addresses.pop().address;
       }).catch(this.handleError);
   }
 
   // Gets a Wallet Balance
-  public getBalanceFromWallet(wallet: Wallet) {
+  public getBalanceFromWallet(wallet: Wallet): Observable<IBalance> {
     return this.http.get(TESTING_URL + '/addrs/' + wallet.name + '/balance?token=' + TOKEN)
     .map((res: Response) => {
-      return res.json() as IBalance;
+      const balance = res.json() as IBalance;
+      balance.crypto = wallet.crypto;
+      return balance;
     })
     .catch(this.handleError);
   }
@@ -93,18 +91,28 @@ export class RestService {
   public getWalletTransactions(wallet: Wallet): Observable<IAddress> {
     return this.http.get(TESTING_URL + '/addrs/' + wallet.name + '/full?token=' + TOKEN)
     .map((res: Response) => {
-      return res.json() as IAddress;
+      const transactions = res.json() as IAddress;
+      transactions.crypto = wallet.crypto;
+      return transactions;
     })
     .catch(this.handleError);
   }
 
-  // Gets all Addresses of an HDWallet (NO SPENT)
-  public getUnusedAddressesWallet(wallet: Wallet) {
-    return this.http.get(TESTING_URL + '/wallets/hd/' + wallet.name + '/addresses?token=' + TOKEN + '?used=false' )
-    .map((res: Response) => {
-      return res.json() as IHDChain;
-    })
-    .catch(this.handleError);
+  public getUnusedAddressesWallet(wallet: IHDWallet): Observable<any> {
+    if ((wallet.addresses) && (wallet.addresses.length > 0)) {
+      return this.getAddressBalance(wallet.addresses.pop())
+      .first()
+      .map((balance) => {
+        if (balance.n_tx === 0) {
+          return balance.address;
+        } else {
+          return this.deriveAddress(wallet);
+        }
+      })
+      .catch(this.handleError);
+    } else {
+      return this.deriveAddress(wallet);
+    }
   }
 
   // Gets an Address Balance
@@ -170,12 +178,12 @@ export class RestService {
   }
 
   // Error Handling for HTTP Errors
-  private handleError(er) {
+  private handleError(er): Observable<any> {
     console.log(er);
     if (er.title) {
       return Observable.throw(er);
     } else {
-      const error = new ErrorService(er.status);
+      const error = new ErrorService(er.status, er._body);
       return Observable.throw(error);
     }
   }

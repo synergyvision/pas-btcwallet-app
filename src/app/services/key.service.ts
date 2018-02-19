@@ -10,7 +10,7 @@ const testnet = networks.testnet;
 
 export class KeyService {
 
-    public createKeys(passphrase?: string) {
+    public createKeys(crypto: string, passphrase?: string) {
         // We generate 12 random words to be used to generate the master seed
 
         const keys = new Keys();

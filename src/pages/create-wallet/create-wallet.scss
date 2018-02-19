@@ -1,0 +1,28 @@
+.new-user{
+    font-size: 1em;
+    font-weight: bold;
+    color: $dark;
+    height: 2em;
+    margin-top: 0.7em;
+    margin-left: 1em;
+    justify-content: center;
+}
+
+ion-label.label.label-ios{
+    margin: auto;
+}
+
+.passphrase-info, .mnemonics-info{
+    margin-top: $padding-sm;
+    font-size: 0.8em;
+}
+
+.mnemonics-title, {
+    height: 2em;
+}
+
+.mnemonics, {
+    font-size: 1em;
+    justify-content: center;
+    text-align: center;
+}
