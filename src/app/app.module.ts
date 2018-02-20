@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { IonicApp, IonicErrorHandler, IonicModule, Slides } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { MyApp } from './app.component';
@@ -42,7 +42,7 @@ import { AccountSecurityPage } from '../pages/account-security/account-security'
 import { AccountWalletPage } from '../pages/account-wallet/account-wallet';
 import { TransactionConfirmationPage } from '../pages/transaction-confirmation/transaction-confirmation';
 import { CreateWalletPage } from '../pages/create-wallet/create-wallet';
-
+import { BlockchainPage } from '../pages/blockchain/blockchain';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -78,6 +78,7 @@ const firebaseConfig = {
     AccountWalletPage,
     TransactionConfirmationPage,
     CreateWalletPage,
+    BlockchainPage,
   ],
   entryComponents: [
     MyApp,

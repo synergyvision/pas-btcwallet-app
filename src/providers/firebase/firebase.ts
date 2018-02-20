@@ -70,19 +70,23 @@ export class FirebaseProvider {
   public getWalletByEmail(email: string, coin: string): Observable<any> {
     return this.angularFire.list('/user', (ref) =>
       ref.orderByChild('userEmail').equalTo(email))
-      .snapshotChanges()
-      .map((changes) => {
-        const data = changes.map((c) => ({
-          key: c.payload.key,
-          wallet: c.payload.val().wallet ? Object.values(c.payload.val().wallet) : null,
-        }));
-        console.log(data.filter((d) => {
-         d.wallet.filter((w) => {
-           return w.crypto.value === coin;
-         });
-        }));
-      });
+      .valueChanges()
+      .first()
+      .map((user: any) => {
+        const wallets = (user[0].wallet ? Object.values(user[0].wallet) : null) as Wallet[];
+        const wallet = wallets.filter((w) => {
+          return (w.crypto.value === coin);
+        });
+        if (wallet.length > 0) {
+          return wallet.pop().name;
+        }
+    });
+  }
 
+  public getUserByEmail(email: string) {
+    return this.angularFire.list('/user', (ref) =>
+      ref.orderByChild('userEmail').equalTo(email))
+      .valueChanges();
   }
 
   public updateWallet(wallet: Wallet, uid: string, key: string) {

@@ -1,5 +1,5 @@
-import { Component, NgZone } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { Component, NgZone, ViewChild } from '@angular/core';
+import { NavController, Slides } from 'ionic-angular';
 import { ReceivePage } from '../receive/receive';
 import { SendPage } from '../send/send';
 import { User } from '../../app/models/user';
@@ -13,6 +13,7 @@ import { ITransactionSke } from '../../app/models/ITransaction';
 import { Events } from 'ionic-angular/util/events';
 import { Wallet } from '../../app/models/wallet';
 import { AppData } from '../../app/app.data';
+import { CreateWalletPage } from '../create-wallet/create-wallet';
 
 // Component for the Home Page, displays user balance, and options
 
@@ -26,6 +27,7 @@ export class HomePage {
   private user: User;
   private error: ErrorService;
   private balances;
+  private canCreateNewWallet: boolean = true;
 
   constructor(public navCtrl: NavController, private restService: RestService, private authService: AuthService,
               private loaderService: LoaderService, private zone: NgZone, private events: Events) {
@@ -43,7 +45,9 @@ export class HomePage {
     this.authService.updateBalances()
       .subscribe((wallets) => {
         this.balances = wallets;
-        console.log(this.balances);
+        if (this.balances.length > 6) {
+          this.canCreateNewWallet = false;
+        }
         this.loaderService.dismissLoader();
       }, (error) => {
         // New User, and has not created its first wallet
@@ -72,6 +76,11 @@ export class HomePage {
   }
 
   private goToSend(balance) {
+    console.log(balance);
     this.navCtrl.push(SendPage, balance);
+  }
+
+  private createNewWallet() {
+    this.navCtrl.push(CreateWalletPage);
   }
 }

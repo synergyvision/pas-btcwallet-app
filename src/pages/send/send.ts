@@ -84,7 +84,7 @@ export class SendPage {
 
   private validateInputedAddress(address: string) {
     // We check that the address is a BTC Valid Address
-    this.restService.getAddressBalance(address)
+    this.restService.getAddressBalance(address, this.navParams.data.crypto.value)
       .subscribe((response) => {
         this.navCtrl.push(SendConfirmPage, address);
       }, (error) => {

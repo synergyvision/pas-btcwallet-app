@@ -12,18 +12,19 @@ export class KeyService {
 
     public createKeys(crypto: string, passphrase?: string) {
         // We generate 12 random words to be used to generate the master seed
-
-        const keys = new Keys();
-        keys.passphrase = '';
-        keys.mnemonics = bip39.generateMnemonic();
-        // We transform the mnemonics to a HEX Seed
-        keys.seed = bip39.mnemonicToSeedHex(keys.mnemonics);
-        // We generate a HD Wallet Key
-        const hdKeys = HDNode.fromSeedHex(keys.seed, testnet);
-        keys.xpub = hdKeys.neutered().toBase58();
-        keys.xpriv = hdKeys.toBase58();
-        console.log(keys);
-        return keys;
+        if (crypto === 'tes' || 'bcy') {
+            const keys = new Keys();
+            keys.passphrase = '';
+            keys.mnemonics = bip39.generateMnemonic();
+            // We transform the mnemonics to a HEX Seed
+            keys.seed = bip39.mnemonicToSeedHex(keys.mnemonics);
+            // We generate a HD Wallet Key
+            const hdKeys = HDNode.fromSeedHex(keys.seed, testnet);
+            keys.xpub = hdKeys.neutered().toBase58();
+            keys.xpriv = hdKeys.toBase58();
+            console.log(keys);
+            return keys;
+        }
     }
 
     public validateMnemonic(mnemonic: string) {

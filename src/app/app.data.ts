@@ -11,6 +11,17 @@ export class AppData {
         { name: 'Litecoin', value: 'ltc' },
         { name: 'BlockCypher Testnet', value: 'bcy' },
         { name: 'Ethereum', value: 'eth' },
+        { name: 'Ethereum Testnet', value: 'tet'},
+    ];
+
+    public static restAPIPaths = [
+        { name: 'TESTNET_URL', path: 'btc/test3', crypto: 'tes'},
+        { name: 'BITCOIN_URL', path: 'btc/main', crypto: 'btc'},
+        { name: 'BLOCKCYPHER_TESTNET_URL', path: 'bcy/test', crypto: 'bcy'},
+        { name: 'ETHER_URL', path: 'eth/main', crypto: 'eth'},
+        { name: 'DOGE_URL', path: 'doge/main', crypto: 'dog'},
+        { name: 'LITECOIN_URL', path: 'ltc/main', crypto: 'ltc'},
+        { name: 'ETHER_TESTNET_URL', path: 'beth/test', crypto: 'tet'},
     ];
 
     public static cryptoUnitList = [

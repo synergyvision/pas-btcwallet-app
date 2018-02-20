@@ -10,6 +10,7 @@ import { Transaction } from '../../app/models/transaction';
 import { AlertService } from '../../app/services/alert.service';
 import { TransactionConfirmationPage } from '../transaction-confirmation/transaction-confirmation';
 import { IBalance } from '../../app/models/IBalance';
+import { ErrorService } from '../../app/services/error.service';
 
 @IonicPage()
 @Component({
@@ -26,13 +27,14 @@ export class SendConfirmPage {
   private unit;
   private currency;
   private fee;
+  private error: ErrorService;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private loaderService: LoaderService,
               private restService: RestService, private formBuilder: FormBuilder, private authService: AuthService,
               private alertService: AlertService) {
     this.currency = {
       name: 'USD',
-      exchange: 10700,
+      exchange: 8656,
     };
     this.fee = this.calculateMinFee();
     this.sendForm = this.formBuilder.group({
@@ -70,22 +72,27 @@ export class SendConfirmPage {
   }
 
   private createTransactionWalletUser(form: FormGroup) {
-    this.authService.getWalletByEmail(this.address.email, this.balance.crypto.value)
+    this.authService.getWalletByEmail(this.address.email, this.balance.wallet.crypto.value)
       .subscribe((receiverAddress) => {
         console.log(receiverAddress);
-        this.restService.createPayment(receiverAddress.chains[0].chain_addresses.pop().address, form.value.amount,
+        this.restService.createPayment(receiverAddress, form.value.amount,
           this.balance.wallet)
           .subscribe((response) => {
             this.signPayment(response);
           });
-        }, (error) => {
-          console.log(error);
+        }, (error: ErrorService) => {
+          this.loaderService.dismissLoader();
+          this.alertService.showAlert(error.message, error.title, error.subTitle)
+          .then(() => {
+            this.navCtrl.popToRoot();
+          });
+
       });
   }
 
   private signPayment(transaction: ITransactionSke) {
     console.log(transaction);
-    this.authService.sendPayment(transaction)
+    this.authService.sendPayment(transaction, this.balance.wallet)
       .subscribe((response) => {
         console.log(response);
         this.loaderService.dismissLoader();

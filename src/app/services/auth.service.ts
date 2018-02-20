@@ -26,16 +26,16 @@ export class AuthService {
     constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider, private events: Events,
                 private restService: RestService, private keyService: KeyService) {
         this.firebaseAuth.authState.first()
-        .subscribe((user) => {
-            if (user) {
-                this.user = this.getLoggedUser(user);
-                this.getWalletsAsync().subscribe((wallets) => {
-                    this.wallets = wallets;
-                });
-            } else {
-                this.logout();
-            }
-        });
+            .subscribe((user) => {
+                if (user) {
+                    this.user = this.getLoggedUser(user);
+                    this.getWalletsAsync().subscribe((wallets) => {
+                        this.wallets = wallets;
+                    });
+                } else {
+                    this.logout();
+                }
+            });
     }
 
     // Login / Sign Up Functions
@@ -44,15 +44,15 @@ export class AuthService {
     public signup(user: FormGroup) {
         return new Promise((resolve, reject) => {
             this.firebaseAuth.auth.createUserWithEmailAndPassword(user.value.email, user.value.password)
-            .then((response) => {
-                // Stores the user email on Firebase Realtime DB
-                this.firebaseData.addUser(response.email, response.uid);
-                resolve(response);
-            })
-            .catch((error) => {
-                // There was an error
-                reject(error);
-             });
+                .then((response) => {
+                    // Stores the user email on Firebase Realtime DB
+                    this.firebaseData.addUser(response.email, response.uid);
+                    resolve(response);
+                })
+                .catch((error) => {
+                    // There was an error
+                    reject(error);
+                });
         });
     }
 
@@ -65,13 +65,13 @@ export class AuthService {
     public loginGoogle() {
         return new Promise((resolve, reject) => {
             this.firebaseAuth.auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider())
-            .then((response) => {
-                this.firebaseData.addUser(response.email, response.uid);
-                resolve(response);
-            })
-            .catch((error) => {
-                reject(error);
-            });
+                .then((response) => {
+                    this.firebaseData.addUser(response.email, response.uid);
+                    resolve(response);
+                })
+                .catch((error) => {
+                    reject(error);
+                });
         });
     }
 
@@ -85,21 +85,21 @@ export class AuthService {
                 extended_public_key: keys.xpub,
             };
             // The unit of the coin is by default the smallest one
-            let currency = AppData.cryptoUnitList.filter((c) => {
+            const currency = AppData.cryptoUnitList.filter((c) => {
                 return c.value.includes(crypto);
-              }).pop();
+            }).pop();
             currency.units = currency.units.pop();
             // We send the info to the BlockCypher API
-            this.restService.createWalletHD(data)
+            this.restService.createWalletHD(data, crypto)
                 .subscribe((hdWallet) => {
                     // Succeed Creating the Wallet, so now we need to store the info on Firebase
                     const newWallet = new Wallet(hdWallet.name, keys, currency);
                     this.firebaseData.addWallet(newWallet, this.user.uid);
                     resolve(newWallet);
                 },
-                (error) => {
-                    reject(error);
-                });
+                    (error) => {
+                        reject(error);
+                    });
         });
     }
 
@@ -136,27 +136,27 @@ export class AuthService {
 
     // Gets the latest Balance from the User Wallets ***
     public updateBalances(): Observable<any> {
-        let balances: Array<Observable<any>> = [];
+        const balances: Array<Observable<any>> = [];
         return this.getWalletsAsync()
-        .first()
-        .flatMap((wallets) => {
-            // If the user has wallets, we return the balances
-            if (wallets.length > 0) {
-                wallets.forEach((wallet) => {
-                    balances.push(this.updateBalance(wallet));
-                });
-                return Observable.combineLatest(balances);
-            } else {
-                // The user is new, and has not created a wallet yet
-                const error = new ErrorService(null, 'NO_WALLET');
+            .first()
+            .flatMap((wallets) => {
+                // If the user has wallets, we return the balances
+                if (wallets.length > 0) {
+                    wallets.forEach((wallet) => {
+                        balances.push(this.updateBalance(wallet));
+                    });
+                    return Observable.combineLatest(balances);
+                } else {
+                    // The user is new, and has not created a wallet yet
+                    const error = new ErrorService(null, 'NO_WALLET');
+                    return Observable.throw(error);
+                }
+            })
+            .catch((error) => {
+                // Error either accessing the Firebase Service or with the Rest Service
+                console.log(error);
                 return Observable.throw(error);
-            }
-        })
-        .catch((error) => {
-            // Error either accessing the Firebase Service or with the Rest Service
-            console.log(error);
-            return Observable.throw(error);
-        });
+            });
     }
 
     // Returns an IBalance object from a single Wallet
@@ -170,14 +170,14 @@ export class AuthService {
             return this.firebaseData.getWallets(this.user.uid);
         } else {
             return this.firebaseAuth.authState.first()
-            .flatMap((user) => {
-                if (user) {
-                    return this.firebaseData.getWallets(user.uid);
-                }
-            },
-            (error) => {
-                return Observable.throw(error);
-            });
+                .flatMap((user) => {
+                    if (user) {
+                        return this.firebaseData.getWallets(user.uid);
+                    }
+                },
+                    (error) => {
+                        return Observable.throw(error);
+                    });
         }
     }
 
@@ -185,13 +185,16 @@ export class AuthService {
     public getWalletByEmail(email: string, coin: string): Observable<any> {
         return this.firebaseData.getWalletByEmail(email, coin)
             .first()
-            .flatMap((userData) => {
-                console.log(userData);
-                let wallet = (userData[0].wallet ? Object.values(userData[0].wallet) : null)[0];
-                console.log(wallet);
-                return this.restService.getWalletAddresses(wallet.name);
+            .flatMap((wallet) => {
+                if (wallet) {
+                    return this.restService.deriveAddress(wallet, coin);
+                } else {
+                    const error = new ErrorService(null, 'NO_WALLET_FOR_SELECTED_CRYPTO');
+                    return Observable.throw(error);
+                }
             })
             .catch((error) => {
+                console.log(error);
                 return Observable.throw(error);
             });
     }
@@ -204,18 +207,18 @@ export class AuthService {
     // Checks the application database to see if a user exists ***
     public addressExist(email: string): Observable<any> {
         if (email !== this.user.email) {
-        return this.firebaseData.getWalletByEmail(email)
-            .map((data) => {
-                if (data.length > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }, (error) => {
-                return Observable.throw(error);
-            });
+            return this.firebaseData.getUserByEmail(email)
+                .map((data) => {
+                    if (data.length > 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }, (error) => {
+                    return Observable.throw(error);
+                });
         } else {
-            return Observable.throw( new ErrorService(null, 'SAME_USER'));
+            return Observable.throw(new ErrorService(null, 'SAME_USER'));
         }
     }
 
@@ -225,18 +228,22 @@ export class AuthService {
     }
 
     // Function for signing an ITransactionSke, needed for Sending money (Payments) ***
-    public sendPayment(transaction: ITransactionSke): Observable<any> {
+    public sendPayment(transaction: ITransactionSke, wallet: IHDWallet): Observable<any> {
         if (this.wallets) {
-            // The transaction Skeleton is incomplete, we need to add pub keys and sign the data
-            const trx = this.keyService.signWithPrivKey(transaction, this.wallets[0].keys);
-            return this.restService.sendPayment(trx)
-                .map((response) => {
-                    // The transaction was Created Succesfully
-                    return response;
-                }).catch((error) => {
-                    console.log(error);
-                    return error;
-                });
-        }
+            const signingWallet = this.wallets.find((w) => {
+                return (w.name === wallet.name);
+            });
+             // The transaction Skeleton is incomplete, we need to add pub keys and sign the data
+            const trx = this.keyService.signWithPrivKey(transaction, signingWallet.keys);
+            return this.restService.sendPayment(trx, wallet.crypto.value)
+            .map((response) => {
+                // The transaction was Created Succesfully
+                return response;
+            }).catch((error) => {
+                console.log(error);
+                return error;
+            });
     }
+        }
+
 }

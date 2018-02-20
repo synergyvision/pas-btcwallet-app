@@ -27,7 +27,7 @@ export class CreateWalletPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService,
               private loaderService: LoaderService, private viewCtrl: ViewController, private events: Events,
               private alertService: AlertService) {
-    if (!this.navCtrl.canGoBack()) {
+    if (!this.navCtrl.parent === null) {
       this.navCtrl.swipeBackEnabled = false;
       this.viewCtrl.showBackButton(false);
       this.newUser();
@@ -58,7 +58,6 @@ export class CreateWalletPage {
   public continue() {
     if (this.mnemonics === undefined) {
       this.loaderService.showFullLoader('Generando Datos');
-      console.log(this.selectedCrypto);
       this.authService.createWallet(this.selectedCrypto, this.passphrase)
         .then((success) => {
           this.mnemonics = success.keys.mnemonics;

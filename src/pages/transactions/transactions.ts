@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { RestService } from '../../app/services/rest.service';
 import { Transaction } from '../../app/models/transaction';
 import { AuthService } from '../../app/services/auth.service';
-import { ITransaction } from '../../app/models/ITransaction';
+import { ITransaction, IWalletTrx } from '../../app/models/ITransaction';
 import { Observable } from 'rxjs';
 import { IAddress } from '../../app/models/IAddress';
 import { LoaderService } from '../../app/services/loader.service';
@@ -20,29 +20,32 @@ export class TransactionsPage {
   public search: string;
   public wallet: IAddress;
   public walletList: Wallet[];
-  public selectedWallet;
+  public selectedWallet: Wallet;
   public txsList: ITransaction[];
   public segmentTxs: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private restService: RestService,
               private authService: AuthService, private loaderService: LoaderService) {
-    this.loaderService.showFullLoader('Espere');
     this.segmentTxs = 'all';
     this.walletList = this.authService.wallets;
-    this.walletList.forEach((wallet) => {
-      this.restService.getWalletTransactions(this.authService.wallets[0])
-      .subscribe((data) => {
-        const addresses = data.wallet.addresses;
-        this.txsList = this.receivedtransactions(addresses, data.txs);
-        console.log(this.txsList);
-        this.loaderService.dismissLoader();
+    console.log(this.walletList);
+  }
+
+  private onWalletChange() {
+    console.log(this.selectedWallet);
+    this.getTransactions(this.selectedWallet);
+  }
+
+  private getTransactions(wallet) {
+    this.restService.getWalletTransactions(wallet)
+    .subscribe((data) => {
+      this.txsList = this.receivedtransactions(data.wallet.addresses, data.txs);
       }, (error) => {
         console.log(error);
       });
-    });
   }
 
-  public receivedtransactions(addresses: string[], txs: ITransaction[]) {
+  private receivedtransactions(addresses: string[], txs: ITransaction[]) {
     txs.forEach((tx) => {
       const sent = tx.inputs.some((input) =>
         input.addresses.some((address) =>

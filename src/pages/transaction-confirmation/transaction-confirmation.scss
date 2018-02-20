@@ -1,23 +1,21 @@
-.transaction-title{
-    font-size: $font-size-small-title;
-    color: $secondary;
-    font-weight: bold;
-    text-align: left;
-}
+page-transaction-confirmation{
 
-.transaction-info{
-    font-size: $font-size-info-text;
-    color: $dark;
-}
+    .transaction-title{
+        margin-top: $padding-sm;
+        color: $secondary;
+        font-weight: bold;
+        text-align: left;
+    }
 
-.transaction-list{
-    font-size: $font-size-info-text;
-    color: $dark;
-    text-align: left;
-    margin-top: 0;
+    .transaction-list{
+        color: $dark;
+        text-align: left;
+        margin-top: 0;
+    }
+    
+    .transaction-confirmation {
+        padding-bottom: 0px!important;
+        margin-bottom: 0px;
+        border-top: 3px solid $secondary;
+    }
 }
- 
-.ul, .label-ios {
-    padding-bottom: 0px!important;
-    margin-bottom: 0px;
- }

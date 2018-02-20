@@ -14,5 +14,4 @@ export interface IBalance {
     unconfirmed_n_tx?: number;
     hd_wallet?: IHDWallet;
     wallet?: IHDWallet;
-    crypto: CryptoCoin;
 }

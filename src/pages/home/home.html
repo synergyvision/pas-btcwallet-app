@@ -13,26 +13,26 @@
   <span *ngIf="error">
     {{error.title}} {{error.message}}
   </span>
-  <ion-slides class="balances-slides" *ngIf="balances">
+  <ion-slides pager="true" class="balances-slides" *ngIf="balances">
     <ion-slide class="wallet-slide"*ngFor="let b of balances">
       <div class="display-img home-balance">
-        {{ b.balance / b.crypto.units.exchange }}
-        <span class="home-balance-unit"><b class="crypto"></b>{{b.crypto.units.name}}</span>
+        {{ b.balance / b.wallet.crypto.units.exchange }}
+        <span class="home-balance-unit"><b class="crypto"></b>{{b.wallet.crypto.units.name}}</span>
         <div class="home-btc-balance">
-          {{b.balance / b.crypto.difference }} {{b.crypto.coin | uppercase}}
+          {{b.balance / b.wallet.crypto.difference }} {{b.wallet.crypto.coin | uppercase}}
         </div>
       </div>
       <div class="page-title">
-        Billetera {{b.crypto.name | uppercase}}
+        Billetera {{b.wallet.crypto.name | uppercase}}
       </div>
       <div class="home-wallet">
         {{b.wallet.name}}
       </div>
       <div class="home-info">
         <p>Transacciones: {{b.n_tx}}</p>
-        <p>Total Recibido: {{b.total_received / b.crypto.units.exchange }} {{ b.crypto.units.name }}</p>
-        <p>Total Enviado: {{b.total_sent  /  b.crypto.units.exchange }} {{ b.crypto.units.name }}</p>
-        <p>Balance por Confirmar: {{ b.unconfirmed_balance / b.crypto.units.exchange }} {{b.crypto.units.name }}</p>
+        <p>Total Recibido: {{b.total_received / b.wallet.crypto.units.exchange }} {{ b.wallet.crypto.units.name }}</p>
+        <p>Total Enviado: {{b.total_sent  /  b.wallet.crypto.units.exchange }} {{ b.wallet.crypto.units.name }}</p>
+        <p>Balance por Confirmar: {{ b.unconfirmed_balance / b.wallet.crypto.units.exchange }} {{b.wallet.crypto.units.name }}</p>
         <p>Transacciones por Confirmar: {{b.unconfirmed_n_tx}}</p>
       </div>
       <button class="home-button receive-button" block ion-button on-click="goToReceive(b.wallet)">
@@ -40,6 +40,12 @@
         </button>
         <button class="home-button send" block ion-button on-click="goToSend(b)">
           Enviar
+        </button>
+    </ion-slide>
+    <ion-slide class="new-wallet-slide">
+        <button class="new-wallet-button" block ion-button on-click="createNewWallet()">
+          <ion-icon name="add"></ion-icon>
+            Agregar Billetera
         </button>
     </ion-slide>
   </ion-slides>

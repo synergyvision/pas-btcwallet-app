@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Address } from '../../app/models/address';
 import { AuthService } from '../../app/services/auth.service';
 import { AppSettings } from '../../app/app.settings';
+import { ErrorService } from '../../app/services/error.service';
 
 @IonicPage()
 @Component({
@@ -58,7 +59,9 @@ export class AddressPage {
       } else {
         this.error = 'Este usuario no existe';
       }
-    });
+    }, ((error: ErrorService) => {
+      this.error = error.message;
+    }));
   }
 
   private validateAddress(form: FormGroup) {

@@ -2,6 +2,11 @@
 // Info on https://www.blockcypher.com/dev/bitcoin/?javascript#tx
 
 // TX Object
+
+export interface IWalletTrx {
+    wallet: any;
+    trxList: ITransaction[];
+}
 export interface ITransaction {
     block_height: number;
     hash: string;
