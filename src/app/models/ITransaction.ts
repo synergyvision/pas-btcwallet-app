@@ -36,6 +36,10 @@ export interface ITransaction {
     data_protocol?: string;
     hex?: string;
     filtering_value?: string;
+
+    // Ethereum only
+    gas_used?: number;
+    gas_price?: number;
 }
 
 // TXSKeleton Object
@@ -43,8 +47,8 @@ export interface ITransactionSke {
     tx: ITransaction;
     tosign: string[];
     signatures: string[];
-    pubkeys: string[];
-    tosign_tx: string[];
+    pubkeys?: string[];
+    tosign_tx?: string[];
     errors?: string[];
 }
 

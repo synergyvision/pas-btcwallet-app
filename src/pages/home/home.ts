@@ -26,13 +26,21 @@ export class HomePage {
 
   private user: User;
   private error: ErrorService;
-  private balances;
+  private balances: IBalance[];
   private canCreateNewWallet: boolean = true;
 
   constructor(public navCtrl: NavController, private restService: RestService, private authService: AuthService,
               private loaderService: LoaderService, private zone: NgZone, private events: Events) {
     this.loaderService.showFullLoader('Espere');
     this.getBalance();
+    // Need to finish this
+    /* this.events.subscribe('wallet:update', (wallet) => {
+      this.balances.find((b) => {
+        return (b.wallet.name = wallet;
+      });
+      this.authService.updateBalance(wallet)
+      .subscribe((data);
+    }); */
   }
 
   public newUser() {

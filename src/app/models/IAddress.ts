@@ -9,19 +9,19 @@ export interface IAddress {
     address?: string;
     wallet?: IHDWallet;
     hd_wallet?: IHDWallet;
-    total_received: number;
-    total_sent: number;
-    balance: number;
-    unconfirmed_balance: number;
-    final_balance: number;
-    n_tx: number;
-    unconfirmed_n_tx: number;
-    final_n_tx: number;
+    total_received?: number;
+    total_sent?: number;
+    balance?: number;
+    unconfirmed_balance?: number;
+    final_balance?: number;
+    n_tx?: number;
+    unconfirmed_n_tx?: number;
+    final_n_tx?: number;
     tx_url?: string;
     txs?: ITransaction[];
-    private: string;
-    public: string;
-    wif: string;
+    private?: string;
+    public?: string;
+    wif?: string;
     crypto?: CryptoCoin;
 
 }

@@ -11,7 +11,7 @@ import { IHDWallet } from '../../app/models/IHDWallet';
 import { Wallet } from '../../app/models/wallet';
 import { Address } from '../../app/models/address';
 import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
-import { Keys } from '../../app/models/Keys';
+import { IKeys } from '../../app/models/IKeys';
 
 @Injectable()
 export class FirebaseProvider {
@@ -22,34 +22,50 @@ export class FirebaseProvider {
 
   }
 
-  public addUser(user: string, uid: string) {
-    this.angularFire.list('user/' + uid).set('userEmail', user);
+  public addUser(email: string, uid: string) {
+    this.angularFire.list('user/' + uid).set('userEmail', email);
+    this.angularFire.list('user/' + uid).set('currency', 'USD');
   }
 
   public updateEmail(email: string, uid: string ) {
     this.angularFire.list('user/' + uid).set('userEmail', email);
   }
 
-  public addWallet(wallet: any, uid: string) {
+  public addWallet(wallet: Wallet, uid: string) {
     this.angularFire.list('user/' + uid + '/wallet/').push(wallet);
   }
 
   public getWallets(uid: string): Observable<any> {
     return this.angularFire.list('user/' + uid + '/wallet/')
-      .snapshotChanges().map((changes) => {
-        return changes.map((c) => ({
+      .snapshotChanges()
+      .map((changes) => {
+        const wallet = changes.map((c) => ({
           key: c.payload.key, ...c.payload.val(),
         }));
+        wallet.forEach((w) => {
+          w.keys = {};
+        });
+        return wallet;
       });
   }
 
-  public addAddressToWallet(wallet: Wallet, uid: string, address: string) {
-    this.angularFire.list('user/' + uid + '/wallet/' + wallet.key + '/addresses').push(address);
+  public updateWalletCrypto(wallet: Wallet, uid: string) {
+    return this.angularFire.list('user/' + uid + '/wallet/' + wallet.key)
+    .update('crypto', wallet.crypto);
+}
+
+  public getWalletsKeys(uid: string, wallet: string): Observable<IKeys> {
+    return this.angularFire.object('user/' + uid + '/wallet/' + wallet + '/keys/')
+    .valueChanges()
+    .map((key) => {
+      return key as IKeys;
+    });
   }
 
   public getAddressBook(uid: string): Observable<any> {
     return this.angularFire.list('user/' + uid + '/addressBook/').
-      snapshotChanges().map((changes) => {
+      snapshotChanges()
+      .map((changes) => {
       return changes.map((c) => ({
         key: c.payload.key, ...c.payload.val(),
       }));
@@ -58,7 +74,8 @@ export class FirebaseProvider {
 
   public getAddressFromAddressBook(uid: string, email: string): Observable<any> {
     return this.angularFire.list('user/' + uid + '/addressBook/' , (ref) =>
-      ref.orderByChild('email').equalTo(email))
+      ref.orderByChild('email')
+      .equalTo(email))
       .snapshotChanges()
       .map((changes) => {
         return changes.map((c) => ({
@@ -85,12 +102,9 @@ export class FirebaseProvider {
 
   public getUserByEmail(email: string) {
     return this.angularFire.list('/user', (ref) =>
-      ref.orderByChild('userEmail').equalTo(email))
+      ref.orderByChild('userEmail')
+      .equalTo(email))
       .valueChanges();
-  }
-
-  public updateWallet(wallet: Wallet, uid: string, key: string) {
-      this.angularFire.list('user/' + uid + '/wallet/').update(key, wallet);
   }
 
   public addAddressToAddressBook(uid: string, address: Address) {
@@ -111,7 +125,8 @@ export class FirebaseProvider {
 
   public getActivitiesList(uid: string) {
     return this.angularFire.list('user/' + uid + '/activities/').
-      snapshotChanges().map((changes) => {
+      snapshotChanges()
+      .map((changes) => {
       return changes.map((c) => ({
         key: c.payload.key, ...c.payload.val(),
       }));

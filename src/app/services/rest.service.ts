@@ -24,7 +24,7 @@ import { AppData } from '../app.data';
 // REST Service for getting data from APIs and the Database
 
 // API Base URL for the Testnet
-const URL = 'https://api.blockcypher.com/v1/btc/main';
+const URL = 'https://api.blockcypher.com/v1/';
 const TESTING_URL = 'https://api.blockcypher.com/v1/';
 const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
 const TOKEN2 = '5b3df9346d0e4eac88bc17e6cfb636a6';
@@ -56,8 +56,7 @@ export class RestService {
 
   // Create an HD Wallet
   public createWalletHD(data, crypto: string): Observable<IHDWallet> {
-    this.CRYPTO = this.getPath(crypto);
-    return this.http.post(TESTING_URL + this.CRYPTO + '/wallets/hd?token=' + TOKEN, JSON.stringify(data), this.options)
+    return this.http.post(this.getPath(crypto) + '/wallets/hd?token=' + TOKEN, JSON.stringify(data), this.options)
      .map((res: Response) => {
        return res.json() as IHDWallet;
      }).catch(this.handleError);
@@ -65,8 +64,7 @@ export class RestService {
 
   // Derive an address from an HD Wallet
   public deriveAddress(wallet: string, crypto: string): Observable<IHDWallet> {
-    this.CRYPTO = this.getPath(crypto);
-    return this.http.post(TESTING_URL + this.CRYPTO + '/wallets/hd/' + wallet + '/addresses/derive?token=' + TOKEN,
+    return this.http.post(this.getPath(crypto) + '/wallets/hd/' + wallet + '/addresses/derive?token=' + TOKEN,
     {} , this.options)
       .map((res: Response) => {
         const address = res.json() as IHDWallet;
@@ -76,8 +74,7 @@ export class RestService {
 
   // Gets a Wallet Balance
   public getBalanceFromWallet(wallet: Wallet): Observable<IBalance> {
-    this.CRYPTO = this.getPath(wallet.crypto.value);
-    return this.http.get(TESTING_URL + this.CRYPTO + '/addrs/' + wallet.name + '/balance?token=' + TOKEN)
+    return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + wallet.name + '/balance?token=' + TOKEN)
     .map((res: Response) => {
       const balance = res.json() as IBalance;
       balance.wallet.crypto = wallet.crypto;
@@ -87,8 +84,7 @@ export class RestService {
   }
 
   public getWalletTransactions(wallet: Wallet): Observable<IAddress> {
-    this.CRYPTO = this.getPath(wallet.crypto.value);
-    return this.http.get(TESTING_URL + this.CRYPTO + '/addrs/' + wallet.name + '/full?token=' + TOKEN)
+    return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + wallet.name + '/full?token=' + TOKEN)
     .map((res: Response) => {
       const transactions = res.json() as IAddress;
       transactions.crypto = wallet.crypto;
@@ -98,9 +94,8 @@ export class RestService {
   }
 
   public getUnusedAddressesWallet(wallet: IHDWallet): Observable<any> {
-    this.CRYPTO = this.getPath(wallet.crypto.value);
     if ((wallet.addresses) && (wallet.addresses.length > 0)) {
-      return this.getAddressBalance(wallet.addresses.pop(), this.CRYPTO)
+      return this.getAddressBalance(wallet.addresses.pop(), this.getPath(wallet.crypto.value))
       .first()
       .map((balance) => {
         if (balance.n_tx === 0) {
@@ -116,8 +111,8 @@ export class RestService {
   }
 
   // Gets an Address Balance
-  public getAddressBalance(address: string, crypto: string) {
-    return this.http.get(TESTING_URL + this.CRYPTO + '/addrs/' + address + '/balance')
+  public getAddressBalance(address: string, path: string) {
+    return this.http.get(path + '/addrs/' + address + '/balance')
     .map((res: Response) => {
       return res.json() as IAddress;
     })
@@ -140,7 +135,7 @@ export class RestService {
       address: address,
       amount: amount,
     };
-    return this.http.post(TESTING_URL + this.CRYPTO + '/faucet?token=' + TOKEN, JSON.stringify(data))
+    return this.http.post(this.getPath(crypto) + '/faucet?token=' + TOKEN, JSON.stringify(data))
     .map((res: Response) => {
       return res.json();
     })
@@ -150,7 +145,6 @@ export class RestService {
   // Send Paymentys
 
   public createPayment(address: string, amount: number, wallet: Wallet): Observable<ITransactionSke> {
-    this.CRYPTO = this.getPath(wallet.crypto.value);
     const data = JSON.stringify({
       inputs: [{
         wallet_name: wallet.name,
@@ -163,7 +157,7 @@ export class RestService {
         value: Number(amount),
       }],
     });
-    return this.http.post(TESTING_URL + this.CRYPTO + '/txs/new?token=' + TOKEN, data)
+    return this.http.post(this.getPath(wallet.crypto.value) + '/txs/new?token=' + TOKEN, data)
       .map((res) => {
         return res.json();
       })
@@ -171,8 +165,7 @@ export class RestService {
   }
 
   public sendPayment(trx: ITransactionSke, crypto: string): Observable<ITransactionSke> {
-    this.CRYPTO = this.getPath(crypto);
-    return this.http.post(TESTING_URL + this.CRYPTO  + '/txs/send', JSON.stringify(trx))
+    return this.http.post(this.getPath(crypto) + '/txs/send', JSON.stringify(trx))
     .map((res: Response) => {
       return res.json() as ITransactionSke;
     })
@@ -191,8 +184,9 @@ export class RestService {
   }
 
   private getPath(crypto: string): string {
-    return AppData.restAPIPaths.filter((path) => {
-      return path.crypto === crypto;
+    const path = AppData.restAPIPaths.filter((p) => {
+      return p.crypto === crypto;
     }).pop().path;
+    return TESTING_URL + path;
   }
 }

@@ -31,7 +31,8 @@ export class ReceivePage {
 
   public getAddress() {
     const uid = this.authService.user.uid;
-    this.wallet = this.navParams.data.wallet;
+    this.wallet = this.navParams.data;
+    console.log(this.wallet);
     // We get all addresses from the Wallet that are unused
     this.restService.getUnusedAddressesWallet(this.wallet)
       .subscribe((address) => {

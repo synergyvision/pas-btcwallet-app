@@ -1,4 +1,4 @@
-import { Keys } from './keys';
+import { IKeys } from './IKeys';
 import { IBalance } from './IBalance';
 import { CryptoCoin } from './crypto';
 
@@ -12,11 +12,11 @@ export interface IChainAddress {
 export class Wallet {
     public key?: string;
     public name?: string;
-    public keys?: Keys;
+    public keys?: IKeys;
     public balance?: IBalance;
     public crypto?: CryptoCoin;
 
-    constructor(name?: string, key?: Keys, crypto?) {
+    constructor(name?: string, key?: IKeys, crypto?) {
         this.name = name;
         this.keys = key;
         this.crypto = crypto;

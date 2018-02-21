@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { AuthService } from '../../app/services/auth.service';
 import { LoaderService } from '../../app/services/loader.service';
-import { Keys } from '../../app/models/keys';
+import { IKeys } from '../../app/models/IKeys';
 import { ConfirmEmailPage } from '../confirm-email/confirm-email';
 import { Events } from 'ionic-angular/util/events';
 import { AlertService } from '../../app/services/alert.service';

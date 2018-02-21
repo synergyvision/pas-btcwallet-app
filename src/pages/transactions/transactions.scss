@@ -1,21 +1,13 @@
-.wallet-input{
-  margin-top: $padding-md;
-}
+page-transactions{
+  .thin-input {
+    margin-top: $padding-sm;
+  }
 
-.select-wallet {
-  min-width: 100%;
-}
-
-.segment-button{
-  border-radius: 0px;
-}
-
-.transactions-container {
+  .transactions-container {
     background-color: $light;
     border-radius: $transactions-container-radius;
     height: $transactions-container-height;
     width: $transactions-container-width;
-
     margin:auto;
     margin-top: 10px;
     border-style: none;
@@ -45,3 +37,8 @@
     color: $primary;
     text-align: right;
   }
+  
+}
+
+
+

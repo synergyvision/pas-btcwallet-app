@@ -17,8 +17,8 @@
     </ion-segment-button>
   </ion-segment>
 
-  <ion-item class="wallet-input thin-input">
-    <ion-select (ionChange)="onWalletChange()" class="select-wallet" 
+  <ion-item class="thin-input">
+    <ion-select (ionChange)="onWalletChange()" class="select-option" 
                 [(ngModel)]="selectedWallet" placeholder="Billetera">
       <ion-option *ngFor="let w of walletList" [value]="w">{{w.name}}
       </ion-option>

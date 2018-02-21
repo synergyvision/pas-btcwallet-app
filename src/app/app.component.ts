@@ -13,9 +13,10 @@ import { LoaderService } from './services/loader.service';
 import { ErrorService } from './services/error.service';
 import { AlertService } from './services/alert.service';
 import { CreateWalletPage } from '../pages/create-wallet/create-wallet';
+import { EventService } from './services/events.services';
 
 @Component({
-  providers: [RestService, AuthService, LoaderService, AlertService, AppSettings],
+  providers: [RestService, AuthService, LoaderService, AlertService, AppSettings, EventService],
   templateUrl: 'app.html',
 })
 

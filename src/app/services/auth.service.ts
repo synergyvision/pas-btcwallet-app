@@ -16,6 +16,7 @@ import { Events } from 'ionic-angular';
 import { ITransactionSke } from '../models/ITransaction';
 import { ErrorService } from './error.service';
 import { AppData } from '../app.data';
+import { IKeys } from '../models/IKeys';
 
 @Injectable()
 
@@ -234,16 +235,42 @@ export class AuthService {
                 return (w.name === wallet.name);
             });
              // The transaction Skeleton is incomplete, we need to add pub keys and sign the data
-            const trx = this.keyService.signWithPrivKey(transaction, signingWallet.keys);
-            return this.restService.sendPayment(trx, wallet.crypto.value)
-            .map((response) => {
-                // The transaction was Created Succesfully
-                return response;
-            }).catch((error) => {
-                console.log(error);
-                return error;
+            return this.firebaseData.getWalletsKeys(this.user.uid, signingWallet.key)
+            .first()
+            .flatMap((keys) => {
+                signingWallet.keys = keys;
+                const trx = this.keyService
+                .signWithPrivKey(transaction, signingWallet.keys, signingWallet.crypto.value);
+                return this.restService.sendPayment(trx, wallet.crypto.value)
+                .map((response) => {
+                    // The transaction was Created Successfully
+                    return response;
+                }).catch((error) => {
+                    console.log(error);
+                    return error;
+                });
             });
-    }
         }
+    }
+
+    // User preferences
+
+    public updateWalletCryptoUnit(wallet: Wallet): Promise<any> {
+        return this.firebaseData.updateWalletCrypto(wallet, this.user.uid);
+    }
+
+    public getWalletWIF(wallet: Wallet): Observable<string> {
+        return this.firebaseData.getWalletsKeys(this.user.uid, wallet.key)
+        .map((keys: IKeys) => {
+            return this.keyService.getWIF(keys, wallet.crypto.value);
+        });
+    }
+
+    public getWalletMnemonics(wallet: Wallet): Observable<string> {
+        return this.firebaseData.getWalletsKeys(this.user.uid, wallet.key)
+        .map((keys: IKeys) => {
+            return keys.mnemonics;
+        });
+    }
 
 }

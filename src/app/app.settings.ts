@@ -23,7 +23,7 @@ export class AppSettings {
 
   public static accountOptions = [
     { title: 'Configuración de Seguridad', component: AccountSecurityPage},
-    { title: 'Configuración de las Billeteras', component: AccountWalletPage},
+    { title: 'Configuración de Billeteras', component: AccountWalletPage},
   ];
 
   public static securityOptions =  [
@@ -33,7 +33,11 @@ export class AppSettings {
   ];
 
   public static walletOptions = [
-    { title: 'Cambiar Moneda Local', function: 'changeCurrency' },
+    { title: 'Cambiar Moneda Local', value: 'changeCurrency' },
+    { title: 'Cambiar Unidad de Criptomoneda', value: 'changeCryptoUnit'},
+    { title: 'Exportar Billetera', value: 'exportWallet'},
+    { title: 'Mostrar Clave de Recuperacion', value: 'showMnemonics'},
+    { title: 'Importar Billetera', value: 'importWallet'},
   ];
 
   public static registerForm = [
