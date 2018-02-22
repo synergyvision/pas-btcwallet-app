@@ -17,6 +17,7 @@ import { ITransactionSke } from '../models/ITransaction';
 import { ErrorService } from './error.service';
 import { AppData } from '../app.data';
 import { IKeys } from '../models/IKeys';
+import { EventService } from './events.services';
 
 @Injectable()
 
@@ -25,7 +26,7 @@ export class AuthService {
     public wallets: Wallet[];
 
     constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider, private events: Events,
-                private restService: RestService, private keyService: KeyService) {
+                private restService: RestService, private keyService: KeyService, private eventService: EventService) {
         this.firebaseAuth.authState.first()
             .subscribe((user) => {
                 if (user) {
@@ -91,6 +92,7 @@ export class AuthService {
             }).pop();
             currency.units = currency.units.pop();
             // We send the info to the BlockCypher API
+            if ((crypto !== 'tet') && (crypto !== 'eth')) {
             this.restService.createWalletHD(data, crypto)
                 .subscribe((hdWallet) => {
                     // Succeed Creating the Wallet, so now we need to store the info on Firebase
@@ -101,6 +103,13 @@ export class AuthService {
                     (error) => {
                         reject(error);
                     });
+            } else {
+                const address = this.keyService.generateAddress(keys);
+                const newWallet = new Wallet(data.name, keys, currency);
+                newWallet.address = address;
+                this.firebaseData.addWallet(newWallet, this.user.uid);
+                resolve(newWallet);
+            }
         });
     }
 
@@ -146,6 +155,7 @@ export class AuthService {
                     wallets.forEach((wallet) => {
                         balances.push(this.updateBalance(wallet));
                     });
+                    // this.walletEventCreation(wallets);
                     return Observable.combineLatest(balances);
                 } else {
                     // The user is new, and has not created a wallet yet
@@ -154,15 +164,18 @@ export class AuthService {
                 }
             })
             .catch((error) => {
-                // Error either accessing the Firebase Service or with the Rest Service
-                console.log(error);
+                // Error either accessing the Firebase Service
                 return Observable.throw(error);
             });
     }
 
     // Returns an IBalance object from a single Wallet
     public updateBalance(wallet: Wallet): Observable<IBalance> {
-        return this.restService.getBalanceFromWallet(wallet);
+        if (wallet.crypto.value === 'eth' || wallet.crypto.value === 'tet') {
+            return this.restService.getEthereumBalance(wallet);
+        } else {
+            return this.restService.getBalanceFromWallet(wallet);
+        }
     }
 
     // Returns an observable with all of the user wallets ***
@@ -270,6 +283,12 @@ export class AuthService {
         return this.firebaseData.getWalletsKeys(this.user.uid, wallet.key)
         .map((keys: IKeys) => {
             return keys.mnemonics;
+        });
+    }
+
+    public walletEventCreation(wallets: Wallet[]) {
+       wallets.forEach((wallet) => {
+            this.eventService.createTXConfirmationEvent(wallet.name);
         });
     }
 

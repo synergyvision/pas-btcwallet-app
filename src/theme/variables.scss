@@ -95,6 +95,38 @@ ion-icon {
     mask-image: url(../assets/icons/wallet-arrow.svg);
   }
 }
+ion-icon {
+  &[class*="currency-"] {
+    mask-size: contain;
+    mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    background-color: white;
+    width: 2em;
+    height: 2em;
+  } // custom icons
+  &[class*="currency-btc"] {
+    mask-image: url(../assets/icons/currencies/BTC.svg);
+  }
+  &[class*="currency-bcy"] {
+    mask-image: url(../assets/icons/currencies/BTC.svg);
+  }
+  &[class*="currency-tes"] {
+    mask-image: url(../assets/icons/currencies/BTC.svg);
+  }
+  &[class*="currency-dog"] {
+    mask-image: url(../assets/icons/currencies/DOGE.svg);
+  }
+  &[class*="currency-ltc"] {
+    mask-image: url(../assets/icons/currencies/LTC.svg);
+  }
+  &[class*="currency-eth"] {
+    mask-image: url(../assets/icons/currencies/ETH.svg);
+  }
+  &[class*="currency-tet"] {
+    mask-image: url(../assets/icons/currencies/ETH.svg);
+  }
+  
+}
 
 // App iOS Variables
 // --------------------------------------------------

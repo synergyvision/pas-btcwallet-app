@@ -25,7 +25,6 @@ export class LoginPage {
               private authService: AuthService, private formBuilder: FormBuilder, private eventService: EventService) {
     this.inputs = AppSettings.loginForm;
     this.loginForm = formBuilder.group({});
-    this.eventService.createTXConfirmationEvent();
     this.inputs.forEach((control) => {
       this.loginForm.addControl(control.name, new FormControl(control.value));
       this.loginForm.controls[control.name].setValidators(control.validators);

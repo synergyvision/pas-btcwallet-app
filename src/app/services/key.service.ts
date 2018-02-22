@@ -1,27 +1,39 @@
 import { Injectable } from '@angular/core';
 import { IKeys } from '../models/IKeys';
 import * as bip39 from 'bip39';
-import * as bip32 from 'bip32-utils';
+import * as ethers from 'ethers';
 import { ITInput, ITransaction, ITransactionSke } from '../models/ITransaction';
 import { HDNode, TransactionBuilder, networks } from 'bitcoinjs-lib';
 
-const testnet = networks.testnet;
 @Injectable()
 
 export class KeyService {
 
     public createKeys(crypto: string, passphrase?: string) {
-        // We generate 12 random words to be used to generate the master seed
-        const keys: IKeys = undefined;
-        keys.passphrase = '';
+        console.log(crypto);
+        const keys: IKeys = {};
         keys.mnemonics = bip39.generateMnemonic();
-        // We transform the mnemonics to a HEX Seed
         keys.seed = bip39.mnemonicToSeedHex(keys.mnemonics);
-        // We generate a HD Wallet Key
-        const hdKeys = HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto));
-        keys.xpub = hdKeys.neutered().toBase58();
-        keys.xpriv = hdKeys.toBase58();
-        return keys;
+        // We transform the mnemonics to a HEX Seed
+
+        keys.passphrase = '';
+        switch (crypto) {
+            case 'tes':
+            case 'bcy':
+            case 'ltc':
+            case 'btc':
+                // We generate a HD Wallet Key
+                const hdKeys = HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto));
+                keys.xpub = hdKeys.neutered().toBase58();
+                keys.xpriv = hdKeys.toBase58();
+                return keys;
+            case 'eth':
+            case 'tet':
+                const hdNode = ethers.HDNode.fromSeed(bip39.mnemonicToSeed(keys.mnemonics));
+                keys.xpriv = hdNode.privateKey;
+                keys.xpub = hdNode.publicKey;
+                return keys;
+            }
     }
 
     public validateMnemonic(mnemonic: string) {
@@ -45,6 +57,11 @@ export class KeyService {
         return trx;
     }
 
+    public generateAddress(keys: IKeys) {
+        const wallet = ethers.Wallet.fromMnemonic(keys.mnemonics);
+        return wallet.getAddress();
+    }
+
     // Function that returns the private keys from addresses (using the depth information)
     public derivePrivKey(keys: IKeys, inputAddress: ITInput[], crypto: string) {
         const privKeys = [];
@@ -60,7 +77,7 @@ export class KeyService {
     }
 
     public getWIF(keys: IKeys, crypto: string): string {
-        return HDNode.fromSeedHex(keys.seed, testnet).keyPair.toWIF();
+        return HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto)).keyPair.toWIF();
     }
 
     public getNetwork(crypto: string): any {

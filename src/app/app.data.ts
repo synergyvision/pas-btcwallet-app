@@ -80,6 +80,24 @@ export class AppData {
                 { name: 'wei', exchange: 1 },
             ],
             1000000000000000000, 'Ether'),
+        new CryptoCoin(
+            'Ether Testnet',
+            'tet',
+            [
+                { name: 'ether', exchange: 1000000000000000000 },
+                { name: 'Gwei', exchange: 1000000000000000 },
+                { name: 'Mwei', exchange: 1000000000000 },
+                { name: 'Kwei', exchange: 1000000000 },
+                { name: 'wei', exchange: 1 },
+            ],
+            1000000000000000000, 'Ether'),
+        new CryptoCoin(
+            'Dash',
+            'das',
+            [ {
+
+            }]
+            ,0, 'Dash'),
     ];
 
     public static currenciesList = [

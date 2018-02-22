@@ -15,6 +15,7 @@ export class Wallet {
     public keys?: IKeys;
     public balance?: IBalance;
     public crypto?: CryptoCoin;
+    public address?: string;
 
     constructor(name?: string, key?: IKeys, crypto?) {
         this.name = name;

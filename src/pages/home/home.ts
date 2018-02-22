@@ -14,6 +14,7 @@ import { Events } from 'ionic-angular/util/events';
 import { Wallet } from '../../app/models/wallet';
 import { AppData } from '../../app/app.data';
 import { CreateWalletPage } from '../create-wallet/create-wallet';
+import { EventService } from '../../app/services/events.services';
 
 // Component for the Home Page, displays user balance, and options
 
@@ -28,55 +29,50 @@ export class HomePage {
   private error: ErrorService;
   private balances: IBalance[];
   private canCreateNewWallet: boolean = true;
+  private currency: {};
+  private wallets;
 
   constructor(public navCtrl: NavController, private restService: RestService, private authService: AuthService,
               private loaderService: LoaderService, private zone: NgZone, private events: Events) {
     this.loaderService.showFullLoader('Espere');
-    this.getBalance();
-    // Need to finish this
-    /* this.events.subscribe('wallet:update', (wallet) => {
-      this.balances.find((b) => {
-        return (b.wallet.name = wallet;
-      });
-      this.authService.updateBalance(wallet)
-      .subscribe((data);
-    }); */
+    this.currency = {
+      name: 'USD',
+      exchange: 8656,
+    };
+    this.getBalance()
+    .then(() => {
+      this.loaderService.dismissLoader();
+    })
+    .catch((error) => {
+      this.handleError(Error);
+      this.loaderService.dismissLoader();
+    });
+    this.events.subscribe('wallet:update', (wallet) => {
+      this.updateWallet(wallet);
+    });
   }
 
   public newUser() {
     this.events.publish('user:newUser');
   }
 
-  public getBalance() {
+  public getBalance(): Promise<any> {
     // We get the balance from all of the user Wallets
-    this.error = undefined;
-    this.authService.updateBalances()
+    return new Promise((resolve, reject) => {
+      this.authService.updateBalances()
       .subscribe((wallets) => {
+        console.log(wallets);
         this.balances = wallets;
         if (this.balances.length > 6) {
           this.canCreateNewWallet = false;
-        }
-        this.loaderService.dismissLoader();
-      }, (error) => {
-        // New User, and has not created its first wallet
-        if (error.message === 'CREATE_WALLET') {
-          this.newUser();
         } else {
-        // Error accessing REST Services
-          this.error = error;
+          this.canCreateNewWallet = true;
         }
-        this.loaderService.dismissLoader();
+        resolve();
+      }, (error) => {
+        reject(error);
       });
-  }
-
-  private ionViewWillEnter() {
-    this.authService.updateBalances()
-      .subscribe((balance) => {
-        this.zone.run(() => {
-          this.balances = balance;
-          this.error = undefined;
-        });
-      });
+    });
   }
 
   private goToReceive(wallet) {
@@ -84,11 +80,41 @@ export class HomePage {
   }
 
   private goToSend(balance) {
-    console.log(balance);
     this.navCtrl.push(SendPage, balance);
+  }
+
+  private updateWallet(wallet: string) {
+    console.log('Wallet has been updated');
+    const index = this.balances.findIndex((balance) => {
+      return (balance.wallet.name === wallet);
+    });
+    this.authService.updateBalance(this.balances[index].wallet)
+    .subscribe((newBalance) => {
+      this.balances[index] = newBalance;
+    });
+  }
+
+  private refresh(event) {
+    this.getBalance()
+    .then(() => {
+      this.error = undefined;
+      event.complete();
+    }).catch(() => {
+      event.complete();
+    });
   }
 
   private createNewWallet() {
     this.navCtrl.push(CreateWalletPage);
+  }
+
+  private handleError(error) {
+    if (error.message === 'CREATE_WALLET') {
+      this.newUser();
+    } else {
+    // Error accessing REST Services
+      this.error = error;
+      this.wallets = this.authService.wallets;
+    }
   }
 }

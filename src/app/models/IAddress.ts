@@ -7,7 +7,6 @@ import { CryptoCoin } from './crypto';
 
 export interface IAddress {
     address?: string;
-    wallet?: IHDWallet;
     hd_wallet?: IHDWallet;
     total_received?: number;
     total_sent?: number;
@@ -23,5 +22,6 @@ export interface IAddress {
     public?: string;
     wif?: string;
     crypto?: CryptoCoin;
+    wallet?: IHDWallet;
 
 }

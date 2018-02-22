@@ -30,6 +30,6 @@ export class LoaderService {
     }
 
     public dismissLoader() {
-        this.loadingSpinner.dismissAll();
+        this.loadingSpinner.dismiss();
     }
 }

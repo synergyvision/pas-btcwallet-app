@@ -32,16 +32,20 @@ export class ReceivePage {
   public getAddress() {
     const uid = this.authService.user.uid;
     this.wallet = this.navParams.data;
-    console.log(this.wallet);
+    if (this.wallet.address) {
+      console.log('here');
+      this.address = this.wallet.address;
+      this.loaderService.dismissLoader();
+    } else {
     // We get all addresses from the Wallet that are unused
     this.restService.getUnusedAddressesWallet(this.wallet)
       .subscribe((address) => {
-        console.log(address);
         this.address = address;
         this.loaderService.dismissLoader();
       }, (error) => {
         this.handleError(error);
       });
+    }
   }
 
   public handleError(error) {
@@ -53,4 +57,5 @@ export class ReceivePage {
       this.navCtrl.pop();
     });
   }
+
 }

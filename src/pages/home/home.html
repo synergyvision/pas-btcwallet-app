@@ -10,16 +10,36 @@
 </ion-header>
 
 <ion-content no-bounce overflow-scroll="false">
-  <span *ngIf="error">
-    {{error.title}} {{error.message}}
-  </span>
+  <ion-refresher *ngIf = "!balances" class="home-refresher" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-slides pager="true" class="balances-slides" *ngIf="!balances">
+    <ion-slide class="wallet-slide" *ngFor="let w of wallets">
+      <div class="display-img home-balance">
+        <ion-icon class="currency" name="currency-{{w.crypto.value}}" item-top></ion-icon>
+        {{ w.crypto.coin }}
+      </div>
+      <div class="page-title">
+        Billetera {{w.crypto.name | uppercase}}
+      </div>
+      <div class="home-wallet">
+        {{w.name}}
+      </div>
+      <div class="home-info">
+        <p>{{error.message}}</p>
+      </div>
+    </ion-slide>
+  </ion-slides>
   <ion-slides pager="true" class="balances-slides" *ngIf="balances">
-    <ion-slide class="wallet-slide"*ngFor="let b of balances">
+    <ion-slide class="wallet-slide" *ngFor="let b of balances">
       <div class="display-img home-balance">
         {{ b.balance / b.wallet.crypto.units.exchange }}
-        <span class="home-balance-unit"><b class="crypto"></b>{{b.wallet.crypto.units.name}}</span>
+        <span class="home-balance-unit">
+          <b class="crypto">
+            <ion-icon [name]="b.wallet.crypto.coin" item-left></ion-icon>
+          </b>{{b.wallet.crypto.units.name}}</span>
         <div class="home-btc-balance">
-          {{b.balance / b.wallet.crypto.difference }} {{b.wallet.crypto.coin | uppercase}}
+          {{b.balance / currency.exchange }} {{currency.name| uppercase}}
         </div>
       </div>
       <div class="page-title">
@@ -31,22 +51,23 @@
       <div class="home-info">
         <p>Transacciones: {{b.n_tx}}</p>
         <p>Total Recibido: {{b.total_received / b.wallet.crypto.units.exchange }} {{ b.wallet.crypto.units.name }}</p>
-        <p>Total Enviado: {{b.total_sent  /  b.wallet.crypto.units.exchange }} {{ b.wallet.crypto.units.name }}</p>
-        <p>Balance por Confirmar: {{ b.unconfirmed_balance / b.wallet.crypto.units.exchange }} {{b.wallet.crypto.units.name }}</p>
+        <p>Total Enviado: {{b.total_sent / b.wallet.crypto.units.exchange }} {{ b.wallet.crypto.units.name }}</p>
+        <p>Balance por Confirmar: {{ b.unconfirmed_balance / b.wallet.crypto.units.exchange }} {{b.wallet.crypto.units.name}}
+        </p>
         <p>Transacciones por Confirmar: {{b.unconfirmed_n_tx}}</p>
       </div>
       <button class="home-button receive-button" block ion-button on-click="goToReceive(b.wallet)">
-          Recibir
-        </button>
-        <button class="home-button send" block ion-button on-click="goToSend(b)">
-          Enviar
-        </button>
+        Recibir
+      </button>
+      <button class="home-button send" block ion-button on-click="goToSend(b)">
+        Enviar
+      </button>
     </ion-slide>
     <ion-slide class="new-wallet-slide">
-        <button class="new-wallet-button" block ion-button on-click="createNewWallet()">
-          <ion-icon name="add"></ion-icon>
-            Agregar Billetera
-        </button>
+      <button class="new-wallet-button" block ion-button on-click="createNewWallet()">
+        <ion-icon name="add"></ion-icon>
+        Agregar Billetera
+      </button>
     </ion-slide>
   </ion-slides>
 

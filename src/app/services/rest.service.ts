@@ -41,9 +41,9 @@ export class RestService {
   private CRYPTO: string;
 
   constructor(private http: Http, private loadService: LoaderService, private alertService: AlertService,
-              private databaseProvider: FirebaseProvider, private keyService: KeyService) {
+    private databaseProvider: FirebaseProvider, private keyService: KeyService) {
     let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' });
-    this.options = new RequestOptions( {method: RequestMethod.Post, headers: headers });
+    this.options = new RequestOptions({ method: RequestMethod.Post, headers: headers });
     this.activityList = [
       new Activity(1, '12/12/2017', 'Acceso desde dispositivo Android NG-7800'),
       new Activity(2, '06/11/2017', 'Cambio de clave'),
@@ -57,15 +57,15 @@ export class RestService {
   // Create an HD Wallet
   public createWalletHD(data, crypto: string): Observable<IHDWallet> {
     return this.http.post(this.getPath(crypto) + '/wallets/hd?token=' + TOKEN, JSON.stringify(data), this.options)
-     .map((res: Response) => {
-       return res.json() as IHDWallet;
-     }).catch(this.handleError);
+      .map((res: Response) => {
+        return res.json() as IHDWallet;
+      }).catch(this.handleError);
   }
 
   // Derive an address from an HD Wallet
   public deriveAddress(wallet: string, crypto: string): Observable<IHDWallet> {
     return this.http.post(this.getPath(crypto) + '/wallets/hd/' + wallet + '/addresses/derive?token=' + TOKEN,
-    {} , this.options)
+      {}, this.options)
       .map((res: Response) => {
         const address = res.json() as IHDWallet;
         return address.chains[0].chain_addresses.pop().address;
@@ -75,48 +75,58 @@ export class RestService {
   // Gets a Wallet Balance
   public getBalanceFromWallet(wallet: Wallet): Observable<IBalance> {
     return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + wallet.name + '/balance?token=' + TOKEN)
-    .map((res: Response) => {
-      const balance = res.json() as IBalance;
-      balance.wallet.crypto = wallet.crypto;
-      return balance;
-    })
-    .catch(this.handleError);
+      .map((res: Response) => {
+        const balance = res.json() as IBalance;
+        balance.wallet.crypto = wallet.crypto;
+        return balance;
+      })
+      .catch(this.handleError);
+  }
+
+  // Gets an Address Balance
+  public getEthereumBalance(wallet: Wallet): Observable<IAddress> {
+    return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + wallet.address + '/balance')
+      .map((res: Response) => {
+        const balance = res.json() as IAddress;
+        balance.wallet = wallet;
+        return balance;
+      })
+      .catch(this.handleError);
+  }
+
+  public getAddressBalance(address: string, crypto: string): Observable<IAddress> {
+    return this.http.get(this.getPath(crypto) + '/addrs/' + address + '/balance')
+      .map((res: Response) => {
+        return res.json() as IAddress;
+      })
+      .catch(this.handleError);
   }
 
   public getWalletTransactions(wallet: Wallet): Observable<IAddress> {
     return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + wallet.name + '/full?token=' + TOKEN)
-    .map((res: Response) => {
-      const transactions = res.json() as IAddress;
-      transactions.crypto = wallet.crypto;
-      return transactions;
-    })
-    .catch(this.handleError);
+      .map((res: Response) => {
+        const transactions = res.json() as IAddress;
+        transactions.crypto = wallet.crypto;
+        return transactions;
+      })
+      .catch(this.handleError);
   }
 
   public getUnusedAddressesWallet(wallet: IHDWallet): Observable<any> {
     if ((wallet.addresses) && (wallet.addresses.length > 0)) {
-      return this.getAddressBalance(wallet.addresses.pop(), this.getPath(wallet.crypto.value))
-      .first()
-      .map((balance) => {
-        if (balance.n_tx === 0) {
-          return balance.address;
-        } else {
-          return this.deriveAddress(wallet.name, wallet.crypto.value);
-        }
-      })
-      .catch(this.handleError);
+      return this.getAddressBalance(wallet.addresses.pop(), wallet.crypto.value)
+        .first()
+        .flatMap((balance) => {
+          if (balance.n_tx === 0) {
+            return Observable.of(balance.address);
+          } else {
+            return this.deriveAddress(wallet.name, wallet.crypto.value);
+          }
+        })
+        .catch(this.handleError);
     } else {
       return this.deriveAddress(wallet.name, wallet.crypto.value);
     }
-  }
-
-  // Gets an Address Balance
-  public getAddressBalance(address: string, path: string) {
-    return this.http.get(path + '/addrs/' + address + '/balance')
-    .map((res: Response) => {
-      return res.json() as IAddress;
-    })
-    .catch(this.handleError);
   }
 
   public showAlert(error: ErrorService): Promise<any> {
@@ -136,10 +146,10 @@ export class RestService {
       amount: amount,
     };
     return this.http.post(this.getPath(crypto) + '/faucet?token=' + TOKEN, JSON.stringify(data))
-    .map((res: Response) => {
-      return res.json();
-    })
-    .catch(this.handleError);
+      .map((res: Response) => {
+        return res.json();
+      })
+      .catch(this.handleError);
   }
 
   // Send Paymentys
@@ -149,7 +159,7 @@ export class RestService {
       inputs: [{
         wallet_name: wallet.name,
         wallet_token: TOKEN,
-        }],
+      }],
       outputs: [{
         addresses: [
           address,
@@ -166,10 +176,10 @@ export class RestService {
 
   public sendPayment(trx: ITransactionSke, crypto: string): Observable<ITransactionSke> {
     return this.http.post(this.getPath(crypto) + '/txs/send', JSON.stringify(trx))
-    .map((res: Response) => {
-      return res.json() as ITransactionSke;
-    })
-    .catch(this.handleError);
+      .map((res: Response) => {
+        return res.json() as ITransactionSke;
+      })
+      .catch(this.handleError);
   }
 
   // Error Handling for HTTP Errors

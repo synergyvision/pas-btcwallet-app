@@ -36,21 +36,24 @@ export class EventService {
 
   }
 
-  public createTXConfirmationEvent(wallet) {
-      const walletEvent = this.createEvent(wallet);
+  public createTXConfirmationEvent(walletName: string) {
+      const walletEvent = this.createEvent(walletName);
       const ws = new WebSocket(this.getPath('tes'));
       ws.onmessage = ((event) => {
           // We get the Notificaction that a TX has been made
-          this.events.publish('wallet:update', wallet);
+          console.log(event);
+          this.events.publish('wallet:update', walletName);
       });
       ws.onopen = ((message) => {
+        console.log(message);
+        console.log(walletEvent);
         ws.send(JSON.stringify(walletEvent));
       });
   }
 
   public createEvent(wallet: string) {
     const subEvent: IEvent = {};
-    subEvent.wallet_name = 'tes3gduWGKyL4PVPSbywqINI';
+    subEvent.wallet_name = wallet;
     subEvent.event = 'confirmed-tx';
     subEvent.token = TOKEN;
     subEvent.confirmations = 1;

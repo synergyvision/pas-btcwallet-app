@@ -17,10 +17,10 @@ export interface IHDChain {
 export interface IHDWallet {
     name?: string;
     token?: string;
-    chains: IHDChain;
-    hd: boolean;
-    extended_public_key: string;
-    subchain_indexes: number[];
+    chains?: IHDChain;
+    hd?: boolean;
+    extended_public_key?: string;
+    subchain_indexes?: number[];
     addresses?: string[];
     crypto?: CryptoCoin;
 }
