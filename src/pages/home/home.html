@@ -10,7 +10,7 @@
 </ion-header>
 
 <ion-content no-bounce overflow-scroll="false">
-  <ion-refresher *ngIf = "!balances" class="home-refresher" (ionRefresh)="refresh($event)">
+  <ion-refresher *ngIf="!balances" class="home-refresher" (ionRefresh)="refresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-slides pager="true" class="balances-slides" *ngIf="!balances">
@@ -64,8 +64,8 @@
       </button>
     </ion-slide>
     <ion-slide class="new-wallet-slide">
+      <ion-icon class="new-wallet-icon" name="add"></ion-icon>
       <button class="new-wallet-button" block ion-button on-click="createNewWallet()">
-        <ion-icon name="add"></ion-icon>
         Agregar Billetera
       </button>
     </ion-slide>

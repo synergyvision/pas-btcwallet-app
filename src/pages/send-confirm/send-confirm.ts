@@ -91,7 +91,6 @@ export class SendConfirmPage {
   }
 
   private signPayment(transaction: ITransactionSke) {
-    console.log(transaction);
     this.authService.sendPayment(transaction, this.balance.wallet)
       .subscribe((response) => {
         console.log(response);

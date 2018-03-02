@@ -56,7 +56,7 @@ $home-button-height: 3em;
 $home-button-radius: 26.07px;
 $login-recover-button-height: 0.85em;
 $account-options-radius: 1.4em;
-$account-options-width: 15.6em;
+$account-options-width: 16.5em;
 $account-options-height: 2.8em;
 
 
@@ -142,7 +142,7 @@ $padding-address: 1em;
   }
   
 }
-
+/* 
 ion-title {
   text-transform: capitalize; // For Centering text on Android Devices
   position: absolute;
@@ -151,6 +151,16 @@ ion-title {
   padding: 0;
   width: 100%;
   height: 100%;
+  text-align: center;
+} */
+
+.title.title-md {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  height: 100%;
+  width: 70%;
   text-align: center;
 }
 
@@ -325,5 +335,12 @@ button.account-options {
 .wallet-info-detail{
     color: $dark;
     font-size: $font-size-info-text;
+}
+
+.selectable {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 

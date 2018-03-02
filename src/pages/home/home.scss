@@ -63,4 +63,17 @@ page-home {
   .refresh-home{
     font-size: 3em;
   }
+
+  .new-wallet-slide{
+    background: $primary;
+  }
+
+  .new-wallet-icon{
+    font-size: 5em;
+    color: $light;
+  }
+
+  .swiper-pagination-bullet {
+    background: $secondary;
+  }
 }

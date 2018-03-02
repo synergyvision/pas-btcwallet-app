@@ -6,7 +6,7 @@ import { LoaderService } from './loader.service';
 import { IAddress } from '../models/IAddress';
 import { User } from '../models/user';
 import { Address } from '../models/address';
-import { IBlockchain } from '../models/IBlockchain';
+import { IBlockchain, IBlock } from '../models/IBlockchain';
 import { Headers, Http, RequestMethod, RequestOptions, Response } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { AlertService } from './alert.service';
@@ -20,8 +20,9 @@ import { IHDWallet } from '../models/IHDWallet';
 import { ITransaction, ITransactionSke } from '../models/ITransaction';
 import { IHDChain } from '../models/IHDChain';
 import { AppData } from '../app.data';
+import { create } from 'domain';
 
-// REST Service for getting data from APIs and the Database
+// REST Service for getting data from BlockCypher API
 
 // API Base URL for the Testnet
 const URL = 'https://api.blockcypher.com/v1/';
@@ -40,8 +41,7 @@ export class RestService {
   private options: RequestOptions;
   private CRYPTO: string;
 
-  constructor(private http: Http, private loadService: LoaderService, private alertService: AlertService,
-    private databaseProvider: FirebaseProvider, private keyService: KeyService) {
+  constructor(private http: Http, private loadService: LoaderService, private keyService: KeyService) {
     let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' });
     this.options = new RequestOptions({ method: RequestMethod.Post, headers: headers });
     this.activityList = [
@@ -60,6 +60,14 @@ export class RestService {
       .map((res: Response) => {
         return res.json() as IHDWallet;
       }).catch(this.handleError);
+  }
+
+  public createAddress(crypto: string): Observable<any> {
+    return this.http.post(this.getPath(crypto) + '/addrs?token=' + TOKEN, undefined)
+      .map((res: Response) => {
+        return res.json();
+      })
+      .catch(this.handleError);
   }
 
   // Derive an address from an HD Wallet
@@ -84,6 +92,7 @@ export class RestService {
   }
 
   // Gets an Address Balance
+
   public getEthereumBalance(wallet: Wallet): Observable<IAddress> {
     return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + wallet.address + '/balance')
       .map((res: Response) => {
@@ -102,6 +111,8 @@ export class RestService {
       .catch(this.handleError);
   }
 
+  // Gets all of a Wallet Transactions
+
   public getWalletTransactions(wallet: Wallet): Observable<IAddress> {
     return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + wallet.name + '/full?token=' + TOKEN)
       .map((res: Response) => {
@@ -111,6 +122,8 @@ export class RestService {
       })
       .catch(this.handleError);
   }
+
+  // Returns an unused address from a Wallet for pseudo anonymous transactions
 
   public getUnusedAddressesWallet(wallet: IHDWallet): Observable<any> {
     if ((wallet.addresses) && (wallet.addresses.length > 0)) {
@@ -129,12 +142,55 @@ export class RestService {
     }
   }
 
-  public showAlert(error: ErrorService): Promise<any> {
-    return this.alertService.showAlert(error.message, error.title, error.subTitle);
+  // Creates a Transaction Skeleton to be signed
+
+  public createPayment(address: string, amount: number, wallet: Wallet): Observable<ITransactionSke> {
+    let data: {};
+    if (wallet.crypto.value === 'eth' || wallet.crypto.value === 'tet') {
+      data = JSON.stringify({
+        inputs: [{
+          addresses: [
+            wallet.address,
+          ],
+        }],
+        outputs: [{
+          addresses: [
+            address,
+          ],
+          value: Number(amount),
+        }],
+      });
+
+    } else {
+      data = JSON.stringify({
+        inputs: [{
+          wallet_name: wallet.name,
+          wallet_token: TOKEN,
+        }],
+        outputs: [{
+          addresses: [
+            address,
+          ],
+          value: Number(amount),
+        }],
+      });
+    }
+    console.log(data);
+    return this.http.post(this.getPath(wallet.crypto.value) + '/txs/new?token=' + TOKEN, data)
+      .map((res) => {
+        return res.json();
+      })
+      .catch(this.handleError);
   }
 
-  public showFullAlert(error: ErrorService): Promise<any> {
-    return this.alertService.showFullAlert(error.message, error.title, error.subTitle);
+  // Sends a signed payment
+
+  public sendPayment(trx: ITransactionSke, crypto: string): Observable<ITransactionSke> {
+    return this.http.post(this.getPath(crypto) + '/txs/send?token=' + TOKEN, JSON.stringify(trx))
+      .map((res: Response) => {
+        return res.json() as ITransactionSke;
+      })
+      .catch(this.handleError);
   }
 
   // Testing Faucet
@@ -152,35 +208,25 @@ export class RestService {
       .catch(this.handleError);
   }
 
-  // Send Paymentys
+  // BlockChain Explorer
 
-  public createPayment(address: string, amount: number, wallet: Wallet): Observable<ITransactionSke> {
-    const data = JSON.stringify({
-      inputs: [{
-        wallet_name: wallet.name,
-        wallet_token: TOKEN,
-      }],
-      outputs: [{
-        addresses: [
-          address,
-        ],
-        value: Number(amount),
-      }],
-    });
-    return this.http.post(this.getPath(wallet.crypto.value) + '/txs/new?token=' + TOKEN, data)
-      .map((res) => {
-        return res.json();
-      })
-      .catch(this.handleError);
-  }
-
-  public sendPayment(trx: ITransactionSke, crypto: string): Observable<ITransactionSke> {
-    return this.http.post(this.getPath(crypto) + '/txs/send', JSON.stringify(trx))
+  public getBlockChain(crypto: string): Observable<IBlockchain> {
+    return this.http.get(this.getPath(crypto))
       .map((res: Response) => {
-        return res.json() as ITransactionSke;
+        return res.json() as IBlockchain;
       })
       .catch(this.handleError);
   }
+
+  public getBlock(hash: string, crypto: string): Observable<IBlock> {
+    return this.http.get(this.getPath(crypto) + '/blocks/' + hash)
+      .map((res: Response) => {
+        return res.json() as IBlockchain;
+      })
+      .catch(this.handleError);
+  }
+
+  // CoinBase Exchange
 
   // Error Handling for HTTP Errors
   private handleError(er): Observable<any> {

@@ -67,13 +67,17 @@ export class AuthService {
     public loginGoogle() {
         return new Promise((resolve, reject) => {
             this.firebaseAuth.auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider())
+            .then(() => {
+                this.firebaseAuth.auth.getRedirectResult()
                 .then((response) => {
                     this.firebaseData.addUser(response.email, response.uid);
                     resolve(response);
                 })
                 .catch((error) => {
+                    console.log(error);
                     reject(error);
                 });
+            });
         });
     }
 
@@ -106,6 +110,7 @@ export class AuthService {
             } else {
                 const address = this.keyService.generateAddress(keys);
                 const newWallet = new Wallet(data.name, keys, currency);
+                console.log(address);
                 newWallet.address = address;
                 this.firebaseData.addWallet(newWallet, this.user.uid);
                 resolve(newWallet);
@@ -200,8 +205,11 @@ export class AuthService {
         return this.firebaseData.getWalletByEmail(email, coin)
             .first()
             .flatMap((wallet) => {
-                if (wallet) {
-                    return this.restService.deriveAddress(wallet, coin);
+                if (wallet.address) {
+                    return Observable.of(wallet.address);
+                }
+                if (wallet.name) {
+                    return this.restService.deriveAddress(wallet.name, coin);
                 } else {
                     const error = new ErrorService(null, 'NO_WALLET_FOR_SELECTED_CRYPTO');
                     return Observable.throw(error);

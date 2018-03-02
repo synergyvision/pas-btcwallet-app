@@ -95,7 +95,11 @@ export class FirebaseProvider {
           return (w.crypto.value === coin);
         });
         if (wallet.length > 0) {
-          return wallet.pop().name;
+          const userWallet = wallet.pop();
+          if ((userWallet.crypto.value === 'tet') || (userWallet.crypto.value === 'eth')) {
+            return {address: userWallet.address};
+          }
+          return {name: userWallet.name};
         }
     });
   }

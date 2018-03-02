@@ -24,7 +24,7 @@ export class SendPage {
   private inputError: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
-              private qrScanner: QRScanner, private formBuilder: FormBuilder,
+              private qrScanner: QRScanner, private formBuilder: FormBuilder, private alertService: AlertService,
               private restService: RestService, private loaderService: LoaderService) {
     this.event.subscribe('selected:address', (addressData) => {
       this.selectedAddress = this.duplicateAddress(addressData);
@@ -32,7 +32,7 @@ export class SendPage {
       this.selectAddressForm.reset();
     });
     this.selectAddressForm = this.formBuilder.group({
-      inputAddress: ['', Validators.compose([Validators.maxLength(36), Validators.minLength(24), Validators.required])],
+      inputAddress: ['', Validators.compose([Validators.maxLength(42), Validators.minLength(24), Validators.required])],
     });
   }
 
@@ -44,15 +44,18 @@ export class SendPage {
     this.qrScanner.prepare()
       .then((status: QRScannerStatus) => {
         if (status.authorized) {
-          const scanSub = this.qrScanner.scan().subscribe((text: string) => {
+          const scanSub = this.qrScanner.scan()
+          .subscribe((text: string) => {
             // We must do something here with the address provided
+            console.log(text);
+            this.validateInputedAddress(text);
             this.qrScanner.hide();
             scanSub.unsubscribe();
           });
           this.qrScanner.show();
           // wait for user to scan something, then the observable callback will be called
         } else if (status.denied) {
-          this.restService.showAlert(this.cameraError)
+          this.alertService.showAlert(this.cameraError)
             .then((rest) => {
               // Implement method for getting user permissions on settings
               // camera permission was permanently denied
@@ -65,15 +68,15 @@ export class SendPage {
         }
       })
       .catch((error) => {
-        this.restService.showAlert(error).then((rest) => {
+        this.alertService.showAlert(error).then((rest) => {
           // Do nothing
         });
       });
   }
 
-  private validateAddress(form: FormGroup) {
+  private validateAddress(address: string) {
     if (this.selectedAddress === undefined) {
-      this.validateInputedAddress(form.value.inputAddress);
+      this.validateInputedAddress(address);
     } else {
       this.goToSendConfirm(this.selectedAddress);
     }

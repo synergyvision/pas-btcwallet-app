@@ -34,7 +34,7 @@ export class AppSettings {
 
   public static walletOptions = [
     { title: 'Cambiar Moneda Local', value: 'changeCurrency' },
-    { title: 'Cambiar Unidad de Criptomoneda', value: 'changeCryptoUnit'},
+    { title: 'Cambiar Unidades de Moneda', value: 'changeCryptoUnit'},
     { title: 'Exportar Billetera', value: 'exportWallet'},
     { title: 'Mostrar Clave de Recuperacion', value: 'showMnemonics'},
     { title: 'Importar Billetera', value: 'importWallet'},

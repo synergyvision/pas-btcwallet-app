@@ -20,10 +20,15 @@ export class ReceivePage {
   private wallet;
 
   constructor(public navCtrl: NavController, private restService: RestService, private navParams: NavParams,
-              private loaderService: LoaderService, private authService: AuthService) {
+              private loaderService: LoaderService, private authService: AuthService,
+              private alertService: AlertService) {
 
     // We show a loader while we check the data using the rest service
     this.loaderService.showFullLoader('Generando Código');
+    this.restService.addFundsTestnet('0x6818f6e5f63787e238131bbb5de2069b23b70624', 200000000000000000, 'tet')
+    .subscribe((res) => {
+      console.log(res);
+    });
     // We check if last generated address was used for another transaction
     this.getAddress();
 
@@ -32,14 +37,16 @@ export class ReceivePage {
   public getAddress() {
     const uid = this.authService.user.uid;
     this.wallet = this.navParams.data;
+    // If it is an Ethereum wallet
     if (this.wallet.address) {
-      console.log('here');
+      console.log(this.wallet.address);
       this.address = this.wallet.address;
       this.loaderService.dismissLoader();
     } else {
     // We get all addresses from the Wallet that are unused
     this.restService.getUnusedAddressesWallet(this.wallet)
       .subscribe((address) => {
+        console.log(address);
         this.address = address;
         this.loaderService.dismissLoader();
       }, (error) => {
@@ -50,7 +57,7 @@ export class ReceivePage {
 
   public handleError(error) {
     this.loaderService.dismissLoader();
-    this.restService.showAlert(error)
+    this.alertService.showAlert(error)
     .then((res) => {
       this.navCtrl.pop();
     }, (err) => {

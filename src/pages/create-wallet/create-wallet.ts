@@ -17,7 +17,7 @@ import { AppData } from '../../app/app.data';
 export class CreateWalletPage {
 
   private message: string;
-  private crypto;
+  private crypto = AppData.cryptoCurrencies;
   private selectedCrypto;
   private mnemonics: string;
   private mnemonicsInfo;
@@ -33,7 +33,6 @@ export class CreateWalletPage {
       this.newUser();
     }
     this.message = 'Seleccione una Moneda';
-    this.crypto = AppData.cryptoCurrencies;
     this.mnemonicsInfo = 'Debe guardar esta información, ya que le permitira recuperar su billetera' + 
                           'en caso de perder su contraseña.';
     this.passphraseInfo = 'Esta clave de seguridad se encargara de suministrar mayor seguridad a su billetera' +

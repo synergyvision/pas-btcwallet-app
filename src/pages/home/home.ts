@@ -61,8 +61,8 @@ export class HomePage {
     return new Promise((resolve, reject) => {
       this.authService.updateBalances()
       .subscribe((wallets) => {
-        console.log(wallets);
         this.balances = wallets;
+        console.log(wallets);
         if (this.balances.length > 6) {
           this.canCreateNewWallet = false;
         } else {
