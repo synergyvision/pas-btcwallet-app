@@ -15,6 +15,7 @@ import { Wallet } from '../../app/models/wallet';
 import { AppData } from '../../app/app.data';
 import { CreateWalletPage } from '../create-wallet/create-wallet';
 import { EventService } from '../../app/services/events.services';
+import { ExchangeService } from '../../app/services/exchange.service';
 
 // Component for the Home Page, displays user balance, and options
 
@@ -24,7 +25,7 @@ import { EventService } from '../../app/services/events.services';
 
 })
 export class HomePage {
-
+  @ViewChild(Slides) public slides: Slides;
   private user: User;
   private error: ErrorService;
   private balances: IBalance[];
@@ -33,7 +34,8 @@ export class HomePage {
   private wallets;
 
   constructor(public navCtrl: NavController, private restService: RestService, private authService: AuthService,
-              private loaderService: LoaderService, private zone: NgZone, private events: Events) {
+              private loaderService: LoaderService, private zone: NgZone, private events: Events,
+              private exchangeService: ExchangeService) {
     this.loaderService.showFullLoader('Espere');
     this.currency = {
       name: 'USD',
@@ -49,6 +51,9 @@ export class HomePage {
     });
     this.events.subscribe('wallet:update', (wallet) => {
       this.updateWallet(wallet);
+    });
+    this.events.subscribe('home:refresh', () => {
+      this.slides.slideTo(1);
     });
   }
 

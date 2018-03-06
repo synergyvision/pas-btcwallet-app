@@ -44,6 +44,8 @@ import { TransactionConfirmationPage } from '../pages/transaction-confirmation/t
 import { CreateWalletPage } from '../pages/create-wallet/create-wallet';
 import { BlockchainPage } from '../pages/blockchain/blockchain';
 import { EventService } from './services/events.services';
+import { ExchangeService } from './services/exchange.service';
+import { ExchangePage } from '../pages/exchange/exchange';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -80,6 +82,7 @@ const firebaseConfig = {
     TransactionConfirmationPage,
     CreateWalletPage,
     BlockchainPage,
+    ExchangePage,
   ],
   entryComponents: [
     MyApp,
@@ -101,6 +104,7 @@ const firebaseConfig = {
     TransactionConfirmationPage,
     CreateWalletPage,
     BlockchainPage,
+    ExchangePage,
   ],
   imports: [
     AngularFireDatabaseModule,
@@ -126,6 +130,7 @@ const firebaseConfig = {
     LoaderService,
     KeyService,
     AuthService,
+    ExchangeService,
     EventService,
     QRScanner,
     SplashScreen,

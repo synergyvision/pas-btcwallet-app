@@ -66,6 +66,9 @@ export class MyApp {
     if ((page.component !== this.rootPage) && (page.component !== this.nav.getActive().component)) {
       this.nav.push(page.component);
     }
+    if (page.component === HomePage) {
+      this.events.publish('home:refresh');
+    }
   }
 
   // Log Out of the App

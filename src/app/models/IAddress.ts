@@ -23,5 +23,6 @@ export interface IAddress {
     wif?: string;
     crypto?: CryptoCoin;
     wallet?: IHDWallet;
+    txrefs?: ITransaction[];
 
 }

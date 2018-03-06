@@ -24,7 +24,7 @@
       </ion-option>
     </ion-select>
   </ion-item>
-  <span *ngIf="txsList">
+  <span *ngIf="!isEthereum">
     <ion-list no-lines *ngIf="segmentTxs === 'all'">
       <ion-item class="transactions-container" *ngFor="let t of txsList" no-lines>
         <ion-row>
@@ -41,8 +41,8 @@
           </ion-col>
           <ion-col col-3 text-wrap>
             <div class="transactions-amount">
-              {{t.total / 1000 }}
-              <br> mBTC
+              {{t.outputs[0].value / selectedWallet.crypto.units.exchange}}
+              <br> {{selectedWallet.crypto.units.name}}
             </div>
           </ion-col>
         </ion-row>
@@ -57,7 +57,7 @@
               {{t.received | date:'MMM dd, y hh:mm a'}}
             </div>
             <div class="transactions-address" *ngIf="segmentTxs === 'received'">
-              Destino: {{t.inputs[0].addresses[0]}}
+              Origen: {{t.inputs[0].addresses[0]}}
             </div>
             <div class="transactions-address" *ngIf="segmentTxs === 'sent'">
               Destino: {{t.outputs[0].addresses[0]}}
@@ -65,8 +65,52 @@
           </ion-col>
           <ion-col col-3 text-wrap>
             <div class="transactions-amount">
-              {{t.total / 1000 }}
-              <br> mBTC
+              {{t.outputs[0].value / selectedWallet.crypto.units.exchange}}
+              <br> {{selectedWallet.crypto.units.name}}
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+    </ion-list>
+  </span>
+
+  <span *ngIf="isEthereum">
+    <ion-list no-lines *ngIf="segmentTxs === 'all'">
+      <ion-item class="transactions-container" *ngFor="let t of txsList" no-lines>
+        <ion-row>
+          <ion-col col-9 text-wrap>
+            <div class="transactions-date">
+              {{t.confirmed | date:'MMM dd, y hh:mm a'}}
+            </div>
+            <div class="transactions-address" *ngIf="t.filtering_value === 'received'">
+              Hash: {{t.tx_hash}}
+            </div>
+          </ion-col>
+          <ion-col col-3 text-wrap>
+            <div class="transactions-amount">
+              {{t.value/ selectedWallet.crypto.units.exchange}}
+              <br> {{selectedWallet.crypto.units.name}}
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+    </ion-list>
+
+    <ion-list no-lines *ngIf="segmentTxs !== 'all'">
+      <ion-item class="transactions-container" *ngFor="let t of txsList | filterBy: ['filtering_value']: segmentTxs" no-lines>
+        <ion-row>
+          <ion-col col-9 text-wrap>
+            <div class="transactions-date">
+              {{t.confirmed | date:'MMM dd, y hh:mm a'}}
+            </div>
+            <div class="transactions-address" *ngIf="segmentTxs === 'received'">
+              Hash: {{t.tx_hash}}
+            </div>
+          </ion-col>
+          <ion-col col-3 text-wrap>
+            <div class="transactions-amount">
+              {{t.value/ selectedWallet.crypto.units.exchange }}
+              <br> {{selectedWallet.crypto.units.name}}
             </div>
           </ion-col>
         </ion-row>

@@ -23,42 +23,58 @@ export class TransactionsPage {
   public selectedWallet: Wallet;
   public txsList: ITransaction[];
   public segmentTxs: string;
+  private isEthereum: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private restService: RestService,
               private authService: AuthService, private loaderService: LoaderService) {
     this.segmentTxs = 'all';
     this.walletList = this.authService.wallets;
-    console.log(this.walletList);
   }
 
   private onWalletChange() {
-    console.log(this.selectedWallet);
     this.getTransactions(this.selectedWallet);
   }
 
   private getTransactions(wallet) {
     this.restService.getWalletTransactions(wallet)
     .subscribe((data) => {
-      this.txsList = this.receivedtransactions(data.wallet.addresses, data.txs);
-      }, (error) => {
+      if (wallet.address !== undefined) {
+        this.txsList = this.receivedtransactions(data.txrefs, undefined, wallet.address);
+      } else {
+        this.txsList = this.receivedtransactions(data.txs, data.wallet.addresses, undefined);
+      }
+    }, (error) => {
         console.log(error);
       });
   }
 
-  private receivedtransactions(addresses: string[], txs: ITransaction[]) {
-    txs.forEach((tx) => {
-      const sent = tx.inputs.some((input) =>
-        input.addresses.some((address) =>
-          addresses.includes(address),
-        ),
-      );
-      if (sent) {
-        tx.filtering_value = 'sent';
-      } else {
-        tx.filtering_value = 'received';
-      }
-    });
+  private receivedtransactions(txs: ITransaction[], addresses?: string[], address?: string) {
+    if (addresses !== undefined) {
+      this.isEthereum = false;
+      txs.forEach((tx) => {
+        const sent = tx.inputs.some((input) =>
+          input.addresses.some((ad) =>
+            addresses.includes(ad),
+          ),
+        );
+        if (sent) {
+          tx.filtering_value = 'sent';
+        } else {
+          tx.filtering_value = 'received';
+        }
+      });
+    } else {
+      this.isEthereum = true;
+      txs.forEach((tx) => {
+       if (tx.tx_input_n === 0) {
+         tx.filtering_value = 'sent';
+       } else {
+         tx.filtering_value = 'received';
+       }
+      });
+    }
+    console.log(this.isEthereum);
+    console.log(txs);
     return txs;
-  }
-
+    }
 }

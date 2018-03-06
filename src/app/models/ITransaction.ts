@@ -40,6 +40,9 @@ export interface ITransaction {
     // Ethereum only
     gas_used?: number;
     gas_price?: number;
+    tx_input_n?: number;
+    tx_output_n?: number;
+    value?: number;
 }
 
 // TXSKeleton Object

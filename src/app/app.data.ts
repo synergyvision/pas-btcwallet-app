@@ -1,4 +1,5 @@
 import { CryptoCoin } from './models/crypto';
+import { Activity } from './models/activity';
 
 // Lowest unit of Token used by default by BlockCypher
 
@@ -56,9 +57,10 @@ export class AppData {
             'DOGECOIN',
             'dog',
             [
-                { name: 'DOGE', exchange: 1 },
+                { name: 'DOGE', exchange: 100000000 },
+                { name: 'koinus', exchange: 1 },
             ],
-            1, 'DOGE'),
+            100000000, 'DOGE'),
         new CryptoCoin(
             'LiteCoin',
             'ltc',
@@ -94,14 +96,31 @@ export class AppData {
         new CryptoCoin(
             'Dash',
             'das',
-            [ {
-
-            }]
-            ,0, 'Dash'),
+            [
+                { name: 'DASH', exchange: 100000000 },
+            ],
+            100000000, 'Dash'),
     ];
 
     public static currenciesList = [
         'USD',
         'EUR',
     ];
+
+    public static exchangePairs = [
+        { crypto: 'btc', name: 'btc'},
+        { crypto: 'ltc', name: 'ltc'},
+        { crypto: 'dog', name: 'doge'},
+        { crypto: 'eth', name: 'eth'},
+        { crypto: 'das', name: 'dash'},
+    ];
+
+    public static activityList = [
+        new Activity(1, '12/12/2017', 'Acceso desde dispositivo Android NG-7800'),
+        new Activity(2, '06/11/2017', 'Cambio de clave'),
+        new Activity(3, '05/04/2017', 'Se agregaron 00,156 BTC a la billetera'),
+        new Activity(4, '28/03/2017', 'Se agregaron 00,23 BTC a la billetera'),
+        new Activity(5, '14/01/2017', 'Cambio de clave'),
+        new Activity(6, '28/12/2016', 'Acceso desde dispositivo iPhone 6c'),
+      ];
 }
