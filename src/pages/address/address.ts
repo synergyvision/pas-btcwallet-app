@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Events, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Address } from '../../app/models/address';
-import { AuthService } from '../../app/services/auth.service';
-import { AppSettings } from '../../app/app.settings';
 import { ErrorService } from '../../app/services/error.service';
+import { SharedService } from '../../app/services/shared.service';
+import { AppData } from '../../app/app.data';
 
 @IonicPage()
 @Component({
@@ -23,26 +23,9 @@ export class AddressPage {
   private error: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
-              public formBuilder: FormBuilder, private authService: AuthService) {
+              public formBuilder: FormBuilder, private sharedService: SharedService) {
     // Form Builder
-    this.inputs = [
-      {
-        placeholder: 'Correo', name: 'email', value: '', type: 'email',
-        validators: [Validators.email, Validators.maxLength(30), Validators.required],
-      },
-      {
-        placeholder: 'Alias', name: 'alias', value: '', type: 'text',
-        validators: [Validators.required, Validators.maxLength(30)],
-      },
-      {
-        placeholder: '', name: 'id', value: null, type: 'null',
-        validators: null,
-      },
-      {
-        placeholder: '', name: 'img', value: '../assets/icons/wallet-user.svg', type: 'null',
-        validators: null,
-      },
-    ];
+    this.inputs = AppData.addressInputs;
     this.addressForm = formBuilder.group({});
     this.inputs.forEach((control) => {
       this.addressForm.addControl(control.name, new FormControl(control.value));
@@ -52,7 +35,7 @@ export class AddressPage {
 
   // Save changes to the address
   private onSubmit(form) {
-    this.authService.addressExist(form.value.email)
+    this.sharedService.addressExist(form.value.email)
     .subscribe((response) => {
       if (response) {
         this.validateAddress(form);
@@ -65,10 +48,10 @@ export class AddressPage {
   }
 
   private validateAddress(form: FormGroup) {
-    this.authService.isAddressSaved(form.value.email)
+    this.sharedService.isAddressSaved(form.value.email)
       .subscribe((response) => {
         if (response.length === 0) {
-          this.authService.addAddress(form);
+          this.sharedService.addAddress(form);
           this.navCtrl.pop();
         } else {
           // User already exists on the addressBook

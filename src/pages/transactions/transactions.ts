@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { RestService } from '../../app/services/rest.service';
 import { Transaction } from '../../app/models/transaction';
-import { AuthService } from '../../app/services/auth.service';
 import { ITransaction, IWalletTrx } from '../../app/models/ITransaction';
 import { Observable } from 'rxjs';
 import { IAddress } from '../../app/models/IAddress';
 import { LoaderService } from '../../app/services/loader.service';
 import { Wallet } from '../../app/models/wallet';
+import { SharedService } from '../../app/services/shared.service';
 
 @IonicPage()
 @Component({
@@ -26,9 +26,9 @@ export class TransactionsPage {
   private isEthereum: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private restService: RestService,
-              private authService: AuthService, private loaderService: LoaderService) {
+              private sharedService: SharedService, private loaderService: LoaderService) {
     this.segmentTxs = 'all';
-    this.walletList = this.authService.wallets;
+    this.walletList = this.sharedService.wallets;
   }
 
   private onWalletChange() {

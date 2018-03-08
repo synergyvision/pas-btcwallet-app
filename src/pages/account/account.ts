@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { User } from '../../app/models/user';
-import { AuthService } from '../../app/services/auth.service';
 import { Wallet } from '../../app/models/wallet';
 import { Observable } from 'rxjs/Observable';
 import { NgZone } from '@angular/core';
 import { AppSettings } from '../../app/app.settings';
 import { Events } from 'ionic-angular/util/events';
+import { SharedService } from '../../app/services/shared.service';
 
 @IonicPage()
 @Component({
@@ -19,16 +19,16 @@ export class AccountPage {
   public wallets: Observable<any>;
   public options;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private events: Events, 
-              private authService: AuthService) {
-    this.user = this.authService.user;
+  constructor(public navCtrl: NavController, public navParams: NavParams, private events: Events,
+              private sharedService: SharedService) {
+    this.user = this.sharedService.user;
     this.options = AppSettings.accountOptions;
     this.events.subscribe('user:changedData', () => {
-      this.user = this.authService.user;
+      this.user = this.sharedService.user;
     });
     this.events.subscribe('user:loggedIn', () => {
-      this.authService.updateUser();
-      this.user = this.authService.user;
+      this.sharedService.updateUser();
+      this.user = this.sharedService.user;
     });
   }
 

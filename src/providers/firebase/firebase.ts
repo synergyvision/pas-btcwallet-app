@@ -27,6 +27,18 @@ export class FirebaseProvider {
     this.angularFire.list('user/' + uid).set('currency', 'USD');
   }
 
+  public updateCurreny(uid: string, currency: string) {
+    this.angularFire.list('user/' + uid).set('currency', currency);
+  }
+
+  public getCurrency(uid: string){
+    return this.angularFire.object('user/' + uid + '/currency')
+    .valueChanges()
+    .map((currency) => {
+      return currency;
+    });
+  }
+
   public updateEmail(email: string, uid: string ) {
     this.angularFire.list('user/' + uid).set('userEmail', email);
   }

@@ -1,18 +1,40 @@
-<!--
-  Generated template for the ExchangePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
   <ion-navbar>
-    <ion-title>exchange</ion-title>
+    <ion-title>Exchange</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
+  <ion-list no-lines>
+    <ion-item class="thin-input">
+      <ion-select (ionChange)="onWalletSelect()" class="select-option" [(ngModel)]="originWallet" placeholder="Billetera Origen">
+        <ion-option *ngFor="let w of walletList" [value]="w">{{w.name}}
+        </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item class="wallet-balance" *ngIf="originBalance">
+      Balance: {{originBalance.balance / currency.exchange}} {{currency.name| uppercase}}
+    </ion-item>
+    <ion-item class="thin-input" *ngIf="originWallet">
+      <ion-select (ionChange)="onWalletSelect()" class="select-option" [(ngModel)]="destinationWallet" placeholder="Billetera Destino">
+        <ion-option *ngFor="let w of walletList" [value]="w">{{w.name}}
+        </ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item class="wallet-balance" *ngIf="destinationBalance">
+      Balance {{destinationBalance.balance / currency.exchange }} {{currency.name| uppercase}}
+    </ion-item>
+    <div *ngIf="destinationBalance && exchangeRate">
+      <ion-item class="input">
+        <ion-label>Monto: </ion-label>
+        <ion-input [(ngModel)]="amount" type="number" [min]="exchangeRate.minerFee"></ion-input>
+      </ion-item>
+      <ion-item>
+        Monto en {{destinationWallet.crypto.unit.name}}: {{exchangeRate.rate * amount }}
+      </ion-item>
+    </div>
+  </ion-list>
 </ion-content>

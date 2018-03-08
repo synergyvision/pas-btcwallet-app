@@ -7,7 +7,7 @@ import { AlertService } from '../../app/services/alert.service';
 import { ConfirmEmailPage } from '../confirm-email/confirm-email';
 import { LoaderService } from '../../app/services/loader.service';
 import { Conditional } from '@angular/compiler';
-import { AppSettings } from '../../app/app.settings';
+import { AppData } from '../../app/app.data';
 
 @IonicPage()
 
@@ -26,7 +26,7 @@ export class RegisterPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService,
               private formBuilder: FormBuilder, private loaderService: LoaderService) {
 
-    this.inputs = AppSettings.registerForm;
+    this.inputs = AppData.registerForm;
     this.registerForm = formBuilder.group({});
     this.inputs.forEach((control) => {
       this.registerForm.addControl(control.name, new FormControl(control.value));

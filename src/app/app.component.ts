@@ -14,9 +14,10 @@ import { ErrorService } from './services/error.service';
 import { AlertService } from './services/alert.service';
 import { CreateWalletPage } from '../pages/create-wallet/create-wallet';
 import { EventService } from './services/events.services';
+import { SharedService } from './services/shared.service';
 
 @Component({
-  providers: [RestService, AuthService, LoaderService, AlertService, AppSettings, EventService],
+  providers: [RestService, AuthService, LoaderService, AlertService, AppSettings, EventService, SharedService],
   templateUrl: 'app.html',
 })
 
@@ -32,14 +33,15 @@ export class MyApp {
   public user: User;
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen,
-              public restService: RestService, public authService: AuthService, public events: Events) {
+              public restService: RestService, public authService: AuthService, public events: Events,
+              public sharedService: SharedService) {
     this.initializeApp();
 
     // List of pages that appear on the Side Menu
     this.pages = AppSettings.pagesMenu;
     this.events.subscribe('user:loggedIn', () => {
-      this.authService.updateUser();
-      this.user = this.authService.user;
+      this.sharedService.updateUser();
+      this.user = this.sharedService.user;
       this.rootPage = HomePage;
     });
     this.events.subscribe('user:newUser', () => {
@@ -49,7 +51,7 @@ export class MyApp {
       this.rootPage = LoginPage;
     });
     this.events.subscribe('user:changedData', () => {
-      this.user = this.authService.user;
+      this.user = this.sharedService.user;
     });
   }
 

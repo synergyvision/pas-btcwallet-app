@@ -13,9 +13,9 @@ export class KeyService {
     public createKeys(crypto: string, passphrase?: string) {
         const keys: IKeys = {};
         keys.mnemonics = bip39.generateMnemonic();
-        keys.seed = bip39.mnemonicToSeedHex(keys.mnemonics);
+        keys.seed = bip39.mnemonicToSeedHex(keys.mnemonics, passphrase);
         // We transform the mnemonics to a HEX Seed
-        keys.passphrase = '';
+        keys.passphrase = passphrase;
         const hdKeys = HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto));
         keys.xpub = hdKeys.neutered().toBase58();
         keys.xpriv = hdKeys.toBase58();
@@ -68,7 +68,7 @@ export class KeyService {
         return privKeys;
     }
 
-    public getPrivateKey(keys): ECPair{
+    public getPrivateKey(keys): ECPair {
         return HDNode.fromBase58(keys.xpriv).keyPair;
     }
 
@@ -81,10 +81,9 @@ export class KeyService {
             return networks.bitcoin;
         } else if (crypto === 'ltc') {
             return networks.litecoin;
-        } else if ((crypto === 'bcy') || (crypto === 'test')){
+        } else if ((crypto === 'bcy') || (crypto === 'test')) {
             return networks.testnet;
         } else {
-            // While i find the ethereum js library
             return undefined;
         }
     }

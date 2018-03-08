@@ -1,9 +1,53 @@
 import { CryptoCoin } from './models/crypto';
 import { Activity } from './models/activity';
+import { Validators } from '@angular/forms';
 
 // Lowest unit of Token used by default by BlockCypher
 
 export class AppData {
+
+    // Forms
+
+    public static registerForm = [
+        {
+          placeholder: 'Correo Eléctronico', name: 'email', icon: 'wallet-email', type: 'email',
+          validators: [Validators.email, Validators.required, Validators.maxLength(30)],
+        },
+        {
+          placeholder: 'Contraseña', name: 'password', icon: 'wallet-password', type: 'password',
+          validators: [Validators.required, Validators.minLength(8)],
+        },
+        {
+          placeholder: 'Repetir Contraseña', name: 'passwordRe', icon: 'wallet-password', type: 'password',
+          validators: [Validators.required],
+        },
+      ];
+
+      public static loginForm =  [
+        {
+          placeholder: 'Correo Electrónico', name: 'email', icon: 'wallet-email', type: 'email',
+          validators: [Validators.email, Validators.required, Validators.maxLength(30)],
+        },
+        {
+          placeholder: 'Contraseña', name: 'password', icon: 'wallet-password', type: 'password',
+          validators: [Validators.required, Validators.minLength(8)],
+        },
+      ];
+
+      public static addressInputs = [
+        {
+          placeholder: 'Correo', name: 'email', value: '', type: 'email',
+          validators: [Validators.email, Validators.maxLength(30), Validators.required],
+        },
+        {
+          placeholder: 'Alias', name: 'alias', value: '', type: 'text',
+          validators: [Validators.required, Validators.maxLength(30)],
+        },
+        {
+          placeholder: '', name: 'img', value: '../assets/icons/wallet-user.svg', type: 'null',
+          validators: null,
+        },
+      ];
 
     public static cryptoCurrencies = [
         { name: 'Testnet', value: 'tes' },
@@ -113,6 +157,9 @@ export class AppData {
         { crypto: 'dog', name: 'doge'},
         { crypto: 'eth', name: 'eth'},
         { crypto: 'das', name: 'dash'},
+        { crypto: 'tes', name: 'btc'},
+        { crypto: 'tet', name: 'eth'},
+        { crypto: 'bcy', name: 'btc'},
     ];
 
     public static activityList = [

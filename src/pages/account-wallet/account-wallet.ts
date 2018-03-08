@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { AuthService } from '../../app/services/auth.service';
 import { Observable } from 'rxjs/Observable';
 import { User } from '../../app/models/user';
 import { AppSettings } from '../../app/app.settings';
 import { AppData } from '../../app/app.data';
 import { Wallet } from '../../app/models/wallet';
 import { CryptoCoin } from '../../app/models/crypto';
+import { SharedService } from '../../app/services/shared.service';
 
 @IonicPage()
 @Component({
@@ -29,15 +29,15 @@ export class AccountWalletPage {
   private wif: string;
   private showWalletSelect: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService) {
-    this.wallets = this.authService.wallets;
-    this.user = this.authService.user;
+  constructor(public navCtrl: NavController, public navParams: NavParams, private sharedService: SharedService) {
+    this.wallets = this.sharedService.wallets;
+    this.user = this.sharedService.user;
     this.cryptoUnit = this.cryptoUnitsList.pop();
   }
 
   get self() { return this; }
   private changeCurrency() {
-    // this.authService.changeCurrency(this.selectedCurrency);
+    // this.sharedService.changeCurrency(this.selectedCurrency);
     this.clearData();
     this.message = 'Cambio exitoso';
   }
@@ -54,7 +54,7 @@ export class AccountWalletPage {
 
   private changeCryptoUnit() {
     this.selectedWallet.crypto.units = this.selectedCrypto;
-    this.authService.updateWalletCryptoUnit(this.selectedWallet)
+    this.sharedService.updateWalletCryptoUnit(this.selectedWallet)
     .then((success) => {
       this.clearData();
       this.message = 'Cambio exitoso';
@@ -72,14 +72,14 @@ export class AccountWalletPage {
   }
 
   private exportWallet() {
-    this.authService.getWalletWIF(this.selectedWallet)
+    this.sharedService.getWalletWIF(this.selectedWallet)
     .subscribe((wif) => {
       this.wif = wif;
     });
   }
 
   private showMnemonics() {
-    this.authService.getWalletMnemonics(this.selectedWallet)
+    this.sharedService.getWalletMnemonics(this.selectedWallet)
     .subscribe((mnemonics) => {
       this.selectedWallet.keys.mnemonics = mnemonics;
     });

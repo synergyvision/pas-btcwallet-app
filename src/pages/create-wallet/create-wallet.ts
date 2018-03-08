@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
-import { AuthService } from '../../app/services/auth.service';
 import { LoaderService } from '../../app/services/loader.service';
 import { IKeys } from '../../app/models/IKeys';
 import { ConfirmEmailPage } from '../confirm-email/confirm-email';
@@ -8,6 +7,7 @@ import { Events } from 'ionic-angular/util/events';
 import { AlertService } from '../../app/services/alert.service';
 import { HomePage } from '../home/home';
 import { AppData } from '../../app/app.data';
+import { SharedService } from '../../app/services/shared.service';
 
 @IonicPage()
 @Component({
@@ -24,7 +24,7 @@ export class CreateWalletPage {
   private passphrase;
   private passphraseInfo;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService,
+  constructor(public navCtrl: NavController, public navParams: NavParams, private sharedService: SharedService,
               private loaderService: LoaderService, private viewCtrl: ViewController, private events: Events,
               private alertService: AlertService) {
     if (!this.navCtrl.parent === null) {
@@ -57,7 +57,7 @@ export class CreateWalletPage {
   public continue() {
     if (this.mnemonics === undefined) {
       this.loaderService.showFullLoader('Generando Datos');
-      this.authService.createWallet(this.selectedCrypto, this.passphrase)
+      this.sharedService.createWallet(this.selectedCrypto, this.passphrase)
         .then((success) => {
           this.mnemonics = success.keys.mnemonics;
           this.loaderService.dismissLoader();

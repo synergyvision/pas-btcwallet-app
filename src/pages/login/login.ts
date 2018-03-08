@@ -6,8 +6,8 @@ import { AuthService } from '../../app/services/auth.service';
 import { FormGroup } from '@angular/forms/src/model';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AlertService } from '../../app/services/alert.service';
-import { AppSettings } from '../../app/app.settings';
 import { EventService } from '../../app/services/events.services';
+import { AppData } from '../../app/app.data';
 
 // Component for the Login Page
 @IonicPage()
@@ -23,7 +23,7 @@ export class LoginPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private events: Events,
               private authService: AuthService, private formBuilder: FormBuilder, private eventService: EventService) {
-    this.inputs = AppSettings.loginForm;
+    this.inputs = AppData.loginForm;
     this.loginForm = formBuilder.group({});
     this.inputs.forEach((control) => {
       this.loginForm.addControl(control.name, new FormControl(control.value));

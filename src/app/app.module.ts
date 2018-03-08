@@ -46,6 +46,8 @@ import { BlockchainPage } from '../pages/blockchain/blockchain';
 import { EventService } from './services/events.services';
 import { ExchangeService } from './services/exchange.service';
 import { ExchangePage } from '../pages/exchange/exchange';
+import { SharedService } from './services/shared.service';
+import { RestService } from './services/rest.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -134,6 +136,8 @@ const firebaseConfig = {
     EventService,
     QRScanner,
     SplashScreen,
+    SharedService,
+    RestService,
     {
       provide: ErrorHandler,
       useClass: IonicErrorHandler,

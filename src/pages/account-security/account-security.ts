@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { Events, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AppSettings } from '../../app/app.settings';
-import { AuthService } from '../../app/services/auth.service';
 import { User } from '../../app/models/user';
-import {  FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SharedService } from '../../app/services/shared.service';
+import { AuthService } from '../../app/services/auth.service';
 
 @IonicPage()
 @Component({
@@ -19,16 +19,16 @@ export class AccountSecurityPage {
   private showEmailInput: boolean;
   private changeEmailForm: FormGroup;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events,
-              private authService: AuthService, private formBuilder: FormBuilder) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService,
+              public events: Events, private sharedService: SharedService, private formBuilder: FormBuilder) {
     this.securityOptions = AppSettings.securityOptions;
-    this.user = this.authService.user;
+    this.user = this.sharedService.user;
     this.showEmailInput = false;
     this.changeEmailForm = formBuilder.group({
       email: ['', [Validators.email, Validators.required, Validators.maxLength(30)]],
     });
     this.events.subscribe('user:changedData', () => {
-      this.user = this.authService.user;
+      this.user = this.sharedService.user;
     });
   }
 
@@ -47,7 +47,6 @@ export class AccountSecurityPage {
   private restorePassword() {
     this.authService.restorePassword()
     .then(() => {
-      this.authService.restorePassword();
       this.message = 'Se envió un correo a ' + this.user.email;
     })
     .catch((error) => {
@@ -56,5 +55,9 @@ export class AccountSecurityPage {
   }
   private ionViewDidLeave() {
     this.message = undefined;
+  }
+
+  private activateTwoFactorAuth() {
+    console.log('Here');
   }
 }

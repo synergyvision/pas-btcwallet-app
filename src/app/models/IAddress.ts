@@ -24,5 +24,7 @@ export interface IAddress {
     crypto?: CryptoCoin;
     wallet?: IHDWallet;
     txrefs?: ITransaction[];
+    pubkeys?: string[];
+    script_type: string;
 
 }

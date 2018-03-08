@@ -12,7 +12,7 @@
   </div>
   <div class="receive-code" *ngIf="address">
     <qrcode [qrdata]="address" [level]="'M'"></qrcode>
-    <div class="receive-address">
+    <div class="receive-address selectable">
       {{address}}
     </div>
   </div>

@@ -58,6 +58,18 @@ export class RestService {
       .catch(this.handleError);
   }
 
+  public createMultisignAddress(crypto: string, keys: string[], script: string): Observable<IAddress> {
+    const data = JSON.stringify({
+      pubkeys: keys,
+      script_type: script,
+    });
+    return this.http.post(this.getPath(crypto), + '/addrs?token=' + TOKEN, data)
+    .map((res: Response) => {
+      return res.json() as IAddress;
+    })
+    .catch(this.handleError);
+  }
+
   // Derive an address from an HD Wallet
   public deriveAddress(wallet: string, crypto: string): Observable<IHDWallet> {
     return this.http.post(this.getPath(crypto) + '/wallets/hd/' + wallet + '/addresses/derive?token=' + TOKEN,

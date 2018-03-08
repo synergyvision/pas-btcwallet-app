@@ -3,7 +3,6 @@ import { NavController, Slides } from 'ionic-angular';
 import { ReceivePage } from '../receive/receive';
 import { SendPage } from '../send/send';
 import { User } from '../../app/models/user';
-import { AuthService } from '../../app/services/auth.service';
 import { RestService } from '../../app/services/rest.service';
 import { Observable } from 'rxjs/Observable';
 import { IBalance } from '../../app/models/IBalance';
@@ -16,6 +15,7 @@ import { AppData } from '../../app/app.data';
 import { CreateWalletPage } from '../create-wallet/create-wallet';
 import { EventService } from '../../app/services/events.services';
 import { ExchangeService } from '../../app/services/exchange.service';
+import { SharedService } from '../../app/services/shared.service';
 
 // Component for the Home Page, displays user balance, and options
 
@@ -33,7 +33,7 @@ export class HomePage {
   private currency: {};
   private wallets;
 
-  constructor(public navCtrl: NavController, private restService: RestService, private authService: AuthService,
+  constructor(public navCtrl: NavController, private restService: RestService, private sharedService: SharedService,
               private loaderService: LoaderService, private zone: NgZone, private events: Events,
               private exchangeService: ExchangeService) {
     this.loaderService.showFullLoader('Espere');
@@ -46,7 +46,7 @@ export class HomePage {
       this.loaderService.dismissLoader();
     })
     .catch((error) => {
-      this.handleError(Error);
+      this.handleError(error);
       this.loaderService.dismissLoader();
     });
     this.events.subscribe('wallet:update', (wallet) => {
@@ -64,10 +64,9 @@ export class HomePage {
   public getBalance(): Promise<any> {
     // We get the balance from all of the user Wallets
     return new Promise((resolve, reject) => {
-      this.authService.updateBalances()
+      this.sharedService.updateBalances()
       .subscribe((wallets) => {
         this.balances = wallets;
-        console.log(wallets);
         if (this.balances.length > 6) {
           this.canCreateNewWallet = false;
         } else {
@@ -89,11 +88,10 @@ export class HomePage {
   }
 
   private updateWallet(wallet: string) {
-    console.log('Wallet has been updated');
     const index = this.balances.findIndex((balance) => {
       return (balance.wallet.name === wallet);
     });
-    this.authService.updateBalance(this.balances[index].wallet)
+    this.sharedService.updateBalance(this.balances[index].wallet)
     .subscribe((newBalance) => {
       this.balances[index] = newBalance;
     });
@@ -119,7 +117,7 @@ export class HomePage {
     } else {
     // Error accessing REST Services
       this.error = error;
-      this.wallets = this.authService.wallets;
+      this.wallets = this.sharedService.wallets;
     }
   }
 }

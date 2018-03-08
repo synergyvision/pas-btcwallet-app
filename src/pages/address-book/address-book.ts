@@ -5,8 +5,8 @@ import { SendPage } from '../send/send';
 import { EditAddressPage } from '../edit-address/edit-address';
 import { NgZone } from '@angular/core';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
-import { AuthService } from '../../app/services/auth.service';
 import { Observable } from 'rxjs';
+import { SharedService } from '../../app/services/shared.service';
 
 @IonicPage()
 @Component({
@@ -24,11 +24,10 @@ export class AddressBookPage {
   private zone: NgZone;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
-              public dataProvider: FirebaseProvider, public authService: AuthService) {
+              public dataProvider: FirebaseProvider, public sharedService: SharedService) {
     this.zone = new NgZone({ enableLongStackTrace: false });
-    this.uid = this.authService.user.uid;
+    this.uid = this.sharedService.user.uid;
     this.addressBook = dataProvider.getAddressBook(this.uid);
-
     // If this view parent is SendPage, then we select an Address for sending BTC or CC
     if (this.navCtrl.last().name === 'SendPage') {
       this.selectAddress = true;

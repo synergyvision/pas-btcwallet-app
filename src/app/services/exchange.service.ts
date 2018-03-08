@@ -15,24 +15,15 @@ export class ExchangeService {
 
     }
 
-    public getExchangeRate(input: string, output: string): Observable<IExchange> {
-        return this.http.get(URL + '/marketinfo/' + this.getPair(input, output))
+    public getExchangeRate(pair: string): Observable<IExchange> {
+        return this.http.get(URL + '/marketinfo/' + pair)
         .map((res: Response) => {
             return res.json() as IExchange;
         })
         .catch(this.handleError);
     }
 
-    public getPair(input: string, output: string): string {
-        const input_pair = AppData.exchangePairs.filter((p) => {
-            return p.crypto === input;
-        }).pop().name;
-        const output_pair = AppData.exchangePairs.filter((p) => {
-            return p.crypto === output;
-        }).pop().name;
-        return input_pair + '_' + output_pair;
-    }
-
+   
     // public exchangeCurrencies(input: string, output: string, amount: number)
 
     private handleError(er): Observable<any> {

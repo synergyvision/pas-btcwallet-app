@@ -4,9 +4,9 @@ import { LoaderService } from '../../app/services/loader.service';
 import { RestService } from '../../app/services/rest.service';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
 import { Observable } from 'rxjs/Observable';
-import { AuthService } from '../../app/services/auth.service';
 import { IHDWallet } from '../../app/models/IHDWallet';
 import { AlertService } from '../../app/services/alert.service';
+import { SharedService } from '../../app/services/shared.service';
 
 // Component for Receiving BTC Page. Displays the user QR Code an address
 @IonicPage()
@@ -20,22 +20,18 @@ export class ReceivePage {
   private wallet;
 
   constructor(public navCtrl: NavController, private restService: RestService, private navParams: NavParams,
-              private loaderService: LoaderService, private authService: AuthService,
+              private loaderService: LoaderService, private sharedService: SharedService,
               private alertService: AlertService) {
 
     // We show a loader while we check the data using the rest service
     this.loaderService.showFullLoader('Generando Código');
-    this.restService.addFundsTestnet('0x6818f6e5f63787e238131bbb5de2069b23b70624', 200000000000000000, 'tet')
-    .subscribe((res) => {
-      console.log(res);
-    });
     // We check if last generated address was used for another transaction
     this.getAddress();
 
   }
 
   public getAddress() {
-    const uid = this.authService.user.uid;
+    const uid = this.sharedService.user.uid;
     this.wallet = this.navParams.data;
     // If it is an Ethereum wallet
     if (this.wallet.address) {

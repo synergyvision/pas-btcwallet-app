@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { RestService } from '../../app/services/rest.service';
 import { LoaderService } from '../../app/services/loader.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../app/services/auth.service';
 import { Address } from '../../app/models/address';
 import { ITransactionSke } from '../../app/models/ITransaction';
 import { Transaction } from '../../app/models/transaction';
@@ -11,6 +10,7 @@ import { AlertService } from '../../app/services/alert.service';
 import { TransactionConfirmationPage } from '../transaction-confirmation/transaction-confirmation';
 import { IBalance } from '../../app/models/IBalance';
 import { ErrorService } from '../../app/services/error.service';
+import { SharedService } from '../../app/services/shared.service';
 
 @IonicPage()
 @Component({
@@ -30,7 +30,7 @@ export class SendConfirmPage {
   private error: ErrorService;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private loaderService: LoaderService,
-              private restService: RestService, private formBuilder: FormBuilder, private authService: AuthService,
+              private restService: RestService, private formBuilder: FormBuilder, private sharedService: SharedService,
               private alertService: AlertService) {
     this.currency = {
       name: 'USD',
@@ -72,7 +72,7 @@ export class SendConfirmPage {
   }
 
   private createTransactionWalletUser(form: FormGroup) {
-    this.authService.getWalletByEmail(this.address.email, this.balance.wallet.crypto.value)
+    this.sharedService.getWalletByEmail(this.address.email, this.balance.wallet.crypto.value)
       .subscribe((receiverAddress) => {
         console.log(receiverAddress);
         this.restService.createPayment(receiverAddress, form.value.amount,
@@ -91,7 +91,7 @@ export class SendConfirmPage {
   }
 
   private signPayment(transaction: ITransactionSke) {
-    this.authService.sendPayment(transaction, this.balance.wallet)
+    this.sharedService.sendPayment(transaction, this.balance.wallet)
       .subscribe((response) => {
         console.log(response);
         this.loaderService.dismissLoader();
