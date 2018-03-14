@@ -2,13 +2,6 @@ export class CryptoCoin {
     public name: string;
     public value: string;
     public units?: any;
-    // Expected Input
-    /*     [
-        {
-        name: string,
-        exchange: number,
-        }
-    ]; */
     public difference: number;
     public coin: string;
 

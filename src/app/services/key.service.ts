@@ -5,6 +5,7 @@ import * as hdKey from 'ethereumjs-wallet/hdkey';
 import * as ethereumjsWallet from 'ethereumjs-wallet';
 import { ITInput, ITransaction, ITransactionSke } from '../models/ITransaction';
 import { ECPair, HDNode, TransactionBuilder, networks } from 'bitcoinjs-lib';
+import { ISigner } from '../models/multisignedWallet';
 
 @Injectable()
 
@@ -15,7 +16,7 @@ export class KeyService {
         keys.mnemonics = bip39.generateMnemonic();
         keys.seed = bip39.mnemonicToSeedHex(keys.mnemonics, passphrase);
         // We transform the mnemonics to a HEX Seed
-        keys.passphrase = passphrase;
+        keys.passphrase = passphrase || '';
         const hdKeys = HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto));
         keys.xpub = hdKeys.neutered().toBase58();
         keys.xpriv = hdKeys.toBase58();
@@ -32,6 +33,7 @@ export class KeyService {
         /*         We need to add the relevant information to the toSign, signatures and signingKeys fields
                 to be sent with the Transaction skeleton to BlockCypher */
         const inputAddress = trx.tx.inputs;
+        // If is an Ethereum or Ethereum Testnet Address
         if (crypto !== 'tet' && crypto !== 'eth') {
             const signingKeys = this.derivePrivKey(keys, inputAddress, this.getNetwork(crypto));
             // We Sign and add the Public Keys to the Transaction Skeleton
@@ -39,13 +41,14 @@ export class KeyService {
                 trx.pubkeys.push(signingKeys[n].getPublicKeyBuffer().toString('hex'));
                 return signingKeys[n].sign(new Buffer(tosign, 'hex')).toDER().toString('hex');
             });
+        // If it is an HD Wallet
         } else {
             const signingKeys = this.getPrivateKey(keys);
             trx.signatures = trx.tosign.map((tosign, n) => {
+                trx.pubkeys.push(signingKeys.getPublicKeyBuffer().toString('hex'));
                 return signingKeys.sign(Buffer.from(tosign, 'hex')).toDER().toString('hex');
             });
         }
-        console.log(JSON.stringify(trx));
         return trx;
     }
 
@@ -69,7 +72,8 @@ export class KeyService {
     }
 
     public getPrivateKey(keys): ECPair {
-        return HDNode.fromBase58(keys.xpriv).keyPair;
+        return HDNode.fromSeedHex(keys.seed).keyPair;
+        // return HDNode.fromBase58(keys.xpriv).keyPair;
     }
 
     public getWIF(keys: IKeys, crypto: string): string {
@@ -88,4 +92,18 @@ export class KeyService {
         }
     }
 
+    // MultiSigned Wallet Methods
+
+    public createMultiSignedKeys(users: number, crypto: string): IKeys[] {
+        const keys: IKeys[] = [];
+        let key: IKeys = {};
+        while ( users > 0 ) {
+            key = this.createKeys(crypto);
+            key.xpriv = '';
+            key.xpub = HDNode.fromSeedHex(key.seed).keyPair.getPublicKeyBuffer().toString('hex');
+            keys.push(key);
+            users --;
+        }
+        return keys;
+    }
 }

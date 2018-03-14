@@ -1,7 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { Events, IonicPage, NavController, NavParams } from 'ionic-angular';
-import { HomePage } from '../../pages/home/home';
-import { RegisterPage } from '../register/register';
 import { AuthService } from '../../app/services/auth.service';
 import { FormGroup } from '@angular/forms/src/model';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
@@ -49,7 +47,7 @@ export class LoginPage {
   }
 
   private goToRegister() {
-    this.navCtrl.push(RegisterPage);
+    this.navCtrl.push('RegisterPage');
   }
 
 }

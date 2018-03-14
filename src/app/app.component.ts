@@ -2,8 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { HomePage } from '../pages/home/home';
-import { LoginPage } from '../pages/login/login';
 import { RestService } from './services/rest.service';
 import { AuthService } from './services/auth.service';
 import { User } from './models/user';
@@ -12,7 +10,6 @@ import { AppSettings } from './app.settings';
 import { LoaderService } from './services/loader.service';
 import { ErrorService } from './services/error.service';
 import { AlertService } from './services/alert.service';
-import { CreateWalletPage } from '../pages/create-wallet/create-wallet';
 import { EventService } from './services/events.services';
 import { SharedService } from './services/shared.service';
 
@@ -42,13 +39,13 @@ export class MyApp {
     this.events.subscribe('user:loggedIn', () => {
       this.sharedService.updateUser();
       this.user = this.sharedService.user;
-      this.rootPage = HomePage;
+      this.rootPage = 'HomePage';
     });
     this.events.subscribe('user:newUser', () => {
-      this.rootPage = CreateWalletPage;
+      this.rootPage = 'CreateWalletPage';
     });
     this.events.subscribe('user:loggedOut', () => {
-      this.rootPage = LoginPage;
+      this.rootPage = 'LoginPage';
     });
     this.events.subscribe('user:changedData', () => {
       this.user = this.sharedService.user;
@@ -58,7 +55,7 @@ export class MyApp {
   public initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      this.rootPage = LoginPage;
+      this.rootPage = 'LoginPage';
       this.splashScreen.hide();
     });
   }
@@ -68,7 +65,7 @@ export class MyApp {
     if ((page.component !== this.rootPage) && (page.component !== this.nav.getActive().component)) {
       this.nav.push(page.component);
     }
-    if (page.component === HomePage) {
+    if (page.component === 'HomePage') {
       this.events.publish('home:refresh');
     }
   }

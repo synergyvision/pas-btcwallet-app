@@ -1,4 +1,4 @@
-import { CryptoCoin } from "./crypto";
+import { CryptoCoin } from './crypto';
 
 // Interface for the HDWallet Object received by the API
 // Info on https://www.blockcypher.com/dev/bitcoin/?javascript#hdwallet
@@ -23,4 +23,6 @@ export interface IHDWallet {
     subchain_indexes?: number[];
     addresses?: string[];
     crypto?: CryptoCoin;
+    multiSignedKey?: string;
+    address?: string;
 }

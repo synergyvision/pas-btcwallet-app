@@ -1,24 +1,23 @@
+import { ITransactionSke } from '../../app/models/ITransaction';
 import { Component, NgZone, ViewChild } from '@angular/core';
-import { NavController, Slides } from 'ionic-angular';
-import { ReceivePage } from '../receive/receive';
-import { SendPage } from '../send/send';
 import { User } from '../../app/models/user';
 import { RestService } from '../../app/services/rest.service';
 import { Observable } from 'rxjs/Observable';
 import { IBalance } from '../../app/models/IBalance';
 import { LoaderService } from '../../app/services/loader.service';
 import { ErrorService } from '../../app/services/error.service';
-import { ITransactionSke } from '../../app/models/ITransaction';
+import { IonicPage, NavController, Slides } from 'ionic-angular';
 import { Events } from 'ionic-angular/util/events';
 import { Wallet } from '../../app/models/wallet';
 import { AppData } from '../../app/app.data';
-import { CreateWalletPage } from '../create-wallet/create-wallet';
 import { EventService } from '../../app/services/events.services';
 import { ExchangeService } from '../../app/services/exchange.service';
 import { SharedService } from '../../app/services/shared.service';
+import { ISigner } from '../../app/models/multisignedWallet';
 
 // Component for the Home Page, displays user balance, and options
 
+@IonicPage()
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
@@ -49,12 +48,36 @@ export class HomePage {
       this.handleError(error);
       this.loaderService.dismissLoader();
     });
+    this.getRequests();
     this.events.subscribe('wallet:update', (wallet) => {
       this.updateWallet(wallet);
     });
     this.events.subscribe('home:refresh', () => {
       this.slides.slideTo(1);
     });
+    // this.createWallet();
+  }
+
+  public getRequests() {
+    this.sharedService.getRequests()
+    .subscribe((requests) => {
+      console.log(requests);
+    });
+  }
+
+  public createWallet() {
+    const data: ISigner[] = [
+      { email: 'a@a.com', uid: 'pUH4YKUc6ZbZ8MIj0Dft5Hg14Wb2', pubKey: '' },
+      { email: 'c@c.com', uid: 'VTxK5ZRyC7exB2i1xPfrVsQRPXa2', pubKey: '' },
+    ];
+    console.log(data);
+    this.sharedService.createMultisignWallet('tes', 'multisig-2-of-2', data)
+      .then((resolve) => {
+        console.log(resolve);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   public newUser() {
@@ -80,11 +103,12 @@ export class HomePage {
   }
 
   private goToReceive(wallet) {
-    this.navCtrl.push(ReceivePage, wallet);
+    console.log(wallet);
+    this.navCtrl.push('ReceivePage', wallet);
   }
 
   private goToSend(balance) {
-    this.navCtrl.push(SendPage, balance);
+    this.navCtrl.push('SendPage', balance);
   }
 
   private updateWallet(wallet: string) {
@@ -108,7 +132,11 @@ export class HomePage {
   }
 
   private createNewWallet() {
-    this.navCtrl.push(CreateWalletPage);
+    this.navCtrl.push('CreateWalletPage');
+  }
+
+  private createNewMultiWallet() {
+    this.navCtrl.push('CreateMultiwalletPage');
   }
 
   private handleError(error) {

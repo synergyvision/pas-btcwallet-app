@@ -10,20 +10,25 @@ import { FormGroup } from '@angular/forms';
 import { ITransactionSke } from '../models/ITransaction';
 import { IHDWallet } from '../models/IHDWallet';
 import { KeyService } from './key.service';
-import { AppData } from '../app.data';
 import { AuthService } from './auth.service';
 import { User } from '../models/user';
 import { Events } from 'ionic-angular';
 import { IKeys } from '../models/IKeys';
 import { ExchangeService } from './exchange.service';
 import { IExchange } from '../models/IExchange';
+import { IPendingTxs, ISigner, MultiSignedWallet, IMSWalletRequest } from '../models/multisignedWallet';
+import { IAddress } from '../models/IAddress';
+import { Address } from '../models/address';
+import { AppData } from '../app.data';
 
+const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
 @Injectable()
 
 export class SharedService {
     public balances: IBalance[];
     public user: User;
     public wallets: Wallet[];
+    public multiSignedWallets: MultiSignedWallet[];
     public currency;
 
     constructor(public firebaseData: FirebaseProvider, public restService: RestService, public events: Events,
@@ -33,18 +38,24 @@ export class SharedService {
             this.setUser(this.authService.getLoggedUser());
             this.wallets = undefined;
             this.balances = undefined;
+            this.multiSignedWallets = undefined;
         });
+        // We get all of the logged user information
         this.events.subscribe('user:loggedIn', () => {
             this.setUser(this.authService.getLoggedUser());
-            this.getWalletsAsync().subscribe((wallets) => {
-                this.setWallets(wallets);
-            });
+            this.getWalletsAsync()
+                .subscribe((wallets) => {
+                    this.setWallets(wallets);
+                });
             this.getCurrency();
+            this.getRequests();
         });
         this.events.subscribe('user:changedData', () => {
             this.updateUser();
         });
     }
+
+    // Setters
 
     public setUser(user: User) {
         this.user = user;
@@ -52,10 +63,27 @@ export class SharedService {
 
     public setWallets(wallets: Wallet[]) {
         this.wallets = wallets;
+        this.multiSignedWallets = [];
+        wallets.forEach((wallet) => {
+            if (wallet.multiSignedKey !== '') {
+                this.firebaseData.getMultiSignedWallet(wallet.multiSignedKey)
+                    .subscribe((mSWallet: MultiSignedWallet) => {
+                        this.multiSignedWallets.push(mSWallet);
+                    });
+            }
+        });
+
     }
 
     public updateUser() {
         this.user = this.authService.getLoggedUser();
+    }
+
+    public getRequests(): Observable<IMSWalletRequest[]> {
+        return this.firebaseData.getMultiSignedWalletRequest(this.user.uid)
+        .map((request) => {
+            return request;
+        });
     }
 
     public setBalances(balances) {
@@ -64,41 +92,49 @@ export class SharedService {
         });
     }
 
-    // Creates a new wallet for a logged User
-    public createWallet(crypto, passphrase): Promise<Wallet> {
-        return new Promise((resolve, reject) => {
-            // We create the crypto information according to the currency selected
-            const keys = this.keyService.createKeys(crypto, passphrase);
-            const data = {
-                name: crypto + this.user.uid.substring(0, 21),
-                extended_public_key: keys.xpub,
-            };
-            // The unit of the coin is by default the smallest one
-            const currency = AppData.cryptoUnitList.filter((c) => {
-                return c.value.includes(crypto);
-            }).pop();
-            currency.units = currency.units.pop();
-            // We send the info to the BlockCypher API
-            if ((crypto !== 'tet') && (crypto !== 'eth')) {
-            this.restService.createWalletHD(data, crypto)
-                .subscribe((hdWallet) => {
-                    // Succeed Creating the Wallet, so now we need to store the info on Firebase
-                    const newWallet = new Wallet(hdWallet.name, keys, currency);
-                    this.firebaseData.addWallet(newWallet, this.user.uid);
-                    resolve(newWallet);
-                },
-                    (error) => {
-                        reject(error);
-                    });
-            } else {
-                const address = this.keyService.generateAddress(keys);
-                const newWallet = new Wallet(data.name, keys, currency);
-                newWallet.address = address;
-                this.firebaseData.addWallet(newWallet, this.user.uid);
-                resolve(newWallet);
-            }
+    // Transform the data that is going to be shown on the views
+
+    public formatBalanceData(balances: IBalance[]): IBalance[] {
+        balances.forEach((balance) => {
+            balance.balance = parseFloat(balance.balance.toFixed(2));
+        });
+        return balances;
+    }
+
+     // User preferences
+
+     public updateWalletCryptoUnit(wallet: Wallet): Promise<any> {
+        return this.firebaseData.updateWalletCrypto(wallet, this.user.uid);
+    }
+
+    public getWalletWIF(wallet: Wallet): Observable<string> {
+        return this.firebaseData.getWalletsKeys(this.user.uid, wallet.key)
+            .map((keys: IKeys) => {
+                return this.keyService.getWIF(keys, wallet.crypto.value);
+            });
+    }
+
+    public getWalletMnemonics(wallet: Wallet): Observable<string> {
+        return this.firebaseData.getWalletsKeys(this.user.uid, wallet.key)
+            .map((keys: IKeys) => {
+                return keys.mnemonics;
+            });
+    }
+
+    public walletEventCreation(wallets: Wallet[]) {
+        wallets.forEach((wallet) => {
+            this.eventService.createTXConfirmationEvent(wallet.name);
         });
     }
+
+    public getCurrency() {
+        this.firebaseData.getCurrency(this.user.uid)
+            .subscribe((currency) => {
+                this.currency = currency;
+            });
+    }
+
+    // Home Functions, they are required when the user logs in
 
     // Gets the latest Balance from the User Wallets ***
     public updateBalances(): Observable<any> {
@@ -126,9 +162,9 @@ export class SharedService {
     }
 
     // Returns an IBalance object from a single Wallet
-    public updateBalance(wallet: Wallet): Observable<IBalance> {
-        if (wallet.crypto.value === 'eth' || wallet.crypto.value === 'tet') {
-            return this.restService.getEthereumBalance(wallet);
+    public updateBalance(wallet): Observable<IBalance> {
+        if (wallet.address !== '') {
+            return this.restService.getAddressWalletBalance(wallet);
         } else {
             return this.restService.getBalanceFromWallet(wallet);
         }
@@ -141,26 +177,7 @@ export class SharedService {
         }
     }
 
-    // Returns another app user wallet information *** NO MULTI WALLET IMPLEMENTATION
-    public getWalletByEmail(email: string, coin: string): Observable<any> {
-        return this.firebaseData.getWalletByEmail(email, coin)
-            .first()
-            .flatMap((wallet) => {
-                if (wallet.address) {
-                    return Observable.of(wallet.address);
-                }
-                if (wallet.name) {
-                    return this.restService.deriveAddress(wallet.name, coin);
-                } else {
-                    const error = new ErrorService(null, 'NO_WALLET_FOR_SELECTED_CRYPTO');
-                    return Observable.throw(error);
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                return Observable.throw(error);
-            });
-    }
+    // Address Book Functions
 
     // Checks the user Address Book for duplicate values
     public isAddressSaved(email: string): Observable<any> {
@@ -190,76 +207,153 @@ export class SharedService {
         this.firebaseData.addAddressToAddressBook(this.user.uid, form.value);
     }
 
+    // Wallet Creation
+
+    // Creates a new wallet for a logged User
+    public createWallet(crypto, passphrase): Promise<Wallet> {
+        return new Promise((resolve, reject) => {
+            // We create the crypto information according to the currency selected
+            const keys = this.keyService.createKeys(crypto, passphrase);
+            const data = {
+                name: crypto + this.user.uid.substring(0, 21),
+                extended_public_key: keys.xpub,
+            };
+            // The unit of the coin is by default the smallest one
+            const currency = AppData.cryptoUnitList.filter((c) => {
+                return c.value.includes(crypto);
+            }).pop();
+            currency.units = currency.units.pop();
+            // We send the info to the BlockCypher API
+            if ((crypto !== 'tet') && (crypto !== 'eth')) {
+                this.restService.createWalletHD(data, crypto)
+                    .subscribe((hdWallet) => {
+                        // Succeed Creating the Wallet, so now we need to store the info on Firebase
+                        const newWallet = new Wallet(hdWallet.name, keys, currency);
+                        this.firebaseData.addWallet(newWallet, this.user.uid);
+                        resolve(newWallet);
+                    },
+                        (error) => {
+                            reject(error);
+                        });
+            } else {
+                const address = this.keyService.generateAddress(keys);
+                const newWallet = new Wallet(data.name, keys, currency);
+                newWallet.address = address;
+                this.firebaseData.addWallet(newWallet, this.user.uid);
+                resolve(newWallet);
+            }
+        });
+    }
+
+    // Functions for creating and sending Payments
+
+    // Returns another app user wallet information *** NO MULTI WALLET IMPLEMENTATION
+    public getWalletByEmail(email: string, coin: string): Observable<any> {
+        return this.firebaseData.getWalletByEmail(email, coin)
+            .first()
+            .flatMap((wallet) => {
+                if (wallet.address) {
+                    return Observable.of(wallet.address);
+                }
+                if (wallet.name) {
+                    return this.restService.deriveAddress(wallet.name, coin);
+                } else {
+                    const error = new ErrorService(null, 'NO_WALLET_FOR_SELECTED_CRYPTO');
+                    return Observable.throw(error);
+                }
+            })
+            .catch((error) => {
+                return Observable.throw(error);
+            });
+    }
+
+    // Creates a Pending Transaction to be signed by the user(s)
+
+    public createPayment(address: string, amount: number, wallet: IHDWallet) {
+        let data: {};
+        // MultiSigned Wallets
+        if (wallet.multiSignedKey !== '') {
+            data = JSON.stringify({
+                inputs: [{
+                    addresses: [
+                        wallet.address,
+                    ],
+                    script_type: 'multisig-2-of-2',
+                }],
+                outputs: [{
+                    addresses: [
+                        address,
+                    ],
+                    value: Number(amount),
+                }],
+            });
+        }
+
+        // Ethereum and Ethereum Testnet Wallets
+        if ((wallet.address !== '') && ((wallet.crypto.value === 'tet') || (wallet.crypto.value === 'bet'))) {
+            data = JSON.stringify({
+                inputs: [{
+                    addresses: [
+                        wallet.address,
+                    ],
+                }],
+                outputs: [{
+                    addresses: [
+                        address,
+                    ],
+                    value: Number(amount),
+                }],
+            });
+
+        // HD Wallets
+        } else if (wallet.address === '') {
+            data = JSON.stringify({
+                inputs: [{
+                    wallet_name: wallet.name,
+                    wallet_token: TOKEN,
+                }],
+                outputs: [{
+                    addresses: [
+                        address,
+                    ],
+                    value: Number(amount),
+                }],
+            });
+        }
+        return this.restService.createPayment(data, wallet.crypto.value);
+    }
+
     // Function for signing an ITransactionSke, needed for Sending money (Payments) ***
-    public sendPayment(transaction: ITransactionSke, wallet: IHDWallet): Observable<any> {
-        if (this.wallets) {
+    public sendPayment(transaction: ITransactionSke, wallet: IHDWallet, address?: any): Observable<any> {
+        if (wallet.multiSignedKey !== '') {
+            // We create a Transaction
+            this.createPendingTrx(transaction, wallet, address);
+        } else if (this.wallets) {
             const signingWallet = this.wallets.find((w) => {
                 return (w.name === wallet.name);
             });
-             // The transaction Skeleton is incomplete, we need to add pub keys and sign the data
+            // The transaction Skeleton is incomplete, we need to add pub keys and sign the data
             return this.firebaseData.getWalletsKeys(this.user.uid, signingWallet.key)
-            .first()
-            .flatMap((keys) => {
-                signingWallet.keys = keys;
-                const trx = this.keyService
-                .signWithPrivKey(transaction, signingWallet.keys, signingWallet.crypto.value);
-                return this.restService.sendPayment(trx, wallet.crypto.value)
-                .map((response) => {
-                    // The transaction was Created Successfully
-                    return response;
-                }).catch((error) => {
-                    console.log(error);
-                    return error;
+                .first()
+                .flatMap((keys) => {
+                    signingWallet.keys = keys;
+                    const trx = this.keyService
+                        .signWithPrivKey(transaction, signingWallet.keys, signingWallet.crypto.value);
+                    return this.restService.sendPayment(trx, wallet.crypto.value)
+                        .map((response) => {
+                            // The transaction was Created Successfully
+                            return response;
+                        }).catch((error) => {
+                            console.log(error);
+                            return error;
+                        });
                 });
-            });
         }
     }
 
-    // User preferences
+    // Exchange Functions
 
-    public updateWalletCryptoUnit(wallet: Wallet): Promise<any> {
-        return this.firebaseData.updateWalletCrypto(wallet, this.user.uid);
-    }
-
-    public getWalletWIF(wallet: Wallet): Observable<string> {
-        return this.firebaseData.getWalletsKeys(this.user.uid, wallet.key)
-        .map((keys: IKeys) => {
-            return this.keyService.getWIF(keys, wallet.crypto.value);
-        });
-    }
-
-    public getWalletMnemonics(wallet: Wallet): Observable<string> {
-        return this.firebaseData.getWalletsKeys(this.user.uid, wallet.key)
-        .map((keys: IKeys) => {
-            return keys.mnemonics;
-        });
-    }
-
-    public walletEventCreation(wallets: Wallet[]) {
-       wallets.forEach((wallet) => {
-            this.eventService.createTXConfirmationEvent(wallet.name);
-        });
-    }
-
-    public getCurrency() {
-        this.firebaseData.getCurrency(this.user.uid)
-        .subscribe((currency) => {
-            this.currency = currency;
-        });
-    }
-/* 
-    public getCurrencyExchange() {
-    } */
-
-    // Transform the data that is going to be shown on the views
-    public formatBalanceData(balances: IBalance[]): IBalance[] {
-        balances.forEach((balance) => {
-            balance.balance = parseFloat(balance.balance.toFixed(2));
-        });
-        return balances;
-    }
-
-    public getExchangePair(input: string, output: string): string{
+    public getExchangePair(input: string, output: string): string {
         const input_pair = AppData.exchangePairs.filter((p) => {
             return p.crypto === input;
         }).pop().name;
@@ -272,5 +366,118 @@ export class SharedService {
     public getExchangeRate(input: string, output: string): Observable<IExchange> {
         const pair = this.getExchangePair(input, output);
         return this.exchangeService.getExchangeRate(pair);
+    }
+
+    // MultiSigned Wallets Functions
+
+    // We Verify that all signers are registered on the App
+
+    public addressesExist(emails: string[]): Observable<any> {
+        const response: Array<Observable<any>> = [];
+        emails.forEach((email) => {
+            response.push(this.addressExist(email));
+        });
+        return Observable.combineLatest(response)
+            .map((result) => {
+                if (result.includes(false)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }, (error) => {
+                return Observable.throw(error);
+        });
+    }
+
+    // We create the MultiSigned Walled Request for the other users on the App
+
+    public createMultisignWalletRequest(data: any, users: string[]) {
+        const request: IMSWalletRequest = {};
+        request.createdBy = this.user.email;
+        request.crypto = data.selectedCrypto;
+        users.push(this.user.email);
+        request.signers = users;
+        request.accepted = [];
+        request.accepted.push(this.user.email);
+        request.type = 'multisig-' +  data.numberOfSigners + '-' + data.numberOfSignatures;
+        request.rejected = false;
+        return this.addMultiSignedWalletRequest(request, users);
+
+    }
+
+    public addMultiSignedWalletRequest(request: IMSWalletRequest, users: string[]) {
+        console.log(request);
+        this.firebaseData.getUserKeyByEmail(users)
+        .first()
+        .subscribe((keys) => {
+            console.log(keys);
+            this.firebaseData.addMultiSignedWalletRequest(request, keys);
+            return request;
+        }, (error) => {
+            return Observable.throw(error);
+        });
+    }
+
+
+    public createMultisignWallet(crypto: string, type: string, users: ISigner[]) {
+        // Emails were verified before
+        return new Promise((resolve, reject) => {
+            // First we create the new Wallet Data
+            const name = 'MS' + crypto + this.user.uid.substring(0, 19);
+            const script = 'multisig-2-of-2';
+            const currency = AppData.cryptoUnitList.filter((c) => {
+                return c.value.includes(crypto);
+            }).pop();
+            currency.units = currency.units.pop();
+            // We create the Keys for every Signer
+            const keys = this.keyService.createMultiSignedKeys(users.length, crypto);
+            const userKeys: any[] = keys;
+            const pubKeys: string[] = [];
+            users.forEach((user) => {
+                user.pubKey = userKeys.shift();
+                pubKeys.unshift(user.pubKey.xpub);
+            });
+            if ((crypto !== 'tet') && (crypto !== 'eth')) {
+                this.restService.createMultiSignedAddress(crypto, pubKeys, script)
+                    .first()
+                    .subscribe((address: IAddress) => {
+                        const data = {
+                            name: name,
+                            address: address.address,
+                        };
+                        const newWallet = new MultiSignedWallet(name, currency, users, script, address.address);
+                        const key = this.firebaseData.addMultiSignedWallet(newWallet, users);
+                        resolve(newWallet);
+                    },
+                        (error) => {
+                            reject(error);
+                        });
+            } else {
+                /* // Ethereum wallets
+                 // const address = this.keyService.generateAddress(keys);
+                const newWallet = new Wallet(name, keys, currency);
+                newWallet.address = address;
+                this.firebaseData.addWallet(newWallet, this.user.uid);
+                resolve(newWallet); */
+            }
+        });
+    }
+
+    public createPendingTrx(transaction: ITransactionSke, wallet: IHDWallet, address: any) {
+        const signingWallet = this.wallets.find((w) => {
+            return (w.name === wallet.name);
+        });
+        transaction = this.keyService.signWithPrivKey(transaction, signingWallet.keys, signingWallet.crypto.value);
+        let pendingTrx: IPendingTxs;
+        pendingTrx.tx = transaction.tx;
+        pendingTrx.to = address;
+        pendingTrx.createdBy = this.user.email;
+        const mSWallet = this.multiSignedWallets.find((w) => {
+            return (w.name === wallet.name);
+        });
+        pendingTrx.approved.push({ user: this.user.email });
+        mSWallet.pendingTxs.push(pendingTrx);
+        this.firebaseData.updateMultiSignedWallet(mSWallet);
+
     }
 }

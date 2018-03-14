@@ -7,7 +7,6 @@ import { Address } from '../../app/models/address';
 import { ITransactionSke } from '../../app/models/ITransaction';
 import { Transaction } from '../../app/models/transaction';
 import { AlertService } from '../../app/services/alert.service';
-import { TransactionConfirmationPage } from '../transaction-confirmation/transaction-confirmation';
 import { IBalance } from '../../app/models/IBalance';
 import { ErrorService } from '../../app/services/error.service';
 import { SharedService } from '../../app/services/shared.service';
@@ -63,7 +62,7 @@ export class SendConfirmPage {
   }
 
   private createTransactionInput(form: FormGroup) {
-    this.restService.createPayment(this.address, form.value.amount, this.balance.wallet)
+    this.sharedService.createPayment(this.address, form.value.amount, this.balance.wallet)
     .subscribe((transaction) => {
       this.signPayment(transaction);
     }, (error) => {
@@ -75,7 +74,7 @@ export class SendConfirmPage {
     this.sharedService.getWalletByEmail(this.address.email, this.balance.wallet.crypto.value)
       .subscribe((receiverAddress) => {
         console.log(receiverAddress);
-        this.restService.createPayment(receiverAddress, form.value.amount,
+        this.sharedService.createPayment(receiverAddress, form.value.amount,
           this.balance.wallet)
           .subscribe((response) => {
             this.signPayment(response);
@@ -95,7 +94,7 @@ export class SendConfirmPage {
       .subscribe((response) => {
         console.log(response);
         this.loaderService.dismissLoader();
-        this.navCtrl.push(TransactionConfirmationPage, response);
+        this.navCtrl.push('TransactionConfirmationPage', response);
       }, (error) => {
         this.loaderService.dismissLoader();
         this.message = error;

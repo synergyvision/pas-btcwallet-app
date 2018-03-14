@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, keyframes } from '@angular/core';
 import { User } from '../../app/models/user';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireList, AngularFireObject } from 'angularfire2/database/interfaces';
@@ -12,6 +12,8 @@ import { Wallet } from '../../app/models/wallet';
 import { Address } from '../../app/models/address';
 import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
 import { IKeys } from '../../app/models/IKeys';
+import { MultiSignedWallet, ISigner, IMSWalletRequest } from '../../app/models/multisignedWallet';
+import { CryptoCoin } from '../../app/models/crypto';
 
 @Injectable()
 export class FirebaseProvider {
@@ -59,6 +61,10 @@ export class FirebaseProvider {
         });
         return wallet;
       });
+  }
+
+  public setWallet(wallet: Wallet, uid: string, key: string) {
+    this.angularFire.list('user/' + uid + '/wallet/').push(wallet);
   }
 
   public updateWalletCrypto(wallet: Wallet, uid: string) {
@@ -117,7 +123,7 @@ export class FirebaseProvider {
   }
 
   public getUserByEmail(email: string) {
-    return this.angularFire.list('/user', (ref) =>
+    return this.angularFire.list('user', (ref) =>
       ref.orderByChild('userEmail')
       .equalTo(email))
       .valueChanges();
@@ -146,6 +152,60 @@ export class FirebaseProvider {
       return changes.map((c) => ({
         key: c.payload.key, ...c.payload.val(),
       }));
+    });
+  }
+
+  // MultiSigned Wallets
+
+  public addMultiSignedWallet(multiWallet: MultiSignedWallet, walletOwner: any[]) {
+    console.log(walletOwner);
+    const key = this.angularFire.list('multiSignedWallet/').push(multiWallet).key;
+    const wallet = multiWallet.toWallet(key);
+    walletOwner.forEach((owner) => {
+      wallet.keys = owner.pubKey;
+      this.setWallet(wallet, owner.uid, key);
+    });
+  }
+
+  public getMultiSignedWallet(walletKey: string): Observable<MultiSignedWallet> {
+    return this.angularFire.object('multiSignedWallet/' + walletKey)
+    .valueChanges()
+    .map((wallet) => {
+      return wallet as MultiSignedWallet;
+    });
+  }
+
+  public updateMultiSignedWallet(wallet: MultiSignedWallet){
+    this.angularFire.object('multiSignedWallet/' + wallet.key).update(wallet);
+  }
+
+  public getUserKeyByEmail(emails: string[]): Observable<any> {
+    const result: Array<Observable<any>> = [];
+    emails.forEach((e) => {
+      result.push(this.angularFire.list('user', (ref) =>
+      ref.orderByChild('userEmail')
+      .equalTo(e))
+      .snapshotChanges()
+      .map((changes) => {
+        return changes.map((c) => ({
+          uid: c.payload.key,
+        })).pop();
+      }));
+    });
+    return Observable.combineLatest(result);
+  }
+
+  public addMultiSignedWalletRequest(request: IMSWalletRequest, keys: any[]) {
+    keys.forEach((key) => {
+      this.angularFire.list('user/' + key.uid + '/requests/').push(request);
+    });
+  }
+
+  public getMultiSignedWalletRequest(uid: string): Observable<IMSWalletRequest[]> {
+    return this.angularFire.list('user/' + uid + '/requests/')
+    .valueChanges()
+    .map((request) => {
+      return request as IMSWalletRequest[];
     });
   }
 }

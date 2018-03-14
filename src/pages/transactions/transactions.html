@@ -24,7 +24,7 @@
       </ion-option>
     </ion-select>
   </ion-item>
-  <span *ngIf="!isEthereum">
+  <span *ngIf="isWallet">
     <ion-list no-lines *ngIf="segmentTxs === 'all'">
       <ion-item class="transactions-container" *ngFor="let t of txsList" no-lines>
         <ion-row>
@@ -74,7 +74,7 @@
     </ion-list>
   </span>
 
-  <span *ngIf="isEthereum">
+  <span *ngIf="!isWallet">
     <ion-list no-lines *ngIf="segmentTxs === 'all'">
       <ion-item class="transactions-container" *ngFor="let t of txsList" no-lines>
         <ion-row>

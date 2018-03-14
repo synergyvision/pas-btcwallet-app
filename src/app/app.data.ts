@@ -169,5 +169,7 @@ export class AppData {
         new Activity(4, '28/03/2017', 'Se agregaron 00,23 BTC a la billetera'),
         new Activity(5, '14/01/2017', 'Cambio de clave'),
         new Activity(6, '28/12/2016', 'Acceso desde dispositivo iPhone 6c'),
-      ];
+    ];
+
+    public static numberOfSigners = [ 2, 3, 4, 5];
 }

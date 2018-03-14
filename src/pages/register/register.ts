@@ -4,7 +4,6 @@ import { FormGroup } from '@angular/forms/src/model';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../../app/services/auth.service';
 import { AlertService } from '../../app/services/alert.service';
-import { ConfirmEmailPage } from '../confirm-email/confirm-email';
 import { LoaderService } from '../../app/services/loader.service';
 import { Conditional } from '@angular/compiler';
 import { AppData } from '../../app/app.data';
@@ -43,7 +42,7 @@ export class RegisterPage {
     this.authService.signup(registerForm).
       then((data) => {
         this.loaderService.dismissLoader();
-        this.navCtrl.push(ConfirmEmailPage, registerForm.value.email);
+        this.navCtrl.push('ConfirmEmailPage', registerForm.value.email);
       })
       .catch((error) => {
         this.loaderService.dismissLoader();

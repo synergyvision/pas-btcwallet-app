@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
 import { Events, IonicPage, NavController, NavParams } from 'ionic-angular';
-import { AddressPage } from '../address/address';
-import { SendPage } from '../send/send';
-import { EditAddressPage } from '../edit-address/edit-address';
 import { NgZone } from '@angular/core';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
 import { Observable } from 'rxjs';
@@ -36,7 +33,7 @@ export class AddressBookPage {
 
   // Pushes a new Address to the Address List
   private addAddress() {
-    this.navCtrl.push(AddressPage);
+    this.navCtrl.push('AddressPage');
   }
 
   // Opens AddressPage or selects an Address for SendPage
@@ -47,7 +44,7 @@ export class AddressBookPage {
       this.navCtrl.pop();
       // Else, opens EditAddressPage with a selected Address to be seen or modified
     } else {
-      this.navCtrl.push(EditAddressPage, address);
+      this.navCtrl.push('EditAddressPage', address);
     }
   }
 

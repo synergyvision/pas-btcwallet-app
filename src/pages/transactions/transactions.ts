@@ -23,7 +23,7 @@ export class TransactionsPage {
   public selectedWallet: Wallet;
   public txsList: ITransaction[];
   public segmentTxs: string;
-  private isEthereum: boolean;
+  private isWallet: boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private restService: RestService,
               private sharedService: SharedService, private loaderService: LoaderService) {
@@ -50,7 +50,7 @@ export class TransactionsPage {
 
   private receivedtransactions(txs: ITransaction[], addresses?: string[], address?: string) {
     if (addresses !== undefined) {
-      this.isEthereum = false;
+      this.isWallet = true;
       txs.forEach((tx) => {
         const sent = tx.inputs.some((input) =>
           input.addresses.some((ad) =>
@@ -64,7 +64,7 @@ export class TransactionsPage {
         }
       });
     } else {
-      this.isEthereum = true;
+      this.isWallet = false;
       txs.forEach((tx) => {
        if (tx.tx_input_n === 0) {
          tx.filtering_value = 'sent';
@@ -73,7 +73,6 @@ export class TransactionsPage {
        }
       });
     }
-    console.log(this.isEthereum);
     console.log(txs);
     return txs;
     }

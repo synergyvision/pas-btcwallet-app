@@ -19,8 +19,8 @@ import { KeyService } from './key.service';
 import { IHDWallet } from '../models/IHDWallet';
 import { ITransaction, ITransactionSke } from '../models/ITransaction';
 import { IHDChain } from '../models/IHDChain';
-import { AppData } from '../app.data';
 import { create } from 'domain';
+import { AppData } from '../app.data';
 
 // REST Service for getting data from BlockCypher API
 
@@ -47,27 +47,8 @@ export class RestService {
     return this.http.post(this.getPath(crypto) + '/wallets/hd?token=' + TOKEN, JSON.stringify(data), this.options)
       .map((res: Response) => {
         return res.json() as IHDWallet;
-      }).catch(this.handleError);
-  }
-
-  public createAddress(crypto: string): Observable<any> {
-    return this.http.post(this.getPath(crypto) + '/addrs?token=' + TOKEN, undefined)
-      .map((res: Response) => {
-        return res.json();
       })
       .catch(this.handleError);
-  }
-
-  public createMultisignAddress(crypto: string, keys: string[], script: string): Observable<IAddress> {
-    const data = JSON.stringify({
-      pubkeys: keys,
-      script_type: script,
-    });
-    return this.http.post(this.getPath(crypto), + '/addrs?token=' + TOKEN, data)
-    .map((res: Response) => {
-      return res.json() as IAddress;
-    })
-    .catch(this.handleError);
   }
 
   // Derive an address from an HD Wallet
@@ -86,6 +67,7 @@ export class RestService {
       .map((res: Response) => {
         const balance = res.json() as IBalance;
         balance.wallet.crypto = wallet.crypto;
+        balance.wallet.multiSignedKey = wallet.multiSignedKey;
         return balance;
       })
       .catch(this.handleError);
@@ -93,20 +75,20 @@ export class RestService {
 
   // Gets an Address Balance
 
-  public getEthereumBalance(wallet: Wallet): Observable<IAddress> {
+  public getAddressBalance( address: string, crypto: string): Observable<IAddress> {
+    return this.http.get(this.getPath(crypto) + '/addrs/' + address + '/balance')
+      .map((res: Response) => {
+        return res.json() as IAddress;
+      })
+      .catch(this.handleError);
+  }
+
+  public getAddressWalletBalance(wallet: Wallet): Observable<IAddress> {
     return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + wallet.address + '/balance')
       .map((res: Response) => {
         const balance = res.json() as IAddress;
         balance.wallet = wallet;
         return balance;
-      })
-      .catch(this.handleError);
-  }
-
-  public getAddressBalance(address: string, crypto: string): Observable<IAddress> {
-    return this.http.get(this.getPath(crypto) + '/addrs/' + address + '/balance')
-      .map((res: Response) => {
-        return res.json() as IAddress;
       })
       .catch(this.handleError);
   }
@@ -155,40 +137,10 @@ export class RestService {
 
   // Creates a Transaction Skeleton to be signed
 
-  public createPayment(address: string, amount: number, wallet: Wallet): Observable<ITransactionSke> {
-    let data: {};
-    if (wallet.crypto.value === 'eth' || wallet.crypto.value === 'tet') {
-      data = JSON.stringify({
-        inputs: [{
-          addresses: [
-            wallet.address,
-          ],
-        }],
-        outputs: [{
-          addresses: [
-            address,
-          ],
-          value: Number(amount),
-        }],
-      });
-
-    } else {
-      data = JSON.stringify({
-        inputs: [{
-          wallet_name: wallet.name,
-          wallet_token: TOKEN,
-        }],
-        outputs: [{
-          addresses: [
-            address,
-          ],
-          value: Number(amount),
-        }],
-      });
-    }
-    return this.http.post(this.getPath(wallet.crypto.value) + '/txs/new?token=' + TOKEN, data)
+  public createPayment(data: any, crypto: string): Observable<ITransactionSke> {
+    return this.http.post(this.getPath(crypto) + '/txs/new?token=' + TOKEN, data)
       .map((res) => {
-        return res.json();
+        return res.json() as ITransactionSke;
       })
       .catch(this.handleError);
   }
@@ -234,6 +186,22 @@ export class RestService {
         return res.json() as IBlockchain;
       })
       .catch(this.handleError);
+  }
+
+  // MultiSigned Wallet Methods
+
+  public createMultiSignedAddress(crypto: string, keys: string[], script: string)
+  : Observable<IAddress> {
+    const data = JSON.stringify({
+      pubkeys: keys,
+      script_type: script,
+    });
+    return this.http.post(this.getPath(crypto) + '/addrs?token=' + TOKEN, data)
+    .map((res: Response) => {
+      console.log(res);
+      return res.json() as IAddress;
+    })
+    .catch(this.handleError);
   }
 
   // Error Handling for HTTP Errors

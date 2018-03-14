@@ -2,10 +2,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { LoaderService } from '../../app/services/loader.service';
 import { IKeys } from '../../app/models/IKeys';
-import { ConfirmEmailPage } from '../confirm-email/confirm-email';
 import { Events } from 'ionic-angular/util/events';
 import { AlertService } from '../../app/services/alert.service';
-import { HomePage } from '../home/home';
 import { AppData } from '../../app/app.data';
 import { SharedService } from '../../app/services/shared.service';
 
@@ -63,7 +61,7 @@ export class CreateWalletPage {
           this.loaderService.dismissLoader();
         });
     } else {
-      this.navCtrl.setRoot(HomePage);
+      this.navCtrl.setRoot('HomePage');
     }
   }
 
