@@ -23,6 +23,7 @@
       </div>
       <ion-item class="input" *ngIf="!selectedAddress">
         <ion-input type="text" formControlName="inputAddress" [disabled]="selectedAddress" placeholder="Dirección">
+          {{inputAddress}}
         </ion-input>
       </ion-item>
       <ion-item no-lines *ngIf="selectedAddress!=undefined" class="address-container">

@@ -20,8 +20,8 @@ export interface IPendingTxs {
 }
 
 export interface IMSWalletRequest {
+    key?: string;
     type?: string;
-    rejected?: boolean;
     createdBy?: string;
     crypto?: string;
     signers?: any[];

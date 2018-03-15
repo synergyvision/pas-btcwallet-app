@@ -20,6 +20,7 @@ import { IPendingTxs, ISigner, MultiSignedWallet, IMSWalletRequest } from '../mo
 import { IAddress } from '../models/IAddress';
 import { Address } from '../models/address';
 import { AppData } from '../app.data';
+import { Activity } from '../models/activity';
 
 const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
 @Injectable()
@@ -30,25 +31,17 @@ export class SharedService {
     public wallets: Wallet[];
     public multiSignedWallets: MultiSignedWallet[];
     public currency;
+    public requestList: IMSWalletRequest[] = [];
 
     constructor(public firebaseData: FirebaseProvider, public restService: RestService, public events: Events,
                 public eventService: EventService, public keyService: KeyService, public authService: AuthService,
                 public exchangeService: ExchangeService) {
         this.events.subscribe('user:loggedOut', () => {
-            this.setUser(this.authService.getLoggedUser());
-            this.wallets = undefined;
-            this.balances = undefined;
-            this.multiSignedWallets = undefined;
+            this.user = this.wallets = this.balances = this.multiSignedWallets = undefined;
         });
         // We get all of the logged user information
         this.events.subscribe('user:loggedIn', () => {
             this.setUser(this.authService.getLoggedUser());
-            this.getWalletsAsync()
-                .subscribe((wallets) => {
-                    this.setWallets(wallets);
-                });
-            this.getCurrency();
-            this.getRequests();
         });
         this.events.subscribe('user:changedData', () => {
             this.updateUser();
@@ -59,6 +52,21 @@ export class SharedService {
 
     public setUser(user: User) {
         this.user = user;
+        this.getWalletsAsync()
+                .subscribe((wallets) => {
+                    this.setWallets(wallets);
+                });
+        this.getCurrency();
+        this.getRequests()
+            .subscribe((requests) => {
+                requests.forEach((request) => {
+                    if (request.createdBy !== this.user.email) {
+                        this.requestList.push(request);
+                    }
+                });
+                console.log(this.requestList);
+                console.log(requests);
+        });
     }
 
     public setWallets(wallets: Wallet[]) {
@@ -80,10 +88,7 @@ export class SharedService {
     }
 
     public getRequests(): Observable<IMSWalletRequest[]> {
-        return this.firebaseData.getMultiSignedWalletRequest(this.user.uid)
-        .map((request) => {
-            return request;
-        });
+        return this.firebaseData.getMultiSignedWalletRequest(this.user.uid);
     }
 
     public setBalances(balances) {
@@ -391,7 +396,7 @@ export class SharedService {
 
     // We create the MultiSigned Walled Request for the other users on the App
 
-    public createMultisignWalletRequest(data: any, users: string[]) {
+    public createMultisignWalletRequest(data: any, users: string[]): Observable<any> {
         const request: IMSWalletRequest = {};
         request.createdBy = this.user.email;
         request.crypto = data.selectedCrypto;
@@ -400,45 +405,61 @@ export class SharedService {
         request.accepted = [];
         request.accepted.push(this.user.email);
         request.type = 'multisig-' +  data.numberOfSigners + '-' + data.numberOfSignatures;
-        request.rejected = false;
-        return this.addMultiSignedWalletRequest(request, users);
+        return this.addMultiSignedWalletRequest(request);
 
     }
 
-    public addMultiSignedWalletRequest(request: IMSWalletRequest, users: string[]) {
-        console.log(request);
-        this.firebaseData.getUserKeyByEmail(users)
+    public addMultiSignedWalletRequest(request: IMSWalletRequest): Observable<any> {
+        return this.firebaseData.getSignerByEmail(request.signers)
         .first()
-        .subscribe((keys) => {
-            console.log(keys);
-            this.firebaseData.addMultiSignedWalletRequest(request, keys);
-            return request;
+        .map((keys) => {
+            const emails = keys.map((key) => key.uid);
+            return this.firebaseData.addMultiSignedWalletRequest(request, keys);
         }, (error) => {
             return Observable.throw(error);
         });
     }
 
+    //WIP
+    public acceptMultiSignedWalletRequest(request: IMSWalletRequest) {
+        request.accepted.push(this.user.email);
+        this.firebaseData.getSignerByEmail(request.signers)
+            .first()
+            .subscribe((keys) => {
+                request.signers = keys;
+                const uids = keys.map((key) => key.uid);
+                if (request.signers.length === request.accepted.length) {
+                    this.firebaseData.deleteMultiSignedWalletRequest(uids, request);
+                }
+                // this.firebaseData.updateMultiSignedWalletRequest(request, uids);
+            });
+            // this.createMultisignWallet(request);
+    }
 
-    public createMultisignWallet(crypto: string, type: string, users: ISigner[]) {
+    // WIP
+    public rejectMultiSignedWalletRequest(request: IMSWalletRequest) {
+    }
+
+    public createMultisignWallet(request: IMSWalletRequest, users: ISigner[]) {
         // Emails were verified before
         return new Promise((resolve, reject) => {
             // First we create the new Wallet Data
-            const name = 'MS' + crypto + this.user.uid.substring(0, 19);
-            const script = 'multisig-2-of-2';
+            const name = 'MS' + request.crypto + this.user.uid.substring(0, 19);
+            const script = request.type;
             const currency = AppData.cryptoUnitList.filter((c) => {
-                return c.value.includes(crypto);
+                return c.value.includes(request.crypto);
             }).pop();
             currency.units = currency.units.pop();
             // We create the Keys for every Signer
-            const keys = this.keyService.createMultiSignedKeys(users.length, crypto);
+            const keys = this.keyService.createMultiSignedKeys(users.length, request.crypto);
             const userKeys: any[] = keys;
             const pubKeys: string[] = [];
             users.forEach((user) => {
                 user.pubKey = userKeys.shift();
                 pubKeys.unshift(user.pubKey.xpub);
             });
-            if ((crypto !== 'tet') && (crypto !== 'eth')) {
-                this.restService.createMultiSignedAddress(crypto, pubKeys, script)
+            if ((request.crypto !== 'tet') && (request.crypto !== 'eth')) {
+                this.restService.createMultiSignedAddress(request.crypto, pubKeys, script)
                     .first()
                     .subscribe((address: IAddress) => {
                         const data = {

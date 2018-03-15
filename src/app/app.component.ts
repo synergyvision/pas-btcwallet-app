@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import { Nav, Platform, ViewController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { RestService } from './services/rest.service';
@@ -33,6 +33,21 @@ export class MyApp {
               public restService: RestService, public authService: AuthService, public events: Events,
               public sharedService: SharedService) {
     this.initializeApp();
+
+    // Handle Back Button on Android Devices
+    platform.registerBackButtonAction(() => {
+      const activeView: ViewController = this.nav.getActive();
+      if (activeView != null) {
+        if (this.nav.canGoBack()) {
+          this.nav.pop();
+        } else if (typeof activeView.instance.backButtonAction === 'function') {
+          activeView.instance.backButtonAction();
+        } else {
+          this.nav.parent.select(0); // goes to the first tab
+        }
+      }
+    });
+
 
     // List of pages that appear on the Side Menu
     this.pages = AppSettings.pagesMenu;

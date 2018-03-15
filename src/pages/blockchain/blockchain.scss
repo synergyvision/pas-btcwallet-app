@@ -1,3 +1,12 @@
-page-blockchain {
+.blockchain-info, .block-info {
+    .item {
+        font-size: $font-size-info-text;
+    }
+    .header {
+        font-weight: bold;
+    }
+}
 
+.block-info, .blockchain-info {
+    padding-top: $padding-md;
 }

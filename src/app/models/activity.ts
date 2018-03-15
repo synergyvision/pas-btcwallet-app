@@ -2,13 +2,17 @@
 // Related to LogIns and new Devices
 
 export class Activity {
-    public id: number;
+    public key?: string;
     public date: string;
-    public description: string;
+    public activity?: any;
 
-    constructor(id: number, date: string, description: string) {
-      this.id = id;
+    constructor(date: string, activity?: any, key?: string) {
+      this.key = key;
       this.date = date;
-      this.description = description;
+      this.activity = activity;
+    }
+
+    public setActivity(activity) {
+      this.activity = activity;
     }
 }

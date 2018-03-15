@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Activity } from '../../app/models/activity';
-import { RestService } from '../../app/services/rest.service';
 import { AppData } from '../../app/app.data';
+import { SharedService } from '../../app/services/shared.service';
+import { IMSWalletRequest } from '../../app/models/multisignedWallet';
 
 @IonicPage()
 @Component({
@@ -12,9 +13,11 @@ import { AppData } from '../../app/app.data';
 export class ActivityPage {
 
   private activityList: Activity[];
+  private requestList: IMSWalletRequest[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private restService: RestService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private sharedService: SharedService) {
     this.activityList = AppData.activityList;
+    this.requestList = this.sharedService.requestList;
   }
 
   private removeActivity(activity) {
@@ -22,5 +25,9 @@ export class ActivityPage {
     if (index > -1) {
       this.activityList.splice(index, 1);
     }
+  }
+
+  private acceptRequest(request: IMSWalletRequest) {
+    this.sharedService.acceptMultiSignedWalletRequest(request);
   }
 }

@@ -22,6 +22,7 @@ export class SendPage {
   private cameraError = new ErrorService(null, 'CAMARA_ERROR');
   private selectAddressForm: FormGroup;
   private inputError: string;
+  private inputAddress: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
               private qrScanner: QRScanner, private formBuilder: FormBuilder, private alertService: AlertService,
@@ -46,13 +47,14 @@ export class SendPage {
         if (status.authorized) {
           const scanSub = this.qrScanner.scan()
           .subscribe((text: string) => {
-            // We must do something here with the address provided
-            console.log(text);
+            this.inputAddress = text;
             this.validateInputedAddress(text);
             this.qrScanner.hide();
+            window.document.querySelector('ion-app').classList.remove('transparent-body');
             scanSub.unsubscribe();
           });
           this.qrScanner.show();
+          window.document.querySelector('ion-app').classList.add('transparent-body');
           // wait for user to scan something, then the observable callback will be called
         } else if (status.denied) {
           this.alertService.showAlert(this.cameraError)

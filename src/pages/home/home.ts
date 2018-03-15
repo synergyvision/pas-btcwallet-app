@@ -13,7 +13,7 @@ import { AppData } from '../../app/app.data';
 import { EventService } from '../../app/services/events.services';
 import { ExchangeService } from '../../app/services/exchange.service';
 import { SharedService } from '../../app/services/shared.service';
-import { ISigner } from '../../app/models/multisignedWallet';
+import { ISigner, IMSWalletRequest } from '../../app/models/multisignedWallet';
 
 // Component for the Home Page, displays user balance, and options
 
@@ -48,37 +48,41 @@ export class HomePage {
       this.handleError(error);
       this.loaderService.dismissLoader();
     });
-    this.getRequests();
     this.events.subscribe('wallet:update', (wallet) => {
       this.updateWallet(wallet);
     });
     this.events.subscribe('home:refresh', () => {
       this.slides.slideTo(1);
     });
+    // this.createRequest();
     // this.createWallet();
   }
+/* 
+  public createRequest() {
+    console.log('here');
+    const request: IMSWalletRequest = {};
+    request.createdBy = 'a@a.com';
+    request.crypto = 'tet';
+    request.signers = ['a@a.com' , 'c@c.com'];
+    request.accepted = ['a@a.com'];
+    request.type = 'multisig-2-2';
+    this.sharedService.addMultiSignedWalletRequest(request)
+       .subscribe((data) => {
+         console.log(data);
+       });
+  } */
 
-  public getRequests() {
-    this.sharedService.getRequests()
-    .subscribe((requests) => {
-      console.log(requests);
-    });
-  }
-
-  public createWallet() {
+/*   public createWallet() {
     const data: ISigner[] = [
       { email: 'a@a.com', uid: 'pUH4YKUc6ZbZ8MIj0Dft5Hg14Wb2', pubKey: '' },
       { email: 'c@c.com', uid: 'VTxK5ZRyC7exB2i1xPfrVsQRPXa2', pubKey: '' },
     ];
-    console.log(data);
     this.sharedService.createMultisignWallet('tes', 'multisig-2-of-2', data)
       .then((resolve) => {
-        console.log(resolve);
       })
       .catch((error) => {
-        console.log(error);
       });
-  }
+  } */
 
   public newUser() {
     this.events.publish('user:newUser');
@@ -90,6 +94,7 @@ export class HomePage {
       this.sharedService.updateBalances()
       .subscribe((wallets) => {
         this.balances = wallets;
+        console.log(wallets);
         if (this.balances.length > 6) {
           this.canCreateNewWallet = false;
         } else {
@@ -103,7 +108,6 @@ export class HomePage {
   }
 
   private goToReceive(wallet) {
-    console.log(wallet);
     this.navCtrl.push('ReceivePage', wallet);
   }
 

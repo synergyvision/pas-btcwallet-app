@@ -1,12 +1,40 @@
+.thin-input.date {
+  margin-top: $padding-lg;
+  background-color: $secondary;
+  color: $clear;
+}
 
-  .thin-input.date {
+.activity-date {
+  color: $secondary;
+  font-size: $font-size-input-thin;
+}
 
-    margin-top: $padding-lg;
-    background-color:$secondary;
-    color: $clear;
-  }
-  .activity-date {
-    color: $secondary;
-    font-size: $font-size-input-thin;
-  }
+.request-list{
 
+  background: linear-gradient(#3c4661, $secondary);
+  color: $clear;
+  border-radius: $button-radius;
+  width: $input-thin-width;
+  margin:auto;
+  margin-top: $padding-sm;
+}
+
+.request-img {
+  padding-top: $padding-sm;
+  text-align: center;
+  font-size: 2em;
+  color: $primary;
+}
+
+.request-title {
+  color: $clear;
+  font-size: $font-size-small-title;
+}
+
+.request-body {
+  font-size: $font-size-info-text;
+}
+
+.request-button{
+  margin-top: 0;
+}

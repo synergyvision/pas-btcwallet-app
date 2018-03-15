@@ -12,6 +12,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 // i18n Imports
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Firebase And Services
 import { AngularFireDatabaseModule } from 'angularfire2/database';
@@ -53,6 +54,7 @@ const firebaseConfig = {
     AngularFireAuthModule,
     AngularFireModule.initializeApp(firebaseConfig),
     BrowserModule,
+    BrowserAnimationsModule,
     IonicModule.forRoot(MyApp),
     HttpModule,
     HttpClientModule,

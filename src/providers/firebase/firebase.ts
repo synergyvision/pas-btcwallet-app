@@ -158,7 +158,6 @@ export class FirebaseProvider {
   // MultiSigned Wallets
 
   public addMultiSignedWallet(multiWallet: MultiSignedWallet, walletOwner: any[]) {
-    console.log(walletOwner);
     const key = this.angularFire.list('multiSignedWallet/').push(multiWallet).key;
     const wallet = multiWallet.toWallet(key);
     walletOwner.forEach((owner) => {
@@ -175,12 +174,12 @@ export class FirebaseProvider {
     });
   }
 
-  public updateMultiSignedWallet(wallet: MultiSignedWallet){
+  public updateMultiSignedWallet(wallet: MultiSignedWallet) {
     this.angularFire.object('multiSignedWallet/' + wallet.key).update(wallet);
   }
 
-  public getUserKeyByEmail(emails: string[]): Observable<any> {
-    const result: Array<Observable<any>> = [];
+  public getSignerByEmail(emails: string[]): Observable<ISigner[]> {
+    const result: Array<Observable<ISigner>> = [];
     emails.forEach((e) => {
       result.push(this.angularFire.list('user', (ref) =>
       ref.orderByChild('userEmail')
@@ -189,23 +188,42 @@ export class FirebaseProvider {
       .map((changes) => {
         return changes.map((c) => ({
           uid: c.payload.key,
+          email: e,
         })).pop();
       }));
     });
     return Observable.combineLatest(result);
   }
 
-  public addMultiSignedWalletRequest(request: IMSWalletRequest, keys: any[]) {
+  public addMultiSignedWalletRequest(request: IMSWalletRequest, keys: any[]): IMSWalletRequest {
+    const uid = keys.pop().uid;
+    const id = this.angularFire.list('user/' + uid + '/requests/').push(request).key;
+    request.key = id;
+    this.angularFire.list('user/' + uid + '/requests/').update(id, request);
     keys.forEach((key) => {
       this.angularFire.list('user/' + key.uid + '/requests/').push(request);
     });
+    return request;
   }
 
   public getMultiSignedWalletRequest(uid: string): Observable<IMSWalletRequest[]> {
     return this.angularFire.list('user/' + uid + '/requests/')
-    .valueChanges()
-    .map((request) => {
-      return request as IMSWalletRequest[];
+    .snapshotChanges()
+    .map((changes) => {
+      return changes.map((c) => ({
+        key: c.payload.key,
+        ... c.payload.val(),
+      }));
+    });
+  }
+
+  // public updateMultiSignedWalletRequest(keys: string[], request: key)
+  public deleteMultiSignedWalletRequest(keys: string[], request: IMSWalletRequest) {
+    keys.forEach((key) => {
+      console.log(this.angularFire.list('users/' + key + '/requests', (ref) => 
+      ref.orderByChild('key')
+      .equalTo(request.key))
+      .valueChanges());
     });
   }
 }

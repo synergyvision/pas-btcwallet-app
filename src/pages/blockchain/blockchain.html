@@ -19,28 +19,57 @@
       <ion-input type="text" [(ngModel)]="searchValue" placeholder="Buscar Bloque o TX">
       </ion-input>
     </ion-item>
-    <div *ngIf="(blockchain!==undefined) && (block===undefined)" class="blockchain-info">
+    <div *ngIf="selectedCrypto && blockchain" class="blockchain-info">
+      <ion-item class="header">
+        Blockchain Bitcoin
+      </ion-item>
       <ion-item text-wrap>
         Última Actualización: {{blockchain.time | date:'dd MMM, y hh:mm a'}}
       </ion-item>
       <ion-item text-wrap>
         Altura: {{blockchain.height}}
       </ion-item>
-      <button (click)="getBlock(blockchain.hash)" ion-item>
+      <button ion-item (click)="toggleBlock(blockchain.hash)">
         Último Bloque: {{blockchain.hash}}
+        <ion-icon *ngIf="!showBlock" name="arrow-dropright" item-end></ion-icon>
+        <ion-icon *ngIf="showBlock" name="arrow-dropdown" item-end></ion-icon>
       </button>
     </div>
-    <div *ngIf="(block!==undefined)" class="block-info">
-      Hash: {{block.hash}}
-      <br> Nonce: {{block.nonce}}
-      <br> Altura: {{block.height}}
-      <br> Tamaño: {{block.size}}
-      <br> Número de Transacciones: {{block.n_tx}}
-      <br> Volumen de Transacciones: {{block.total}}
-      <br> Comisiones de las Transacciones: {{block.fees}}
-      <br> Fecha y Hora: {{block.time}}
-      <br> Hora de Recepción: {{block.received_time}}
-      <br> Bloque Previo: {{block.prev_block}}
+    <div *ngIf="(showBlock)" class="block-info" [@enterAnimation]>
+      <ion-item class="header">
+        Bloque
+      </ion-item>
+      <ion-item text-wrap>
+        Hash del Bloque: {{block.hash}}
+      </ion-item>
+      <ion-item>
+        Nonce: {{block.nonce}}
+      </ion-item>
+      <ion-item>
+        Altura del Bloque: {{block.height}}
+      </ion-item>
+      <ion-item>
+        Tamaño: {{block.size}}
+      </ion-item>
+      <ion-item>
+        Número de Transacciones: {{block.n_tx}}
+      </ion-item>
+      <ion-item>
+        Volumen de Transacciones: {{block.total}}
+      </ion-item>
+      <ion-item>
+        Comisiones de las Transacciones: {{block.fees}}
+      </ion-item>
+      <ion-item>
+        Fecha y Hora: {{block.time | date:'dd MMM, y hh:mm a'}}
+      </ion-item>
+      <ion-item>
+        Hora de Recepción: {{block.received_time | date:'dd MMM, y hh:mm a' }}
+      </ion-item>
+      <button ion-item (click)="getBlock(block.prev_block, true)">
+        Bloque Previo: {{block.prev_block}}
+        <ion-icon name="arrow-dropright" item-end></ion-icon>
+      </button>
     </div>
   </ion-list>
 </ion-content>
