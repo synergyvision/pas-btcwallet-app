@@ -55,34 +55,20 @@ export class HomePage {
       this.slides.slideTo(1);
     });
     // this.createRequest();
-    // this.createWallet();
   }
-/* 
+
   public createRequest() {
-    console.log('here');
     const request: IMSWalletRequest = {};
     request.createdBy = 'a@a.com';
-    request.crypto = 'tet';
+    request.crypto = 'bcy';
     request.signers = ['a@a.com' , 'c@c.com'];
     request.accepted = ['a@a.com'];
-    request.type = 'multisig-2-2';
+    request.type = 'multisig-2-of-2';
     this.sharedService.addMultiSignedWalletRequest(request)
        .subscribe((data) => {
-         console.log(data);
        });
-  } */
+  }
 
-/*   public createWallet() {
-    const data: ISigner[] = [
-      { email: 'a@a.com', uid: 'pUH4YKUc6ZbZ8MIj0Dft5Hg14Wb2', pubKey: '' },
-      { email: 'c@c.com', uid: 'VTxK5ZRyC7exB2i1xPfrVsQRPXa2', pubKey: '' },
-    ];
-    this.sharedService.createMultisignWallet('tes', 'multisig-2-of-2', data)
-      .then((resolve) => {
-      })
-      .catch((error) => {
-      });
-  } */
 
   public newUser() {
     this.events.publish('user:newUser');

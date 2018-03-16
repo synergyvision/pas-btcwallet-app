@@ -24,12 +24,11 @@ export interface IMSWalletRequest {
     type?: string;
     createdBy?: string;
     crypto?: string;
-    signers?: any[];
+    signers?: any;
     accepted?: string[];
 }
 
 export interface ISigner {
-    email: string;
     pubKey?: any;
     uid: string;
 }

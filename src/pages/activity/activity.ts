@@ -4,6 +4,9 @@ import { Activity } from '../../app/models/activity';
 import { AppData } from '../../app/app.data';
 import { SharedService } from '../../app/services/shared.service';
 import { IMSWalletRequest } from '../../app/models/multisignedWallet';
+import { Observable } from 'rxjs/Observable';
+import { FirebaseProvider } from '../../providers/firebase/firebase';
+import { LoaderService } from '../../app/services/loader.service';
 
 @IonicPage()
 @Component({
@@ -13,11 +16,12 @@ import { IMSWalletRequest } from '../../app/models/multisignedWallet';
 export class ActivityPage {
 
   private activityList: Activity[];
-  private requestList: IMSWalletRequest[];
+  private requestList: Observable<IMSWalletRequest[]>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private sharedService: SharedService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private sharedService: SharedService,
+              private loaderService: LoaderService) {
     this.activityList = AppData.activityList;
-    this.requestList = this.sharedService.requestList;
+    this.requestList = this.sharedService.getRequests();
   }
 
   private removeActivity(activity) {
@@ -28,6 +32,14 @@ export class ActivityPage {
   }
 
   private acceptRequest(request: IMSWalletRequest) {
+    this.loaderService.showFullLoader('Espere');
     this.sharedService.acceptMultiSignedWalletRequest(request);
+  }
+
+  private rejectRequest(request: IMSWalletRequest) {
+    this.sharedService.rejectMultiSignedWalletRequest(request)
+    .then(() => {
+      this.requestList = this.sharedService.getRequests();
+    });
   }
 }

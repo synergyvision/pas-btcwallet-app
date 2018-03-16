@@ -6,7 +6,7 @@
 
 <ion-content>
   <ion-list *ngIf="requestList">
-    <ion-card class="request-list" *ngFor="let r of requestList">
+    <ion-card class="request-list" *ngFor="let r of requestList | async">
       <div class="request-img">
         <ion-icon name="currency-{{r.crypto}}" item-left></ion-icon>
       </div>

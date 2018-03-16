@@ -48,7 +48,6 @@ export class MyApp {
       }
     });
 
-
     // List of pages that appear on the Side Menu
     this.pages = AppSettings.pagesMenu;
     this.events.subscribe('user:loggedIn', () => {

@@ -1,5 +1,5 @@
+import { KeyService } from './key.service';
 import { Injectable } from '@angular/core';
-import { IBalance } from '../models/IBalance';
 import { Wallet } from '../models/wallet';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
 import { RestService } from './rest.service';
@@ -9,18 +9,19 @@ import { EventService } from './events.services';
 import { FormGroup } from '@angular/forms';
 import { ITransactionSke } from '../models/ITransaction';
 import { IHDWallet } from '../models/IHDWallet';
-import { KeyService } from './key.service';
+import { IBalance } from '../models/IBalance';
 import { AuthService } from './auth.service';
 import { User } from '../models/user';
 import { Events } from 'ionic-angular';
 import { IKeys } from '../models/IKeys';
 import { ExchangeService } from './exchange.service';
 import { IExchange } from '../models/IExchange';
-import { IPendingTxs, ISigner, MultiSignedWallet, IMSWalletRequest } from '../models/multisignedWallet';
+import { IMSWalletRequest, IPendingTxs, ISigner, MultiSignedWallet } from '../models/multisignedWallet';
 import { IAddress } from '../models/IAddress';
 import { Address } from '../models/address';
 import { AppData } from '../app.data';
 import { Activity } from '../models/activity';
+import { IsGreaterThanPipe } from 'ngx-pipes';
 
 const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
 @Injectable()
@@ -31,7 +32,8 @@ export class SharedService {
     public wallets: Wallet[];
     public multiSignedWallets: MultiSignedWallet[];
     public currency;
-    public requestList: IMSWalletRequest[] = [];
+    public requestList;
+    public requestNumber: number;
 
     constructor(public firebaseData: FirebaseProvider, public restService: RestService, public events: Events,
                 public eventService: EventService, public keyService: KeyService, public authService: AuthService,
@@ -57,16 +59,6 @@ export class SharedService {
                     this.setWallets(wallets);
                 });
         this.getCurrency();
-        this.getRequests()
-            .subscribe((requests) => {
-                requests.forEach((request) => {
-                    if (request.createdBy !== this.user.email) {
-                        this.requestList.push(request);
-                    }
-                });
-                console.log(this.requestList);
-                console.log(requests);
-        });
     }
 
     public setWallets(wallets: Wallet[]) {
@@ -88,7 +80,12 @@ export class SharedService {
     }
 
     public getRequests(): Observable<IMSWalletRequest[]> {
-        return this.firebaseData.getMultiSignedWalletRequest(this.user.uid);
+        return this.firebaseData.getMultiSignedWalletRequest(this.user.uid)
+        .map((requests) => {
+            return requests.filter((request) => {
+                return !request.accepted.includes(this.user.email);
+            });
+        });
     }
 
     public setBalances(balances) {
@@ -378,6 +375,7 @@ export class SharedService {
     // We Verify that all signers are registered on the App
 
     public addressesExist(emails: string[]): Observable<any> {
+        console.log(emails);
         const response: Array<Observable<any>> = [];
         emails.forEach((email) => {
             response.push(this.addressExist(email));
@@ -404,7 +402,8 @@ export class SharedService {
         request.signers = users;
         request.accepted = [];
         request.accepted.push(this.user.email);
-        request.type = 'multisig-' +  data.numberOfSigners + '-' + data.numberOfSignatures;
+        request.type = 'multisig-' +  data.numberOfSigners + '-of-' + data.numberOfSignatures;
+        console.log(request);
         return this.addMultiSignedWalletRequest(request);
 
     }
@@ -413,8 +412,11 @@ export class SharedService {
         return this.firebaseData.getSignerByEmail(request.signers)
         .first()
         .map((keys) => {
-            const emails = keys.map((key) => key.uid);
-            return this.firebaseData.addMultiSignedWalletRequest(request, keys);
+            console.log(keys);
+            request.signers = Object.assign({}, ...keys.map((key) => {
+                return {[key.uid] : true};
+            }));
+            return Observable.of(this.firebaseData.addMultiSignedWalletRequest(request));
         }, (error) => {
             return Observable.throw(error);
         });
@@ -423,26 +425,46 @@ export class SharedService {
     //WIP
     public acceptMultiSignedWalletRequest(request: IMSWalletRequest) {
         request.accepted.push(this.user.email);
-        this.firebaseData.getSignerByEmail(request.signers)
-            .first()
-            .subscribe((keys) => {
-                request.signers = keys;
-                const uids = keys.map((key) => key.uid);
-                if (request.signers.length === request.accepted.length) {
-                    this.firebaseData.deleteMultiSignedWalletRequest(uids, request);
-                }
-                // this.firebaseData.updateMultiSignedWalletRequest(request, uids);
+        if (Object.keys(request.signers).length === request.accepted.length) {
+            this.firebaseData.deleteMultiSignedWalletRequest(request)
+            .then(() => {
+                request.signers = this.createISignerData(request.signers);
+                this.createMultisignWallet(request);
             });
-            // this.createMultisignWallet(request);
+        } else {
+            this.firebaseData.updateMultiSignedWalletRequest(request);
+        }
+    }
+
+    public createISignerData(signers: {}) {
+        return Object.keys(signers).map((key) => {
+            return { uid: key, pubKey: '' };
+        });
     }
 
     // WIP
     public rejectMultiSignedWalletRequest(request: IMSWalletRequest) {
+        return new Promise((resolve, reject) => {
+            this.firebaseData.deleteMultiSignedWalletRequest(request).
+            then((deleted) => {
+                const rejectedWallet = new Activity(Date.toString(),
+                'El usuario' + this.user.email + 'rechazo su solicitud de billetera multifirmada');
+                this.firebaseData.getUserByEmail(request.createdBy)
+                .subscribe((user) => {
+                    this.firebaseData.addActivity(user.pop().key, rejectedWallet);
+                });
+                resolve(true);
+            })
+            .catch((error) => {
+                reject(error);
+            });
+        });
     }
 
-    public createMultisignWallet(request: IMSWalletRequest, users: ISigner[]) {
+    public createMultisignWallet(request: IMSWalletRequest) {
         // Emails were verified before
         return new Promise((resolve, reject) => {
+            console.log(request);
             // First we create the new Wallet Data
             const name = 'MS' + request.crypto + this.user.uid.substring(0, 19);
             const script = request.type;
@@ -451,13 +473,14 @@ export class SharedService {
             }).pop();
             currency.units = currency.units.pop();
             // We create the Keys for every Signer
-            const keys = this.keyService.createMultiSignedKeys(users.length, request.crypto);
+            const keys = this.keyService.createMultiSignedKeys(request.signers.length, request.crypto);
             const userKeys: any[] = keys;
             const pubKeys: string[] = [];
-            users.forEach((user) => {
+            request.signers.forEach((user) => {
                 user.pubKey = userKeys.shift();
                 pubKeys.unshift(user.pubKey.xpub);
             });
+            console.log(request);
             if ((request.crypto !== 'tet') && (request.crypto !== 'eth')) {
                 this.restService.createMultiSignedAddress(request.crypto, pubKeys, script)
                     .first()
@@ -466,8 +489,9 @@ export class SharedService {
                             name: name,
                             address: address.address,
                         };
-                        const newWallet = new MultiSignedWallet(name, currency, users, script, address.address);
-                        const key = this.firebaseData.addMultiSignedWallet(newWallet, users);
+                        const newWallet = new MultiSignedWallet(name, currency, request.signers,
+                                                                script, address.address);
+                        const key = this.firebaseData.addMultiSignedWallet(newWallet, request.signers);
                         resolve(newWallet);
                     },
                         (error) => {

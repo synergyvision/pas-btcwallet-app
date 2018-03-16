@@ -14,6 +14,7 @@ import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_di
 import { IKeys } from '../../app/models/IKeys';
 import { MultiSignedWallet, ISigner, IMSWalletRequest } from '../../app/models/multisignedWallet';
 import { CryptoCoin } from '../../app/models/crypto';
+import { Activity } from '../../app/models/activity';
 
 @Injectable()
 export class FirebaseProvider {
@@ -24,16 +25,15 @@ export class FirebaseProvider {
 
   }
 
+  // Add User to the DB
+
   public addUser(email: string, uid: string) {
     this.angularFire.list('user/' + uid).set('userEmail', email);
     this.angularFire.list('user/' + uid).set('currency', 'USD');
   }
+  // Retrieve Data of Signed User
 
-  public updateCurreny(uid: string, currency: string) {
-    this.angularFire.list('user/' + uid).set('currency', currency);
-  }
-
-  public getCurrency(uid: string){
+  public getCurrency(uid: string) {
     return this.angularFire.object('user/' + uid + '/currency')
     .valueChanges()
     .map((currency) => {
@@ -41,9 +41,17 @@ export class FirebaseProvider {
     });
   }
 
+  // Update Data of Signed User
+
+  public updateCurreny(uid: string, currency: string) {
+    this.angularFire.list('user/' + uid).set('currency', currency);
+  }
+
   public updateEmail(email: string, uid: string ) {
     this.angularFire.list('user/' + uid).set('userEmail', email);
   }
+
+  // Wallet CRUD Operations
 
   public addWallet(wallet: Wallet, uid: string) {
     this.angularFire.list('user/' + uid + '/wallet/').push(wallet);
@@ -70,7 +78,9 @@ export class FirebaseProvider {
   public updateWalletCrypto(wallet: Wallet, uid: string) {
     return this.angularFire.list('user/' + uid + '/wallet/' + wallet.key)
     .update('crypto', wallet.crypto);
-}
+  }
+
+  // Retrieves the Private Keys to be used on signing Operations
 
   public getWalletsKeys(uid: string, wallet: string): Observable<IKeys> {
     return this.angularFire.object('user/' + uid + '/wallet/' + wallet + '/keys/')
@@ -79,6 +89,10 @@ export class FirebaseProvider {
       return key as IKeys;
     });
   }
+
+  // Address Book CRUD Operations
+
+  // Retrieves all contacts registered on the Logged User Address Book
 
   public getAddressBook(uid: string): Observable<any> {
     return this.angularFire.list('user/' + uid + '/addressBook/').
@@ -89,6 +103,20 @@ export class FirebaseProvider {
       }));
     });
   }
+
+  public addAddressToAddressBook(uid: string, address: Address) {
+    this.angularFire.list('user/' + uid + '/addressBook/').push(address);
+  }
+
+  public removeAddressFromAddressBook(uid: string, address: string) {
+    this.angularFire.list('user/' + uid + '/addressBook/').remove(address);
+  }
+
+  public editAddressFromAddressBook(uid: string, key: string, address: Address) {
+    this.angularFire.list('user/' + uid + '/addressBook/').update(key, address);
+  }
+
+  // Verifies that the contact is already on the AddressBook
 
   public getAddressFromAddressBook(uid: string, email: string): Observable<any> {
     return this.angularFire.list('user/' + uid + '/addressBook/' , (ref) =>
@@ -101,6 +129,8 @@ export class FirebaseProvider {
         }));
       });
   }
+
+  // Gets an especific Wallet from another user by using the email
 
   public getWalletByEmail(email: string, coin: string): Observable<any> {
     return this.angularFire.list('/user', (ref) =>
@@ -122,26 +152,23 @@ export class FirebaseProvider {
     });
   }
 
+  // Verifies if a user is registered on the APP
+
   public getUserByEmail(email: string) {
     return this.angularFire.list('user', (ref) =>
       ref.orderByChild('userEmail')
       .equalTo(email))
-      .valueChanges();
+      .snapshotChanges()
+      .map((users) => {
+          return users.map((c) => ({
+            key: c.payload.key,
+          }));
+      });
   }
 
-  public addAddressToAddressBook(uid: string, address: Address) {
-    this.angularFire.list('user/' + uid + '/addressBook/').push(address);
-  }
-
-  public removeAddressFromAddressBook(uid: string, address: string) {
-    this.angularFire.list('user/' + uid + '/addressBook/').remove(address);
-  }
-
-  public editAddressFromAddressBook(uid: string, key: string, address: Address) {
-    this.angularFire.list('user/' + uid + '/addressBook/').update(key, address);
-  }
-
-  public addActivity(uid: string, activity) {
+  public addActivity(uid: string, activity: Activity) {
+    console.log(activity);
+    console.log(uid);
     this.angularFire.list('user/' + uid + '/activities/').push(activity);
   }
 
@@ -178,6 +205,8 @@ export class FirebaseProvider {
     this.angularFire.object('multiSignedWallet/' + wallet.key).update(wallet);
   }
 
+  // Gets the UID of a list of users just by their email
+
   public getSignerByEmail(emails: string[]): Observable<ISigner[]> {
     const result: Array<Observable<ISigner>> = [];
     emails.forEach((e) => {
@@ -195,19 +224,17 @@ export class FirebaseProvider {
     return Observable.combineLatest(result);
   }
 
-  public addMultiSignedWalletRequest(request: IMSWalletRequest, keys: any[]): IMSWalletRequest {
-    const uid = keys.pop().uid;
-    const id = this.angularFire.list('user/' + uid + '/requests/').push(request).key;
-    request.key = id;
-    this.angularFire.list('user/' + uid + '/requests/').update(id, request);
-    keys.forEach((key) => {
-      this.angularFire.list('user/' + key.uid + '/requests/').push(request);
-    });
-    return request;
+  // MulstiSigned Wallet Requests
+
+  public addMultiSignedWalletRequest(request: IMSWalletRequest): IMSWalletRequest {
+    this.angularFire.list('requests').push(request);
+    return request
   }
 
   public getMultiSignedWalletRequest(uid: string): Observable<IMSWalletRequest[]> {
-    return this.angularFire.list('user/' + uid + '/requests/')
+    return this.angularFire.list('requests', (ref) =>
+    ref.orderByChild('signers/' + uid)
+    .equalTo(true))
     .snapshotChanges()
     .map((changes) => {
       return changes.map((c) => ({
@@ -217,13 +244,10 @@ export class FirebaseProvider {
     });
   }
 
-  // public updateMultiSignedWalletRequest(keys: string[], request: key)
-  public deleteMultiSignedWalletRequest(keys: string[], request: IMSWalletRequest) {
-    keys.forEach((key) => {
-      console.log(this.angularFire.list('users/' + key + '/requests', (ref) => 
-      ref.orderByChild('key')
-      .equalTo(request.key))
-      .valueChanges());
-    });
+  public updateMultiSignedWalletRequest(request: IMSWalletRequest) {
+    return this.angularFire.object('requests/' + request.key).update(request);
+  }
+  public deleteMultiSignedWalletRequest(request: IMSWalletRequest): Promise<any> {
+    return this.angularFire.object('requests/' + request.key).remove();
   }
 }
