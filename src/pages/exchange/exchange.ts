@@ -41,7 +41,7 @@ export class ExchangePage {
       this.originBalance = this.findBalance(this.originWallet, this.walletList);
       const index = this.walletDestinationList.indexOf(this.originWallet);
     } else {
-      this.sharedService.getExchangeRate(this.originWallet.crypto.value,
+      this.exchangeService.getExchangeRate(this.originWallet.crypto.value,
         this.destinationWallet.crypto.value)
         .subscribe((exchange) => {
           this.exchangeRate = exchange;

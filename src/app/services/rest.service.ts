@@ -96,7 +96,6 @@ export class RestService {
   // Gets every Wallet Transaction
 
   public getWalletTransactions(wallet: Wallet): Observable<IAddress> {
-    console.log(wallet);
     if (wallet.crypto.value === 'eth' || wallet.crypto.value === 'tet') {
       return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + wallet.address)
       .map((res: Response) => {
@@ -150,6 +149,7 @@ export class RestService {
   public sendPayment(trx: ITransactionSke, crypto: string): Observable<ITransactionSke> {
     return this.http.post(this.getPath(crypto) + '/txs/send?token=' + TOKEN, JSON.stringify(trx))
       .map((res: Response) => {
+        console.log(res.json());
         return res.json() as ITransactionSke;
       })
       .catch(this.handleError);
@@ -187,6 +187,11 @@ export class RestService {
       })
       .catch(this.handleError);
   }
+
+
+/*
+WIP For Multisignature Wallets
+*/
 
   // MultiSigned Wallet Methods
 

@@ -92,7 +92,6 @@ export class SendConfirmPage {
   private signPayment(transaction: ITransactionSke) {
     this.sharedService.sendPayment(transaction, this.balance.wallet)
       .subscribe((response) => {
-        console.log(response);
         this.loaderService.dismissLoader();
         this.navCtrl.push('TransactionConfirmationPage', response);
       }, (error) => {

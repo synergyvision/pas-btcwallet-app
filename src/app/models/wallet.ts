@@ -18,7 +18,7 @@ export class Wallet {
         this.name = name;
         this.keys = keys || undefined;
         this.crypto = crypto;
-        this.address = address || undefined;
-        this.multiSignedKey = key;
+        this.address = address || '';
+        this.multiSignedKey = key || '';
     }
 }

@@ -60,7 +60,7 @@ export class HomePage {
   public createRequest() {
     const request: IMSWalletRequest = {};
     request.createdBy = 'a@a.com';
-    request.crypto = 'bcy';
+    request.crypto = 'tes';
     request.signers = ['a@a.com' , 'c@c.com'];
     request.accepted = ['a@a.com'];
     request.type = 'multisig-2-of-2';

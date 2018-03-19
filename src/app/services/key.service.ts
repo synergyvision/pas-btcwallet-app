@@ -52,6 +52,16 @@ export class KeyService {
         return trx;
     }
 
+    public signMultiWithPrivKey(trx: ITransactionSke, key: IKeys, crypto: string): ITransactionSke {
+        const signingKeys = [];
+        // Need to Add Signing Key
+        trx.signatures = trx.tosign.map((tosign, n) => {
+            trx.pubkeys.push(signingKeys[n].getPublicKeyBuffer().toString('hex'));
+            return signingKeys[n].sign(new Buffer(tosign, 'hex')).toDER().toString('hex');
+        });
+        return trx;
+    }
+
     public generateAddress(keys: IKeys) {
         const wallet = ethereumjsWallet.fromExtendedPrivateKey(keys.xpriv);
         return wallet.getAddressString();
@@ -102,6 +112,7 @@ export class KeyService {
             key.xpriv = '';
             key.xpub = HDNode.fromSeedHex(key.seed).keyPair.getPublicKeyBuffer().toString('hex');
             keys.push(key);
+            console.log(key);
             users --;
         }
         return keys;

@@ -94,6 +94,12 @@ export class SharedService {
         });
     }
 
+    public getMultiSignedWallet(name: string) {
+        return this.multiSignedWallets.find((w) => {
+            return (w.name === name);
+        });
+    }
+
     // Transform the data that is going to be shown on the views
 
     public formatBalanceData(balances: IBalance[]): IBalance[] {
@@ -275,11 +281,14 @@ export class SharedService {
         let data: {};
         // MultiSigned Wallets
         if (wallet.multiSignedKey !== '') {
+            const mSWallet = this.getMultiSignedWallet(wallet.name);
+            const addresses = [];
+            mSWallet.signers.forEach((signer) => {
+                addresses.push(signer.pubKey);
+            });
             data = JSON.stringify({
                 inputs: [{
-                    addresses: [
-                        wallet.address,
-                    ],
+                    addresses: addresses,
                     script_type: 'multisig-2-of-2',
                 }],
                 outputs: [{
@@ -326,51 +335,34 @@ export class SharedService {
     }
 
     // Function for signing an ITransactionSke, needed for Sending money (Payments) ***
-    public sendPayment(transaction: ITransactionSke, wallet: IHDWallet, address?: any): Observable<any> {
+    public sendPayment(transaction: ITransactionSke, wallet: IHDWallet): Observable<any> {
+        const signingWallet = this.wallets.find((w) => {
+            return (w.name === wallet.name);
+        });
         if (wallet.multiSignedKey !== '') {
-            // We create a Transaction
-            this.createPendingTrx(transaction, wallet, address);
-        } else if (this.wallets) {
-            const signingWallet = this.wallets.find((w) => {
-                return (w.name === wallet.name);
-            });
-            // The transaction Skeleton is incomplete, we need to add pub keys and sign the data
-            return this.firebaseData.getWalletsKeys(this.user.uid, signingWallet.key)
-                .first()
-                .flatMap((keys) => {
-                    signingWallet.keys = keys;
-                    const trx = this.keyService
-                        .signWithPrivKey(transaction, signingWallet.keys, signingWallet.crypto.value);
-                    return this.restService.sendPayment(trx, wallet.crypto.value)
-                        .map((response) => {
-                            // The transaction was Created Successfully
-                            return response;
-                        }).catch((error) => {
-                            console.log(error);
-                            return error;
-                        });
-                });
+            return Observable.of(this.createPendingTrx(transaction, signingWallet));
+            // return this.signPaymentMultiSigned(transaction, signingWallet);
+        } else {
+            return this.signNormalPayment(transaction, signingWallet);
         }
     }
 
-    // Exchange Functions
-
-    public getExchangePair(input: string, output: string): string {
-        const input_pair = AppData.exchangePairs.filter((p) => {
-            return p.crypto === input;
-        }).pop().name;
-        const output_pair = AppData.exchangePairs.filter((p) => {
-            return p.crypto === output;
-        }).pop().name;
-        return input_pair + '_' + output_pair;
+    public signNormalPayment(transaction: ITransactionSke, wallet: Wallet): Observable<ITransactionSke> {
+        return this.firebaseData.getWalletsKeys(this.user.uid, wallet.key)
+            .first()
+            .flatMap((keys) => {
+                wallet.keys = keys;
+                const trx = this.keyService
+                    .signWithPrivKey(transaction, wallet.keys, wallet.crypto.value);
+                return this.restService.sendPayment(trx, wallet.crypto.value);
+            });
     }
 
-    public getExchangeRate(input: string, output: string): Observable<IExchange> {
-        const pair = this.getExchangePair(input, output);
-        return this.exchangeService.getExchangeRate(pair);
-    }
-
-    // MultiSigned Wallets Functions
+/*  All of this is a
+    WIP
+    Which Means it is untested and unfinished
+ */
+    // MultiSigned Wallets Functions 
 
     // We Verify that all signers are registered on the App
 
@@ -405,35 +397,6 @@ export class SharedService {
         request.type = 'multisig-' +  data.numberOfSigners + '-of-' + data.numberOfSignatures;
         console.log(request);
         return this.addMultiSignedWalletRequest(request);
-
-    }
-
-    public addMultiSignedWalletRequest(request: IMSWalletRequest): Observable<any> {
-        return this.firebaseData.getSignerByEmail(request.signers)
-        .first()
-        .map((keys) => {
-            console.log(keys);
-            request.signers = Object.assign({}, ...keys.map((key) => {
-                return {[key.uid] : true};
-            }));
-            return Observable.of(this.firebaseData.addMultiSignedWalletRequest(request));
-        }, (error) => {
-            return Observable.throw(error);
-        });
-    }
-
-    //WIP
-    public acceptMultiSignedWalletRequest(request: IMSWalletRequest) {
-        request.accepted.push(this.user.email);
-        if (Object.keys(request.signers).length === request.accepted.length) {
-            this.firebaseData.deleteMultiSignedWalletRequest(request)
-            .then(() => {
-                request.signers = this.createISignerData(request.signers);
-                this.createMultisignWallet(request);
-            });
-        } else {
-            this.firebaseData.updateMultiSignedWalletRequest(request);
-        }
     }
 
     public createISignerData(signers: {}) {
@@ -442,7 +405,6 @@ export class SharedService {
         });
     }
 
-    // WIP
     public rejectMultiSignedWalletRequest(request: IMSWalletRequest) {
         return new Promise((resolve, reject) => {
             this.firebaseData.deleteMultiSignedWalletRequest(request).
@@ -461,6 +423,33 @@ export class SharedService {
         });
     }
 
+    public addMultiSignedWalletRequest(request: IMSWalletRequest): Observable<any> {
+        return this.firebaseData.getSignerByEmail(request.signers)
+        .first()
+        .map((keys) => {
+            console.log(keys);
+            request.signers = Object.assign({}, ...keys.map((key) => {
+                return {[key.uid] : true};
+            }));
+            return Observable.of(this.firebaseData.addMultiSignedWalletRequest(request));
+        }, (error) => {
+            return Observable.throw(error);
+        });
+    }
+
+    public acceptMultiSignedWalletRequest(request: IMSWalletRequest) {
+        request.accepted.push(this.user.email);
+        if (Object.keys(request.signers).length === request.accepted.length) {
+            this.firebaseData.deleteMultiSignedWalletRequest(request)
+            .then(() => {
+                request.signers = this.createISignerData(request.signers);
+                this.createMultisignWallet(request);
+            });
+        } else {
+            this.firebaseData.updateMultiSignedWalletRequest(request);
+        }
+    }
+
     public createMultisignWallet(request: IMSWalletRequest) {
         // Emails were verified before
         return new Promise((resolve, reject) => {
@@ -474,13 +463,12 @@ export class SharedService {
             currency.units = currency.units.pop();
             // We create the Keys for every Signer
             const keys = this.keyService.createMultiSignedKeys(request.signers.length, request.crypto);
-            const userKeys: any[] = keys;
             const pubKeys: string[] = [];
             request.signers.forEach((user) => {
-                user.pubKey = userKeys.shift();
-                pubKeys.unshift(user.pubKey.xpub);
+                user.pubKey = keys.shift();
+                pubKeys.unshift(user.pubKey);
             });
-            console.log(request);
+            const signers = JSON.parse(JSON.stringify(request.signers)) as ISigner[];
             if ((request.crypto !== 'tet') && (request.crypto !== 'eth')) {
                 this.restService.createMultiSignedAddress(request.crypto, pubKeys, script)
                     .first()
@@ -489,8 +477,7 @@ export class SharedService {
                             name: name,
                             address: address.address,
                         };
-                        const newWallet = new MultiSignedWallet(name, currency, request.signers,
-                                                                script, address.address);
+                        const newWallet = new MultiSignedWallet(name, currency, signers, script, address.address);
                         const key = this.firebaseData.addMultiSignedWallet(newWallet, request.signers);
                         resolve(newWallet);
                     },
@@ -508,21 +495,54 @@ export class SharedService {
         });
     }
 
-    public createPendingTrx(transaction: ITransactionSke, wallet: IHDWallet, address: any) {
-        const signingWallet = this.wallets.find((w) => {
-            return (w.name === wallet.name);
-        });
-        transaction = this.keyService.signWithPrivKey(transaction, signingWallet.keys, signingWallet.crypto.value);
-        let pendingTrx: IPendingTxs;
-        pendingTrx.tx = transaction.tx;
-        pendingTrx.to = address;
-        pendingTrx.createdBy = this.user.email;
-        const mSWallet = this.multiSignedWallets.find((w) => {
-            return (w.name === wallet.name);
-        });
-        pendingTrx.approved.push({ user: this.user.email });
-        mSWallet.pendingTxs.push(pendingTrx);
-        this.firebaseData.updateMultiSignedWallet(mSWallet);
+    // WIP
 
+    public createPendingTrx(transaction: ITransactionSke, wallet: Wallet) {
+        transaction = this.keyService.signWithPrivKey(transaction, wallet.keys, wallet.crypto.value);
+        let pendingTrx: IPendingTxs;
+        pendingTrx.tx = transaction;
+        pendingTrx.to = transaction.tx.outputs.pop().addresses.pop();
+        pendingTrx.createdBy = this.user.email;
+        this.acceptPendingTrx(pendingTrx, wallet);
     }
+
+    public acceptPendingTrx(pendingTrx: IPendingTxs, wallet: Wallet): Observable<any> {
+        return this.firebaseData.getWalletsKeys(this.user.uid, wallet.key)
+        .flatMap((key) => {
+            console.log(key);
+            const trx = this.keyService.signMultiWithPrivKey(pendingTrx.tx, key, wallet.crypto.value);
+            const mSWallet = this.getMultiSignedWallet(wallet.name);
+            pendingTrx.approved.push({ user: this.user.email });
+            mSWallet.pendingTxs.push(pendingTrx);
+            if (pendingTrx.approved.length === (Number(mSWallet.type.replace('multisig-', '').slice(0, -2)))) {
+                // Transaction was approved by the minimun number of signers
+                return this.restService.sendPayment(pendingTrx.tx, wallet.crypto.value)
+                .map((data) => {
+                    return this.firebaseData.deletePendingTrx(pendingTrx);
+                })
+                .catch((error) => {
+                    throw Observable.throw(error);
+                });
+            } else {
+                this.firebaseData.updateMultiSignedWallet(mSWallet);
+                return Observable.of(pendingTrx);
+            }
+        });
+    }
+
+    public signPaymentMultiSigned(transaction: ITransactionSke, wallet: IHDWallet) {
+        const mSWallet = this.getMultiSignedWallet(wallet.name);
+        const pubKeys = [];
+        const uids = [];
+        mSWallet.signers.forEach((signer) => {
+            pubKeys.push(signer.pubKey);
+            uids.push(signer.uid);
+        });
+        // this.firebaseData.getSignersKey(uids, wallet.multiSignedKey);
+        // const trx = this.keyService.signMultiWithPrivKey(transaction, pubKeys, wallet.crypto.value);
+        // console.log(trx);
+        // return this.restService.sendPayment(trx, wallet.crypto.value);
+    }
+
+
 }

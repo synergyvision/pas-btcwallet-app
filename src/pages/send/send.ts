@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { AddressBookPage } from '../address-book/address-book';
 import { Events } from 'ionic-angular/util/events';
 import { Address } from '../../app/models/address';
 import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner';
 import { AlertService } from '../../app/services/alert.service';
 import { RestService } from '../../app/services/rest.service';
-import { SendConfirmPage } from '../send-confirm/send-confirm';
 import { ErrorService } from '../../app/services/error.service';
 import { LoaderService } from '../../app/services/loader.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -38,7 +36,7 @@ export class SendPage {
   }
 
   public goToAddress() {
-    this.navCtrl.push(AddressBookPage);
+    this.navCtrl.push('AddressBookPage');
   }
 
   public scanQRCode() {
@@ -89,16 +87,16 @@ export class SendPage {
 
   private validateInputedAddress(address: string) {
     // We check that the address is a BTC Valid Address
-    this.restService.getAddressBalance(address, this.navParams.data.crypto.value)
+    this.restService.getAddressBalance(address, this.navParams.data.wallet.crypto.value)
       .subscribe((response) => {
-        this.navCtrl.push(SendConfirmPage, address);
+        this.goToSendConfirm(address);
       }, (error) => {
         this.inputError = 'Esta dirección no es válida';
       });
   }
 
   private goToSendConfirm(address) {
-    this.navCtrl.push(SendConfirmPage, {address: address, wallet: this.navParams.data});
+    this.navCtrl.push('SendConfirmPage', {address: address, wallet: this.navParams.data});
   }
 
 }

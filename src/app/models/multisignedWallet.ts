@@ -2,7 +2,7 @@ import { IKeys } from './IKeys';
 import { IBalance } from './IBalance';
 import { CryptoCoin } from './crypto';
 import { Wallet } from './wallet';
-import { ITransaction } from './ITransaction';
+import { ITransaction, ITransactionSke } from './ITransaction';
 
 // Object to be Stored on the Firebase RealTime DB
 export interface IPendingTxs {
@@ -16,7 +16,7 @@ export interface IPendingTxs {
     rejected: [{
         user: string;
     }];
-    tx: ITransaction;
+    tx: ITransactionSke;
 }
 
 export interface IMSWalletRequest {

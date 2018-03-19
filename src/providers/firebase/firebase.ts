@@ -228,7 +228,7 @@ export class FirebaseProvider {
 
   public addMultiSignedWalletRequest(request: IMSWalletRequest): IMSWalletRequest {
     this.angularFire.list('requests').push(request);
-    return request
+    return request;
   }
 
   public getMultiSignedWalletRequest(uid: string): Observable<IMSWalletRequest[]> {
