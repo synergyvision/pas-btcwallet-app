@@ -53,7 +53,7 @@ export class ReceivePage {
 
   public showAddress() {
     this.address = this.wallet.address;
-/*     this.restService.addFundsTestnet('DdFRmhcLZkWJ4e8kV4rQduVovcvKxrEHUE', 10000000, 'bcy')
+/*     this.restService.addFundsTestnet('DcTHHvXabRR83Mdp5tkEM5FKfS5aug37v9', 100000000, 'bcy')
     .subscribe((data) => {
       console.log(data);
     }); */

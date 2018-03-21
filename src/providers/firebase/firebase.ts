@@ -12,7 +12,7 @@ import { Wallet } from '../../app/models/wallet';
 import { Address } from '../../app/models/address';
 import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
 import { IKeys } from '../../app/models/IKeys';
-import { MultiSignedWallet, ISigner, IMSWalletRequest } from '../../app/models/multisignedWallet';
+import { MultiSignedWallet, ISigner, IMSWalletRequest, IPendingTxs } from '../../app/models/multisignedWallet';
 import { CryptoCoin } from '../../app/models/crypto';
 import { Activity } from '../../app/models/activity';
 
@@ -167,8 +167,6 @@ export class FirebaseProvider {
   }
 
   public addActivity(uid: string, activity: Activity) {
-    console.log(activity);
-    console.log(uid);
     this.angularFire.list('user/' + uid + '/activities/').push(activity);
   }
 
@@ -195,9 +193,12 @@ export class FirebaseProvider {
 
   public getMultiSignedWallet(walletKey: string): Observable<MultiSignedWallet> {
     return this.angularFire.object('multiSignedWallet/' + walletKey)
-    .valueChanges()
-    .map((wallet) => {
-      return wallet as MultiSignedWallet;
+    .snapshotChanges()
+    .map((changes) => {
+    return {
+        key: changes.payload.key,
+        ... changes.payload.val(),
+      };
     });
   }
 
@@ -250,4 +251,32 @@ export class FirebaseProvider {
   public deleteMultiSignedWalletRequest(request: IMSWalletRequest): Promise<any> {
     return this.angularFire.object('requests/' + request.key).remove();
   }
+
+  // CRUD Operations for Pending Transactions
+  public getPendingTrx(uid: string): Observable<IPendingTxs[]> {
+    return this.angularFire.list('pendingTxs', (ref) =>
+    ref.orderByChild('signers/' + uid)
+    .equalTo(true))
+    .snapshotChanges()
+    .map((changes) => {
+      return changes.map((c) =>
+      ({
+        key: c.payload.key,
+        ... c.payload.val(),
+      }));
+    });
+  }
+
+  public addPendingTrx(pendingTrx: IPendingTxs) {
+    return this.angularFire.list('pendingTxs/').push(pendingTrx);
+  }
+
+  public deletePendingTrx(pendingTrx: string) {
+    return this.angularFire.object('pendingTxs/' + pendingTrx).remove();
+  }
+
+  public updatePendingTrx(pendingTrx: IPendingTxs) {
+    return this.angularFire.object('pendingTxs/' + pendingTrx.key).update(pendingTrx);
+  }
+
 }

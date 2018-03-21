@@ -116,7 +116,8 @@ export class HomePage {
     .then(() => {
       this.error = undefined;
       event.complete();
-    }).catch(() => {
+    }).catch((error) => {
+      this.handleError(error);
       event.complete();
     });
   }

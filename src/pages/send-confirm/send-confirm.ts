@@ -93,6 +93,7 @@ export class SendConfirmPage {
     this.sharedService.sendPayment(transaction, this.balance.wallet)
       .subscribe((response) => {
         this.loaderService.dismissLoader();
+        console.log(response);
         this.navCtrl.push('TransactionConfirmationPage', response);
       }, (error) => {
         this.loaderService.dismissLoader();

@@ -6,17 +6,16 @@ import { ITransaction, ITransactionSke } from './ITransaction';
 
 // Object to be Stored on the Firebase RealTime DB
 export interface IPendingTxs {
-    createdBy: string;
-    amount: number;
-    to: string;
-    fee: number;
-    approved: [{
-        user: string;
-    }];
-    rejected: [{
-        user: string;
-    }];
-    tx: ITransactionSke;
+    createdBy?: string;
+    amount?: number;
+    to?: string;
+    fee?: number;
+    approved?: string[];
+    dismissed?: string[];
+    tx?: ITransactionSke;
+    key?: string;
+    wallet?: string;
+    signers?: any;
 }
 
 export interface IMSWalletRequest {
@@ -37,10 +36,9 @@ export class MultiSignedWallet {
     public name?: string;
     public signers?: ISigner[];
     public crypto?: CryptoCoin;
-    public type: string;
+    public type?: string;
     // For ethereum wallets
     public address?: string;
-    public pendingTxs: IPendingTxs[];
 
     constructor(name?: string, crypto?: CryptoCoin, users?: ISigner[], type?: string, address?: string) {
         this.name = name;
@@ -49,7 +47,6 @@ export class MultiSignedWallet {
         this.iKeyToString();
         this.type = type;
         this.address = address;
-        this.pendingTxs = [];
     }
 
     public toWallet(key?: string): Wallet {

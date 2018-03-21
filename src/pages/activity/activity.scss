@@ -9,14 +9,21 @@
   font-size: $font-size-input-thin;
 }
 
-.request-list{
-
-  background: linear-gradient(#3c4661, $secondary);
+.wallet-card {
   color: $clear;
   border-radius: $button-radius;
   width: $input-thin-width;
   margin:auto;
   margin-top: $padding-sm;
+  height: auto;
+}
+
+.request-list{
+  background: linear-gradient(#3c4661, $secondary);
+}
+
+.pendingTx-list{
+  background: linear-gradient($terciary, $primary);
 }
 
 .request-img {
@@ -26,9 +33,13 @@
   color: $primary;
 }
 
-.request-title {
+.request-title, .pendingTx-title {
   color: $clear;
   font-size: $font-size-small-title;
+}
+
+.pendingTx-title {
+  text-align: center;
 }
 
 .request-body {
@@ -37,4 +48,19 @@
 
 .request-button{
   margin-top: 0;
+}
+
+.pendingTx-button{
+  color: $secondary;
+  text-align: center;
+  display: block; 
+  margin: auto;
+  border-color: $secondary;
+  border-width: 2px;
+  margin-bottom: $padding-sm;
+}
+
+.dismiss-icon {
+  font-size: 1em;
+  margin: auto;
 }

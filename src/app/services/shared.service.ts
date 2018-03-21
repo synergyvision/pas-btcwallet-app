@@ -21,7 +21,6 @@ import { IAddress } from '../models/IAddress';
 import { Address } from '../models/address';
 import { AppData } from '../app.data';
 import { Activity } from '../models/activity';
-import { IsGreaterThanPipe } from 'ngx-pipes';
 
 const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
 @Injectable()
@@ -34,6 +33,7 @@ export class SharedService {
     public currency;
     public requestList;
     public requestNumber: number;
+    public pendingTxs: IPendingTxs[] = [];
 
     constructor(public firebaseData: FirebaseProvider, public restService: RestService, public events: Events,
                 public eventService: EventService, public keyService: KeyService, public authService: AuthService,
@@ -53,12 +53,14 @@ export class SharedService {
     // Setters
 
     public setUser(user: User) {
-        this.user = user;
-        this.getWalletsAsync()
-                .subscribe((wallets) => {
-                    this.setWallets(wallets);
-                });
-        this.getCurrency();
+        if (user !== undefined) {
+            this.user = user;
+            this.getWalletsAsync()
+                    .subscribe((wallets) => {
+                        this.setWallets(wallets);
+                    });
+            this.getCurrency();
+        }
     }
 
     public setWallets(wallets: Wallet[]) {
@@ -72,11 +74,27 @@ export class SharedService {
                     });
             }
         });
+        this.getPendingTx();
+    }
 
+    public getPendingTx(): Observable<IPendingTxs[]> {
+        return this.firebaseData.getPendingTrx(this.user.uid)
+        .map((pending) => {
+            return pending.filter((tx) => {
+                if (tx.dismissed !== undefined) {
+                    return (!tx.dismissed.includes(this.user.email) &&
+                           (!tx.approved.includes(this.user.email)));
+                } else if (!tx.approved.includes(this.user.email)) {
+                    return tx;
+                }
+
+            });
+        });
     }
 
     public updateUser() {
         this.user = this.authService.getLoggedUser();
+        this.setUser(this.user);
     }
 
     public getRequests(): Observable<IMSWalletRequest[]> {
@@ -94,9 +112,9 @@ export class SharedService {
         });
     }
 
-    public getMultiSignedWallet(name: string) {
+    public getMultiSignedWallet(key: string) {
         return this.multiSignedWallets.find((w) => {
-            return (w.name === name);
+            return (w.key === key);
         });
     }
 
@@ -281,10 +299,11 @@ export class SharedService {
         let data: {};
         // MultiSigned Wallets
         if (wallet.multiSignedKey !== '') {
-            const mSWallet = this.getMultiSignedWallet(wallet.name);
+            console.log('here');
+            const mSWallet = this.getMultiSignedWallet(wallet.multiSignedKey);
             const addresses = [];
             mSWallet.signers.forEach((signer) => {
-                addresses.push(signer.pubKey);
+                addresses.unshift(signer.pubKey);
             });
             data = JSON.stringify({
                 inputs: [{
@@ -299,6 +318,7 @@ export class SharedService {
                 }],
             });
         }
+        console.log(data);
 
         // Ethereum and Ethereum Testnet Wallets
         if ((wallet.address !== '') && ((wallet.crypto.value === 'tet') || (wallet.crypto.value === 'bet'))) {
@@ -340,7 +360,7 @@ export class SharedService {
             return (w.name === wallet.name);
         });
         if (wallet.multiSignedKey !== '') {
-            return Observable.of(this.createPendingTrx(transaction, signingWallet));
+            return this.createPendingTrx(transaction, signingWallet);
             // return this.signPaymentMultiSigned(transaction, signingWallet);
         } else {
             return this.signNormalPayment(transaction, signingWallet);
@@ -353,7 +373,7 @@ export class SharedService {
             .flatMap((keys) => {
                 wallet.keys = keys;
                 const trx = this.keyService
-                    .signWithPrivKey(transaction, wallet.keys, wallet.crypto.value);
+                    .signTransaction(transaction, wallet.keys, wallet.crypto.value);
                 return this.restService.sendPayment(trx, wallet.crypto.value);
             });
     }
@@ -427,10 +447,11 @@ export class SharedService {
         return this.firebaseData.getSignerByEmail(request.signers)
         .first()
         .map((keys) => {
-            console.log(keys);
             request.signers = Object.assign({}, ...keys.map((key) => {
                 return {[key.uid] : true};
             }));
+            console.log(keys);
+            console.log(request.signers);
             return Observable.of(this.firebaseData.addMultiSignedWalletRequest(request));
         }, (error) => {
             return Observable.throw(error);
@@ -466,72 +487,104 @@ export class SharedService {
             const pubKeys: string[] = [];
             request.signers.forEach((user) => {
                 user.pubKey = keys.shift();
-                pubKeys.unshift(user.pubKey);
+                pubKeys.unshift(user.pubKey.xpub);
             });
             const signers = JSON.parse(JSON.stringify(request.signers)) as ISigner[];
-            if ((request.crypto !== 'tet') && (request.crypto !== 'eth')) {
-                this.restService.createMultiSignedAddress(request.crypto, pubKeys, script)
-                    .first()
-                    .subscribe((address: IAddress) => {
-                        const data = {
-                            name: name,
-                            address: address.address,
-                        };
-                        const newWallet = new MultiSignedWallet(name, currency, signers, script, address.address);
-                        const key = this.firebaseData.addMultiSignedWallet(newWallet, request.signers);
-                        resolve(newWallet);
-                    },
-                        (error) => {
-                            reject(error);
-                        });
-            } else {
+            // if ((request.crypto !== 'tet') && (request.crypto !== 'eth')) {
+            this.restService.createMultiSignedAddress(request.crypto, pubKeys, script)
+                .first()
+                .subscribe((address: IAddress) => {
+                    const newWallet = new MultiSignedWallet(name, currency, signers, script, address.address);
+                    const key = this.firebaseData.addMultiSignedWallet(newWallet, request.signers);
+                    resolve(newWallet);
+                },
+                    (error) => {
+                        reject(error);
+                    });
+/*             } else {
                 /* // Ethereum wallets
                  // const address = this.keyService.generateAddress(keys);
                 const newWallet = new Wallet(name, keys, currency);
                 newWallet.address = address;
                 this.firebaseData.addWallet(newWallet, this.user.uid);
                 resolve(newWallet); */
-            }
+            // }
         });
     }
 
     // WIP
 
     public createPendingTrx(transaction: ITransactionSke, wallet: Wallet) {
-        transaction = this.keyService.signWithPrivKey(transaction, wallet.keys, wallet.crypto.value);
-        let pendingTrx: IPendingTxs;
+        const msWallet = this.getMultiSignedWallet(wallet.multiSignedKey);
+        const pendingTrx: IPendingTxs = {};
         pendingTrx.tx = transaction;
         pendingTrx.to = transaction.tx.outputs.pop().addresses.pop();
         pendingTrx.createdBy = this.user.email;
-        this.acceptPendingTrx(pendingTrx, wallet);
+        pendingTrx.wallet = wallet.multiSignedKey;
+        pendingTrx.amount = transaction.tx.total;
+        pendingTrx.approved = [];
+        pendingTrx.dismissed = [];
+        pendingTrx.signers = Object.assign({}, ...msWallet.signers.map((key) => {
+            return {[key.uid] : true};
+        }));
+        return this.acceptPendingTrx(pendingTrx, wallet, msWallet);
     }
 
-    public acceptPendingTrx(pendingTrx: IPendingTxs, wallet: Wallet): Observable<any> {
+    // Accepts and sends the Transaction Signed by the User
+    public acceptPendingTrx(pendingTrx: IPendingTxs, wallet?: Wallet, msWallet?: MultiSignedWallet): Observable<any> {
+        if (wallet === undefined && msWallet === undefined) {
+            msWallet = this.getMultiSignedWallet(pendingTrx.wallet);
+            wallet = this.wallets.find((w) => {
+                return (w.multiSignedKey === msWallet.key);
+            });
+        }
         return this.firebaseData.getWalletsKeys(this.user.uid, wallet.key)
+        .first()
         .flatMap((key) => {
-            console.log(key);
-            const trx = this.keyService.signMultiWithPrivKey(pendingTrx.tx, key, wallet.crypto.value);
-            const mSWallet = this.getMultiSignedWallet(wallet.name);
-            pendingTrx.approved.push({ user: this.user.email });
-            mSWallet.pendingTxs.push(pendingTrx);
-            if (pendingTrx.approved.length === (Number(mSWallet.type.replace('multisig-', '').slice(0, -2)))) {
-                // Transaction was approved by the minimun number of signers
-                return this.restService.sendPayment(pendingTrx.tx, wallet.crypto.value)
-                .map((data) => {
-                    return this.firebaseData.deletePendingTrx(pendingTrx);
-                })
-                .catch((error) => {
-                    throw Observable.throw(error);
-                });
-            } else {
-                this.firebaseData.updateMultiSignedWallet(mSWallet);
-                return Observable.of(pendingTrx);
-            }
+            const trx = this.keyService.signWithPrivateKey(pendingTrx.tx, key, wallet.crypto.value);
+            pendingTrx.approved.push(this.user.email);
+            console.log('SIGNED')
+            return this.restService.sendPayment(trx, wallet.crypto.value)
+            .flatMap((data) => {
+                if (pendingTrx.approved.length === (Number(msWallet.type.replace('multisig-', '').slice(0, 1)))) {
+                    // Transaction was approved by the minimun number of signers
+                    return this.restService.sendPayment(pendingTrx.tx, wallet.crypto.value)
+                    .map((transaction) => {
+                        console.log(transaction);
+                        this.cancelPendingTrx(pendingTrx.key);
+                        return Observable.of(transaction);
+                    })
+                    .catch((error) => {
+                        throw Observable.throw(error);
+                    });
+                } else {
+                    this.firebaseData.addPendingTrx(pendingTrx);
+                    return Observable.of(pendingTrx.tx);
+                }
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+            throw Observable.throw(error);
         });
     }
 
+    // For Canceling the Pending TRX (on Cases where the MultisignedWallet handles rejection)
+    public cancelPendingTrx(pendingTrx: string) {
+        return this.firebaseData.deletePendingTrx(pendingTrx);
+    }
+
+    // For dismissing the PendingTrx Notificaction
+    public dismissPendingTrx(pendingTrx: IPendingTxs) {
+        if (pendingTrx.dismissed === undefined) {
+            pendingTrx.dismissed = [];
+        }
+        pendingTrx.dismissed.push(this.user.email);
+        this.firebaseData.updatePendingTrx(pendingTrx);
+    }
+
     public signPaymentMultiSigned(transaction: ITransactionSke, wallet: IHDWallet) {
-        const mSWallet = this.getMultiSignedWallet(wallet.name);
+        const mSWallet = this.getMultiSignedWallet(wallet.multiSignedKey);
         const pubKeys = [];
         const uids = [];
         mSWallet.signers.forEach((signer) => {

@@ -6,7 +6,7 @@
 
 <ion-content>
   <ion-list *ngIf="requestList">
-    <ion-card class="request-list" *ngFor="let r of requestList | async">
+    <ion-card class="wallet-card request-list" *ngFor="let r of requestList | async">
       <div class="request-img">
         <ion-icon name="currency-{{r.crypto}}" item-left></ion-icon>
       </div>
@@ -33,6 +33,27 @@
           </button>
         </ion-col>
       </ion-row>
+    </ion-card>
+  </ion-list>
+
+  <ion-list *ngIf="pendingTxList">
+    <ion-card class="wallet-card pendingTx-list" *ngFor="let t of pendingTxList | async">
+      <ion-card-content>
+        <ion-card-header class="pendingTx-title">
+          <ion-icon class="dismiss-icon" style="float: right;" (click)="dismissPendingTx(t)" name="close">
+          </ion-icon>
+          Transacción Pendiente
+        </ion-card-header>
+        <div class="pendingTx-body" text-wrap>
+          El usuario {{t.createdBy}} desea que apruebe una transferencia
+          <br> Destino: {{t.to}}
+          <br> Monto: {{t.amount}}
+        </div>
+      </ion-card-content>
+          <button class="pendingTx-button" ion-button icon-left outline on-click="acceptPendingTx(t)">
+            <ion-icon name="checkmark"></ion-icon>
+            <div>Aceptar</div>
+          </button>
     </ion-card>
   </ion-list>
   <ion-list no-lines>

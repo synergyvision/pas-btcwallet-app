@@ -147,6 +147,7 @@ export class RestService {
   // Sends a signed payment
 
   public sendPayment(trx: ITransactionSke, crypto: string): Observable<ITransactionSke> {
+    console.log(JSON.stringify(trx));
     return this.http.post(this.getPath(crypto) + '/txs/send?token=' + TOKEN, JSON.stringify(trx))
       .map((res: Response) => {
         console.log(res.json());
@@ -203,7 +204,6 @@ WIP For Multisignature Wallets
     });
     return this.http.post(this.getPath(crypto) + '/addrs?token=' + TOKEN, data)
     .map((res: Response) => {
-      console.log(res);
       return res.json() as IAddress;
     })
     .catch(this.handleError);

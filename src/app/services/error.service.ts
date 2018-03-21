@@ -33,5 +33,11 @@ export class ErrorService {
                 this.message = 'WALLET_DUPLICATE';
             }
         }
+        if (errorCode === 400) {
+            console.log(errorCode);
+            if (errorText.error.startsWith('Error: Error validating generated transaction: Transaction with hash')) {
+                this.message = 'Esta transacción ya fue generada';
+            }
+        }
     }
 }

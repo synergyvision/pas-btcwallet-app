@@ -29,35 +29,34 @@ export class KeyService {
         return bip39.validateMnemonic(mnemonic);
     }
 
-    public signWithPrivKey(trx: ITransactionSke, keys: IKeys, crypto: string): ITransactionSke {
-        /*         We need to add the relevant information to the toSign, signatures and signingKeys fields
-                to be sent with the Transaction skeleton to BlockCypher */
-        const inputAddress = trx.tx.inputs;
-        // If is an Ethereum or Ethereum Testnet Address
-        if (crypto !== 'tet' && crypto !== 'eth') {
-            const signingKeys = this.derivePrivKey(keys, inputAddress, this.getNetwork(crypto));
-            // We Sign and add the Public Keys to the Transaction Skeleton
-            trx.signatures = trx.tosign.map((tosign, n) => {
-                trx.pubkeys.push(signingKeys[n].getPublicKeyBuffer().toString('hex'));
-                return signingKeys[n].sign(new Buffer(tosign, 'hex')).toDER().toString('hex');
-            });
+    public signTransaction(trx: ITransactionSke, keys: IKeys, crypto: string): ITransactionSke {
+        /*  We need to add the relevant information to the toSign, signatures and signingKeys fields
+        to be sent with the Transaction skeleton to BlockCypher */
         // If it is an HD Wallet
+        if (crypto !== 'tet' && crypto !== 'eth') {
+            return this.signWithDerivedPrivateKey(trx, keys, crypto);
+        // If is an Ethereum or Ethereum Testnet Address
         } else {
-            const signingKeys = this.getPrivateKey(keys);
-            trx.signatures = trx.tosign.map((tosign, n) => {
-                trx.pubkeys.push(signingKeys.getPublicKeyBuffer().toString('hex'));
-                return signingKeys.sign(Buffer.from(tosign, 'hex')).toDER().toString('hex');
-            });
+           return this.signWithPrivateKey(trx, keys, crypto);
         }
-        return trx;
     }
 
-    public signMultiWithPrivKey(trx: ITransactionSke, key: IKeys, crypto: string): ITransactionSke {
-        const signingKeys = [];
-        // Need to Add Signing Key
+    public signWithDerivedPrivateKey(trx: ITransactionSke, keys: IKeys, crypto: string) {
+        const inputAddress = trx.tx.inputs;
+        const signingKeys = this.derivePrivKey(keys, inputAddress, this.getNetwork(crypto));
+        // We Sign and add the Public Keys to the Transaction Skeleton
         trx.signatures = trx.tosign.map((tosign, n) => {
             trx.pubkeys.push(signingKeys[n].getPublicKeyBuffer().toString('hex'));
             return signingKeys[n].sign(new Buffer(tosign, 'hex')).toDER().toString('hex');
+        });
+        return trx;
+    }
+
+    public signWithPrivateKey(trx: ITransactionSke, keys: IKeys, crypto: string) {
+        const signingKeys = this.getPrivateKey(keys);
+        trx.signatures = trx.tosign.map((tosign, n) => {
+            console.log('SIGNED');
+            return signingKeys.sign(Buffer.from(tosign, 'hex')).toDER().toString('hex');
         });
         return trx;
     }
@@ -83,7 +82,6 @@ export class KeyService {
 
     public getPrivateKey(keys): ECPair {
         return HDNode.fromSeedHex(keys.seed).keyPair;
-        // return HDNode.fromBase58(keys.xpriv).keyPair;
     }
 
     public getWIF(keys: IKeys, crypto: string): string {
