@@ -299,7 +299,6 @@ export class SharedService {
         let data: {};
         // MultiSigned Wallets
         if (wallet.multiSignedKey !== '') {
-            console.log('here');
             const mSWallet = this.getMultiSignedWallet(wallet.multiSignedKey);
             const addresses = [];
             mSWallet.signers.forEach((signer) => {
@@ -318,8 +317,6 @@ export class SharedService {
                 }],
             });
         }
-        console.log(data);
-
         // Ethereum and Ethereum Testnet Wallets
         if ((wallet.address !== '') && ((wallet.crypto.value === 'tet') || (wallet.crypto.value === 'bet'))) {
             data = JSON.stringify({
@@ -515,6 +512,7 @@ export class SharedService {
     // WIP
 
     public createPendingTrx(transaction: ITransactionSke, wallet: Wallet) {
+        console.log('We create the Pending TRX');
         const msWallet = this.getMultiSignedWallet(wallet.multiSignedKey);
         const pendingTrx: IPendingTxs = {};
         pendingTrx.tx = transaction;
@@ -527,6 +525,10 @@ export class SharedService {
         pendingTrx.signers = Object.assign({}, ...msWallet.signers.map((key) => {
             return {[key.uid] : true};
         }));
+        console.log('DONE!');
+        console.log(pendingTrx);
+        console.log('Hash');
+        console.log(pendingTrx.tx.tx.hash);
         return this.acceptPendingTrx(pendingTrx, wallet, msWallet);
     }
 
@@ -541,26 +543,26 @@ export class SharedService {
         return this.firebaseData.getWalletsKeys(this.user.uid, wallet.key)
         .first()
         .flatMap((key) => {
+            console.log('SO now we sign our transaction');
             const trx = this.keyService.signWithPrivateKey(pendingTrx.tx, key, wallet.crypto.value);
             pendingTrx.approved.push(this.user.email);
-            console.log('SIGNED')
+            console.log(pendingTrx.tx.tx.inputs);
             return this.restService.sendPayment(trx, wallet.crypto.value)
             .flatMap((data) => {
+                console.log('Signed');
+                console.log(data);
+                console.log('Hash');
+                console.log(data.tx.hash);
+                console.log(pendingTrx.tx.tx.hash);
                 if (pendingTrx.approved.length === (Number(msWallet.type.replace('multisig-', '').slice(0, 1)))) {
                     // Transaction was approved by the minimun number of signers
-                    return this.restService.sendPayment(pendingTrx.tx, wallet.crypto.value)
-                    .map((transaction) => {
-                        console.log(transaction);
-                        this.cancelPendingTrx(pendingTrx.key);
-                        return Observable.of(transaction);
-                    })
-                    .catch((error) => {
-                        throw Observable.throw(error);
-                    });
+                    console.log('here');
+                    this.cancelPendingTrx(pendingTrx.key);
                 } else {
+                    // pendingTrx.tx.tx.hash = data.tx.hash;
                     this.firebaseData.addPendingTrx(pendingTrx);
-                    return Observable.of(pendingTrx.tx);
                 }
+                return Observable.of(pendingTrx.tx);
             });
         })
         .catch((error) => {

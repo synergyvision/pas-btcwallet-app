@@ -73,7 +73,6 @@ export class SendConfirmPage {
   private createTransactionWalletUser(form: FormGroup) {
     this.sharedService.getWalletByEmail(this.address.email, this.balance.wallet.crypto.value)
       .subscribe((receiverAddress) => {
-        console.log(receiverAddress);
         this.sharedService.createPayment(receiverAddress, form.value.amount,
           this.balance.wallet)
           .subscribe((response) => {
@@ -93,7 +92,6 @@ export class SendConfirmPage {
     this.sharedService.sendPayment(transaction, this.balance.wallet)
       .subscribe((response) => {
         this.loaderService.dismissLoader();
-        console.log(response);
         this.navCtrl.push('TransactionConfirmationPage', response);
       }, (error) => {
         this.loaderService.dismissLoader();

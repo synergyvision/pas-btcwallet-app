@@ -54,8 +54,8 @@ export class KeyService {
 
     public signWithPrivateKey(trx: ITransactionSke, keys: IKeys, crypto: string) {
         const signingKeys = this.getPrivateKey(keys);
+        console.log(signingKeys.getPublicKeyBuffer().toString('hex'));
         trx.signatures = trx.tosign.map((tosign, n) => {
-            console.log('SIGNED');
             return signingKeys.sign(Buffer.from(tosign, 'hex')).toDER().toString('hex');
         });
         return trx;

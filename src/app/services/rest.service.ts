@@ -137,8 +137,12 @@ export class RestService {
   // Creates a Transaction Skeleton to be signed
 
   public createPayment(data: any, crypto: string): Observable<ITransactionSke> {
+    console.log('we create the transaction with this input');
+    console.log(data);
     return this.http.post(this.getPath(crypto) + '/txs/new?token=' + TOKEN, data)
       .map((res) => {
+        console.log('We get the Transaction to be Signed');
+        console.log(res.json() as ITransactionSke);
         return res.json() as ITransactionSke;
       })
       .catch(this.handleError);
@@ -147,7 +151,7 @@ export class RestService {
   // Sends a signed payment
 
   public sendPayment(trx: ITransactionSke, crypto: string): Observable<ITransactionSke> {
-    console.log(JSON.stringify(trx));
+    console.log(trx);
     return this.http.post(this.getPath(crypto) + '/txs/send?token=' + TOKEN, JSON.stringify(trx))
       .map((res: Response) => {
         console.log(res.json());
