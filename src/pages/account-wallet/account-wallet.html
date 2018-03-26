@@ -4,7 +4,7 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>
-      Billetera
+      {{'WALLET_SETTINGS.title' | translate }}
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -19,11 +19,11 @@
     </ion-item>
     <span class="error-message" *ngIf="message">{{message}}</span>
     <ion-item class="account-info">
-      Configuración de la Billetera
+        {{'WALLET_SETTINGS.sub_title' | translate }}
     </ion-item>
 
     <button ion-button block outline *ngFor="let o of walletOptions" class="account-options" (click)="selectOption(o.value)">
-      {{o.title}}
+      {{o.title | translate }}
       <ion-label>
         <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
       </ion-label>
@@ -34,7 +34,7 @@
 
     <div class="change-option" *ngIf="showWalletSelect">
       <ion-item class="thin-input">
-        <ion-select (ionChange)="onWalletChange()" class="select-option" [(ngModel)]="selectedWallet" placeholder="Billetera">
+        <ion-select (ionChange)="onWalletChange()" class="select-option" [(ngModel)]="selectedWallet" placeholder="{{'WALLET_SETTINGS.crypto_unit' | translate }}">
           <ion-option *ngFor="let w of wallets" [value]="w">{{w.name}}
           </ion-option>
         </ion-select>
@@ -45,7 +45,7 @@
 
     <div class="change-option" *ngIf="selectedOption ==='changeCryptoUnit'">
       <ion-item class="thin-input">
-        <ion-select (ionChange)="changeCryptoUnit()" class="select-option" [(ngModel)]="selectedCrypto" placeholder="Unidad" [disabled]="!selectedWallet">
+        <ion-select (ionChange)="changeCryptoUnit()" class="select-option" [(ngModel)]="selectedCrypto" placeholder="{{'WALLET_SETTINGS.crypto_unit' | translate }}" [disabled]="!selectedWallet">
           <ion-option *ngFor="let c of cryptoUnit.units" [value]="c">{{c.name}}
           </ion-option>
         </ion-select>
@@ -56,7 +56,7 @@
 
     <div class="change-option" *ngIf="selectedOption==='changeCurrency'">
       <ion-item class="thin-input">
-        <ion-select (ionChange)="changeCurrency()" class="select-option" [(ngModel)]="selectedCurrency" placeholder="Moneda">
+        <ion-select (ionChange)="changeCurrency()" class="select-option" [(ngModel)]="selectedCurrency" placeholder="{{'coin' | translate }}">
           <ion-option *ngFor="let c of currenciesList" [value]="c">{{c}}
           </ion-option>
         </ion-select>
@@ -67,13 +67,13 @@
 
     <div *ngIf="(selectedWallet) && (selectedOption==='exportWallet' || selectedOption ==='showMnemonics')" class="wallet-info">
       <ion-item class="wallet-info" text-wrap>
-        Wallet:
+          {{'wallet' | translate }}
         <div class="wallet-info-detail">
           {{selectedWallet.name}}
         </div>
       </ion-item>
       <ion-item *ngIf="(selectedOption==='showMnemonics')"class="wallet-info">
-        Mnemonic:
+        {{'mnemonic' | translate }}
         <div class="wallet-info-detail" text-wrap>
           - {{selectedWallet.keys.mnemonics}}
         </div>

@@ -23,10 +23,7 @@ export class ActivityPage {
               private loaderService: LoaderService) {
     this.activityList = AppData.activityList;
     this.requestList = this.sharedService.getRequests();
-    this.pendingTxList = this.sharedService.getPendingTx();
-    this.pendingTxList.subscribe((Data) => {
-      console.log(Data);
-    });
+    this.pendingTxList = this.sharedService.pendingTxs;
   }
 
   private removeActivity(activity) {
@@ -38,7 +35,7 @@ export class ActivityPage {
 
   private acceptRequest(request: IMSWalletRequest) {
     this.loaderService.showFullLoader('Espere');
-    this.sharedService.acceptMultiSignedWalletRequest(request)
+    this.sharedService.acceptMultiSignedWalletRequest(request);
     this.loaderService.dismissLoader();
   }
 
@@ -50,10 +47,11 @@ export class ActivityPage {
   }
 
   private acceptPendingTx(pendingTx: IPendingTxs) {
-    this.sharedService.acceptPendingTrx(pendingTx).subscribe((data) => {
-      console.log(data);
+    this.sharedService.acceptPendingTrx(pendingTx)
+    .subscribe((transaction) => {
+      this.navCtrl.push('TransactionConfirmationPage', transaction);
     }, (error) => {
-      console.log(error);
+      // we show an error
     });
 
   }

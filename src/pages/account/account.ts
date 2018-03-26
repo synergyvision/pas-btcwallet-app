@@ -37,4 +37,8 @@ export class AccountPage {
       this.navCtrl.push(o.component);
     }
   }
+
+  public changePicture() {
+    console.log(this.sharedService.changePicture());
+  }
 }

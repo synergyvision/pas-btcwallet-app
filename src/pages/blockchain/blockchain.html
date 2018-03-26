@@ -1,13 +1,13 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Explorador</ion-title>
+    <ion-title>{{'BLOCKCHAIN.title' | translate }}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <ion-list no-lines>
     <ion-item class="crypto input">
-      <ion-label>Criptomonedas</ion-label>
+      <ion-label>{{'cryptocoins' | translate }}</ion-label>
       <ion-select class="select-crypto" [(ngModel)]="selectedCrypto" (ionChange)="onBlockchainChange()">
         <ion-option *ngFor="let c of crypto" value="{{c.value}}">{{c.name}}</ion-option>
       </ion-select>
@@ -16,58 +16,58 @@
       <ion-label>
         <ion-icon name="search"></ion-icon>
       </ion-label>
-      <ion-input type="text" [(ngModel)]="searchValue" placeholder="Buscar Bloque o TX">
+      <ion-input type="text" [(ngModel)]="searchValue" placeholder="{{'BLOCKCHAIN.search' | translate }}">
       </ion-input>
     </ion-item>
     <div *ngIf="selectedCrypto && blockchain" class="blockchain-info">
       <ion-item class="header">
-        Blockchain Bitcoin
+        {{'BLOCKCHAIN.default_block' | translate }}
       </ion-item>
       <ion-item text-wrap>
-        Última Actualización: {{blockchain.time | date:'dd MMM, y hh:mm a'}}
+        {{'BLOCKCHAIN.time' | translate }} {{blockchain.time | date:'dd MMM, y hh:mm a'}}
       </ion-item>
       <ion-item text-wrap>
-        Altura: {{blockchain.height}}
+        {{'BLOCKCHAIN.height' | translate }} {{blockchain.height}}
       </ion-item>
       <button ion-item (click)="toggleBlock(blockchain.hash)">
-        Último Bloque: {{blockchain.hash}}
+        {{'BLOCKCHAIN.hash' | translate }}{{blockchain.hash}}
         <ion-icon *ngIf="!showBlock" name="arrow-dropright" item-end></ion-icon>
         <ion-icon *ngIf="showBlock" name="arrow-dropdown" item-end></ion-icon>
       </button>
     </div>
     <div *ngIf="(showBlock)" class="block-info" [@enterAnimation]>
       <ion-item class="header">
-        Bloque
+        {{'BLOCKCHAIN.block_title' | translate }}
       </ion-item>
       <ion-item text-wrap>
-        Hash del Bloque: {{block.hash}}
+        {{'BLOCKCHAIN.block_hash' | translate }}{{block.hash}}
       </ion-item>
       <ion-item>
-        Nonce: {{block.nonce}}
+        {{'BLOCKCHAIN.block_nonce' | translate }} {{block.nonce}}
       </ion-item>
       <ion-item>
-        Altura del Bloque: {{block.height}}
+        {{'BLOCKCHAIN.block_height' | translate }} {{block.height}}
       </ion-item>
       <ion-item>
-        Tamaño: {{block.size}}
+        {{'BLOCKCHAIN.block_size' | translate }} {{block.size}}
       </ion-item>
       <ion-item>
-        Número de Transacciones: {{block.n_tx}}
+        {{'BLOCKCHAIN.n_tx' | translate }} {{block.n_tx}}
       </ion-item>
       <ion-item>
-        Volumen de Transacciones: {{block.total}}
+        {{'BLOCKCHAIN.total' | translate }} {{block.total}}
       </ion-item>
       <ion-item>
-        Comisiones de las Transacciones: {{block.fees}}
+        {{'BLOCKCHAIN.fees' | translate }} {{block.fees}}
       </ion-item>
       <ion-item>
-        Fecha y Hora: {{block.time | date:'dd MMM, y hh:mm a'}}
+        {{'BLOCKCHAIN.time' | translate }} {{block.time | date:'dd MMM, y hh:mm a'}}
       </ion-item>
       <ion-item>
-        Hora de Recepción: {{block.received_time | date:'dd MMM, y hh:mm a' }}
+        {{'BLOCKCHAIN.received_time' | translate }}: {{block.received_time | date:'dd MMM, y hh:mm a' }}
       </ion-item>
       <button ion-item (click)="getBlock(block.prev_block, true)">
-        Bloque Previo: {{block.prev_block}}
+        {{'BLOCKCHAIN.prev_block' | translate }} {{block.prev_block}}
         <ion-icon name="arrow-dropright" item-end></ion-icon>
       </button>
     </div>

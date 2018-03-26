@@ -27,6 +27,9 @@ import { EventService } from './services/events.services';
 import { ExchangeService } from './services/exchange.service';
 import { SharedService } from './services/shared.service';
 import { RestService } from './services/rest.service';
+import { StorageProvider } from '../providers/firebase/storage';
+import { Camera } from '@ionic-native/camera';
+
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -68,7 +71,9 @@ const firebaseConfig = {
     }),
   ],
   providers: [
+    Camera,
     FirebaseProvider,
+    StorageProvider,
     AlertService,
     LoaderService,
     KeyService,

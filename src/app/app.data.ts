@@ -10,37 +10,37 @@ export class AppData {
 
     public static registerForm = [
         {
-          placeholder: 'Correo Eléctronico', name: 'email', icon: 'wallet-email', type: 'email',
+          placeholder: 'FORM.email', name: 'email', icon: 'wallet-email', type: 'email',
           validators: [Validators.email, Validators.required, Validators.maxLength(30)],
         },
         {
-          placeholder: 'Contraseña', name: 'password', icon: 'wallet-password', type: 'password',
+          placeholder: 'FORM.password', name: 'password', icon: 'wallet-password', type: 'password',
           validators: [Validators.required, Validators.minLength(8)],
         },
         {
-          placeholder: 'Repetir Contraseña', name: 'passwordRe', icon: 'wallet-password', type: 'password',
+          placeholder: 'FORM.repeat_password', name: 'passwordRe', icon: 'wallet-password', type: 'password',
           validators: [Validators.required],
         },
       ];
 
       public static loginForm =  [
         {
-          placeholder: 'Correo Electrónico', name: 'email', icon: 'wallet-email', type: 'email',
+          placeholder: 'FORM.email', name: 'email', icon: 'wallet-email', type: 'email',
           validators: [Validators.email, Validators.required, Validators.maxLength(30)],
         },
         {
-          placeholder: 'Contraseña', name: 'password', icon: 'wallet-password', type: 'password',
+          placeholder: 'FORM.password', name: 'password', icon: 'wallet-password', type: 'password',
           validators: [Validators.required, Validators.minLength(8)],
         },
       ];
 
       public static addressInputs = [
         {
-          placeholder: 'Correo', name: 'email', value: '', type: 'email',
+          placeholder: 'FORM.email', name: 'email', value: '', type: 'email',
           validators: [Validators.email, Validators.maxLength(30), Validators.required],
         },
         {
-          placeholder: 'Alias', name: 'alias', value: '', type: 'text',
+          placeholder: 'FORM.alias', name: 'alias', value: '', type: 'text',
           validators: [Validators.required, Validators.maxLength(30)],
         },
         {
@@ -57,6 +57,14 @@ export class AppData {
         { name: 'BlockCypher Testnet', value: 'bcy' },
         { name: 'Ethereum', value: 'eth' },
         { name: 'Ethereum Testnet', value: 'tet'},
+    ];
+
+    public static multiCryptoCurrencies = [
+        { name: 'Testnet', value: 'tes' },
+        { name: 'Bitcoin', value: 'btc' },
+        { name: 'Dogecoin', value: 'dog' },
+        { name: 'Litecoin', value: 'ltc' },
+        { name: 'BlockCypher Testnet', value: 'bcy' },
     ];
 
     public static restAPIPaths = [

@@ -3,30 +3,29 @@
 export class AppSettings {
 
   public static pagesMenu = [
-    { title: 'Inicio', component: 'HomePage', icon: 'wallet-home' },
-    { title: 'Cuenta', component: 'AccountPage', icon: 'wallet-account' },
-    { title: 'Libreta de Contactos', component: 'AddressBookPage', icon: 'wallet-address-book' },
-    { title: 'Transacciones', component: 'TransactionsPage', icon: 'wallet-transactions' },
-    { title: 'Actividad', component: 'ActivityPage', icon: 'wallet-activity' },
-    { title: 'Exchange', component: 'ExchangePage', icon: 'wallet-activity'},
-    { title: 'Blockchain', component: 'BlockchainPage', icon: 'wallet-transactions'},
+    { title: 'HOME.title', component: 'HomePage', icon: 'wallet-home' },
+    { title: 'ACCOUNT.title', component: 'AccountPage', icon: 'wallet-account' },
+    { title: 'ADDRESS_BOOK.title', component: 'AddressBookPage', icon: 'wallet-address-book' },
+    { title: 'TRANSACTIONS.title', component: 'TransactionsPage', icon: 'wallet-transactions' },
+    { title: 'ACTIVITY.title', component: 'ActivityPage', icon: 'wallet-activity' },
+    { title: 'EXCHANGE.title', component: 'ExchangePage', icon: 'wallet-activity'},
+    { title: 'BLOCKCHAIN.title', component: 'BlockchainPage', icon: 'wallet-transactions'},
   ];
 
   public static accountOptions = [
-    { title: 'Configuración de Seguridad', component: 'AccountSecurityPage'},
-    { title: 'Configuración de Billeteras', component: 'AccountWalletPage'},
+    { title: 'ACCOUNT_OPTIONS.security_settings', component: 'AccountSecurityPage'},
+    { title: 'ACCOUNT_OPTIONS.wallet_settings' , component: 'AccountWalletPage'},
   ];
 
   public static securityOptions =  [
-    { title: 'Restablecer Contraseña', function: 'restorePassword' },
-    { title: 'Verificación de dos Pasos', function: 'activateTwoFactorAuth' },
+    { title: 'SECURITY_OPTIONS.recover_password', function: 'restorePassword' },
+    { title: 'SECURITY_OPTIONS.activate_2auf', function: 'activateTwoFactorAuth' },
   ];
 
   public static walletOptions = [
-    { title: 'Cambiar Moneda Local', value: 'changeCurrency' },
-    { title: 'Cambiar Unidades de Moneda', value: 'changeCryptoUnit'},
-    { title: 'Exportar Billetera', value: 'exportWallet'},
-    { title: 'Mostrar Clave de Recuperacion', value: 'showMnemonics'},
-    { title: 'Importar Billetera', value: 'importWallet'},
+    { title: 'WALLET_OPTIONS.change_currency', value: 'changeCurrency' },
+    { title: 'WALLET_OPTIONS.change_crypto_unit', value: 'changeCryptoUnit'},
+    { title: 'WALLET_OPTIONS.export_wallet', value: 'exportWallet'},
+    { title: 'WALLET_OPTIONS.show_mnemonics', value: 'showMnemonics'},
   ];
 }

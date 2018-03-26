@@ -44,6 +44,7 @@ export class TransactionsPage {
         this.txsList = this.receivedtransactions(data.txs, data.wallet.addresses, undefined);
       }
     }, (error) => {
+      // We need to show an error
         console.log(error);
       });
   }
@@ -73,7 +74,6 @@ export class TransactionsPage {
        }
       });
     }
-    console.log(txs);
     return txs;
     }
 }

@@ -1,0 +1,205 @@
+{
+    "wallet": "Billetera",
+    "menu": "Menú",
+    "coin": "Moneda",
+    "mnemonic": "Mnemonic",
+    "cryptocoins": "Cryptomonedas",
+    "cryptocoin": "Cryptomoneda",
+    "passphrase": "Clave",
+    "address": "Dirección",
+
+    "LOGIN": {
+        "recover_password" : "Recuperar Contraseña",
+        "log_in": "Iniciar Sesión",
+        "register": "Registrarse",
+        "google": "Google"
+    },
+
+    "REGISTER": {
+        "title": "Registro"
+    },
+
+    "CONFIRM_EMAIL": {
+        "title": "Registro",
+        "sub_title": "Debe confirmar su cuenta",
+        "resend_email_info": "¿No ha recibido ningún correo?"
+    },
+
+    "HOME": {
+        "title": "Inicio",
+        "transactions": "Transacciones",
+        "total_received": "Total Recibido",
+        "total_sent": "Total Enviado",
+        "unconfirmed_balance": "Balance por Confirmar",
+        "unconfirmed_n_tx": "Transacciones por Confirmar"
+    },
+
+    "ACCOUNT": {
+        "title": "Cuenta",
+        "sub_title": "Configuración"
+    },
+
+    "SECURITY_SETTINGS": {
+        "title": "Seguridad",
+        "sub_title": "Configuración de seguridad",
+        "email_verified_message": "Su cuenta no se encuentra verificada"
+    },
+
+    "WALLET_SETTINGS": {
+        "title": "Seguridad",
+        "sub_title": "Configuración de Billeteras",
+        "email_verified_message": "Su cuenta no se encuentra verificada",
+        "crypto_unit": "Unidad"
+    },
+
+    "ACTIVITY": {
+        "title":"Actividad",
+        "request_title":"Solicitud de participación en una Billetera Multifirmada",
+        "request_body": "El usuario {{ user }} desea que firme en una billetera {{ type }}",
+        "request_type": "El tipo de billetera es",
+        "pending_tx_title": "Transacción Pendiente",
+        "pending_tx_body": "El usuario {{ user }} desea que apruebe una transferencia",
+        "destination": "Destino: ",
+        "amount": "Monto: ",
+        "activity_title": "Actividad Reciente"
+    },
+
+    "ADDRESS": {
+        "title": "Agregar Dirección"
+    },
+
+    "ADDRESS_BOOK": {
+        "title": "Libreta de Direcciones"
+    },
+
+    "BLOCKCHAIN": {
+        "title": "Explorer",
+        "search": "Buscar Bloque o TX",
+        "default_block": "Blockchain Bitcoin",
+        "time": "Última Actualización: ",
+        "height": "Altura: ",
+        "hash": "Último Bloque: ",
+        "block_title": "Bloque",
+        "block_hash": "Hash del Bloque: ",
+        "block_nonce": "Nonce: ",
+        "block_height": "Altura del Bloque: ",
+        "block_size": "Tamaño: ",
+        "block_n_tx": "Número de Transacciones: ",
+        "block_total": "Volumen de Transacciones: ",
+        "block_fees": "Comisiones de las Transacciones: ",
+        "block_time": "Fecha y Hora: ",
+        "block_received_time": "Hora de Recepción: ",
+        "block_prev_block": "Bloque Previo: "
+    },
+
+    "CREATE_MULTIWALLET": {
+        "title": "Crear Billetera",
+        "sub_title": "Creación de Billeteras Multifirmadas",
+        "signers": "Firmantes ",
+        "signer": "Firmante",
+        "signatures": "Firmas "
+    },
+
+    "CREATE_WALLET": {
+        "title": "Crear Billetera",
+        "sub_title": "Creación de Billeteras",
+        "select_crypto": "Seleccione una Moneda",
+        "mnemonics_title": "Mnemonics de la Billetera",
+        "mnemonics_info": "Debe guardar esta información, ya que le permitira recuperar su billetera en caso de perder su contraseña.",
+        "passphrase_info": "Esta clave de seguridad se encargara de suministrar mayor seguridad a su billetera debe guardar esta información, ya que es vital para poder recuperar sus datos en caso de perder su contraseña"
+    },
+
+    "EDIT_ADDRESS":{
+        "title":"Editar Dirección"
+    },
+
+    "EXCHANGE": {
+        "title": "Exchange",
+        "select_origin": "Billetera Origen",
+        "select_destination": "Billetera Destino",
+        "balance": "Balance: ",
+        "amount": "Monto: ",
+        "destination_amount": "Monto en: "
+    },
+    
+    "RECEIVE": {
+        "title": "Recibir"
+    },
+
+    "SEND": {
+        "title": "Enviar",
+        "sub_title": "Seleccionar Destinatario",
+        "address_book": "Libreta de Contactos",
+        "scan_qr": "Escanear Código QR"
+    },
+
+    "SEND_CONFIRM": {
+        "title":"Enviar",
+        "sub_title": "Seleccionar Monto",
+        "balance": "Disponible: ",
+        "left": "Restante: ",
+        "min_fee": "Tarifa Minima: ",
+        "selected_address": "Dirección Seleccionada",
+        "token": "Token"
+    },
+
+    "TRANSACTION_CONFIRMATION": {
+        "title": "Transacción",
+        "sub_title": "Datos de la Transacción",
+        "hash": "Hash: ",
+        "receiver": "Recipientes: ",
+        "ouputs": "Salidas: ",
+        "amount": "Monto: ",
+        "fee": "Tarifa: ",
+        "received_time": "Recibido: "
+    },
+
+    "TRANSACTIONS": {
+        "title": "Transacciones",
+        "all_segment": "Todas",
+        "received_segment": "Recibidas",
+        "sent_segment": "Enviadas",
+        "destination": "Destino: ",
+        "from": "Origen: ",
+        "hash": "Hash: "
+
+    },
+
+    "FORM": {
+        "email": "Correo Electrónico",
+        "password": "Contraseña",
+        "repeat_password": "Repetir Contraseña",
+        "alias": "Alias",
+        "accept": "Aceptar",
+        "reject": "Rechazar",
+        "continue": "Continuar",
+        "go_back": "Volver",
+        "receive": "Recibir",
+        "send": "Enviar",
+        "delete": "Eliminar",
+        "add_wallet": "Agregar Billetera",
+        "add_multisigned_wallet": "Agregar Billetera MultiFirmada",
+        "log_out": "Cerrar Sesión",
+        "resend_email_button": "Reenviar Correo",
+        "select_image": "Seleccionar Imagen",
+        "save": "Guardar",
+        "type": "Tipo"
+    },
+
+    "ACCOUNT_OPTIONS": {
+        "security_settings": "Configuración de Seguridad",
+        "wallet_settings": "Configuración de Billeteras"
+    },
+
+    "SECURITY_OPTIONS": {
+        "recover_password": "Restablecer Contraseña",
+        "activate_2auf": "Verificación de dos Pasos"
+    },
+
+    "WALLET_OPTIONS": {
+        "change_currency":"Cambiar Moneda Local",
+        "change_crypto_unit":"Cambiar Unidades de Moneda",
+        "export_wallet":"Exportar Billetera",
+        "show_mnemonics": "Mostrar Clave de Recuperacion"
+    }
+}

@@ -12,7 +12,7 @@ import { AlertService } from '../../app/services/alert.service';
 })
 export class CreateMultiwalletPage {
 
-  private crypto = AppData.cryptoCurrencies;
+  private crypto = AppData.multiCryptoCurrencies;
   private signers = AppData.numberOfSigners;
   private signatures = this.signers;
   private numberOfSigners: number;

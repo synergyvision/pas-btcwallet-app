@@ -1,19 +1,19 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Transacciones</ion-title>
+    <ion-title>{{'TRANSACTIONS.title' | translate }} </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <ion-segment [(ngModel)]="segmentTxs">
     <ion-segment-button value="all" class="segment-button">
-      Todas
+      {{'TRANSACTIONS.all_segment' | translate }} 
     </ion-segment-button>
     <ion-segment-button value="received" class="segment-button">
-      Recibidas
+      {{'TRANSACTIONS.received_segment' | translate }}  
     </ion-segment-button>
     <ion-segment-button value="sent" class="segment-button">
-      Enviadas
+      {{'TRANSACTIONS.sent_segment' | translate }} 
     </ion-segment-button>
   </ion-segment>
 
@@ -33,10 +33,10 @@
               {{t.received | date:'MMM dd, y hh:mm a'}}
             </div>
             <div class="transactions-address" *ngIf="t.filtering_value === 'received'">
-              Destino: {{t.inputs[0].addresses[0]}}
+              {{'TRANSACTIONS.destination' | translate }} {{t.inputs[0].addresses[0]}}
             </div>
             <div class="transactions-address" *ngIf="t.filtering_value === 'sent'">
-              Destino: {{t.outputs[0].addresses[0]}}
+              {{'TRANSACTIONS.destination' | translate }} {{t.outputs[0].addresses[0]}}
             </div>
           </ion-col>
           <ion-col col-3 text-wrap>
@@ -57,10 +57,10 @@
               {{t.received | date:'MMM dd, y hh:mm a'}}
             </div>
             <div class="transactions-address" *ngIf="segmentTxs === 'received'">
-              Origen: {{t.inputs[0].addresses[0]}}
+              {{'TRANSACTIONS.from' | translate }} {{t.inputs[0].addresses[0]}}
             </div>
             <div class="transactions-address" *ngIf="segmentTxs === 'sent'">
-              Destino: {{t.outputs[0].addresses[0]}}
+              {{'TRANSACTIONS.destination' | translate }} {{t.outputs[0].addresses[0]}}
             </div>
           </ion-col>
           <ion-col col-3 text-wrap>
@@ -82,8 +82,8 @@
             <div class="transactions-date">
               {{t.confirmed | date:'MMM dd, y hh:mm a'}}
             </div>
-            <div class="transactions-address" *ngIf="t.filtering_value === 'received'">
-              Hash: {{t.tx_hash}}
+            <div class="transactions-address">
+              {{'TRANSACTIONS.hash' | translate }} {{t.tx_hash}}
             </div>
           </ion-col>
           <ion-col col-3 text-wrap>
@@ -103,8 +103,8 @@
             <div class="transactions-date">
               {{t.confirmed | date:'MMM dd, y hh:mm a'}}
             </div>
-            <div class="transactions-address" *ngIf="segmentTxs === 'received'">
-              Hash: {{t.tx_hash}}
+            <div class="transactions-address">
+              {{'TRANSACTIONS.hash' | translate }} {{t.tx_hash}}
             </div>
           </ion-col>
           <ion-col col-3 text-wrap>

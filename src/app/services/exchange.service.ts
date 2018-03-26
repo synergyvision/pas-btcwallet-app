@@ -6,6 +6,7 @@ import { ErrorService } from './error.service';
 import { IExchange } from '../models/IExchange';
 
 const URL = 'https://cors.shapeshift.io';
+const MARKET_URL = 'https://api.coinmarketcap.com/v1/';
 
 @Injectable()
 

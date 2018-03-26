@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Libreta de Direcciones
+      {{'ADDRESS_BOOK.title' | translate}}
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -21,7 +21,7 @@
       <ion-item-options>
         <button ion-button class="button-delete-address" (click)="removeAddress(a.key)" icon-start>
           <ion-icon name="trash">
-            <div>Delete</div>
+            <div>{{'FORM.delete'}}</div>
           </ion-icon>
         </button>
       </ion-item-options>

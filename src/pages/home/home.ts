@@ -33,8 +33,7 @@ export class HomePage {
   private wallets;
 
   constructor(public navCtrl: NavController, private restService: RestService, private sharedService: SharedService,
-              private loaderService: LoaderService, private zone: NgZone, private events: Events,
-              private exchangeService: ExchangeService) {
+              private loaderService: LoaderService, private zone: NgZone, private events: Events) {
     this.loaderService.showFullLoader('Espere');
     this.currency = {
       name: 'USD',

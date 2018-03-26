@@ -1,21 +1,21 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Enviar
+      {{'SEND.title' | translate}}
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <div class="page-title">
-    Seleccionar destinatario
+    {{'SEND.sub_title' | translate}}
   </div>
   <ion-list no-lines>
     <button ion-button class="send-button button-select-address" block (click)="goToAddress()">
-      Libreta de Contactos
+      {{'SEND.address_book' | translate}}
     </button>
     <button ion-button class="send-button button-scan-code" block (click)="scanQRCode()">
-        Escanear Código QR
+      {{'SEND.scan_qr' | translate}}
     </button>
     <form [formGroup]="selectAddressForm" (ngSubmit)="validateAddress(selectAddressForm.value.inputAddress)">  
       <div *ngIf="this.inputError" class="error-message">
@@ -37,7 +37,7 @@
       </ion-item>
       <ion-footer>
         <button [disabled]="!selectedAddress && !selectAddressForm.valid" ion-button block class="send-button button-continue" type="submit">
-          Continuar
+          {{'FORM.continue' | translate }}
         </button>
       </ion-footer>
     </form>

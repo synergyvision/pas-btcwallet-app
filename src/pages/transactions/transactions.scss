@@ -35,7 +35,11 @@ page-transactions{
   .transactions-amount {
     font-size: $font-size-transactions-amount;
     color: $primary;
-    text-align: right;
+    display: flex;
+    height: 100%;
+    text-align: center;
+    justify-content: center;
+    align-items: center
   }
   
 }

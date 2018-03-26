@@ -1,18 +1,18 @@
+import { IAddress } from '../../app/models/IAddress';
 import { Injectable, keyframes } from '@angular/core';
-import { User } from '../../app/models/user';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireList, AngularFireObject } from 'angularfire2/database/interfaces';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
-import { IAddress } from '../../app/models/IAddress';
+import { User } from '../../app/models/user';
 import { IHDWallet } from '../../app/models/IHDWallet';
 import { Wallet } from '../../app/models/wallet';
 import { Address } from '../../app/models/address';
 import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
 import { IKeys } from '../../app/models/IKeys';
-import { MultiSignedWallet, ISigner, IMSWalletRequest, IPendingTxs } from '../../app/models/multisignedWallet';
+import { IMSWalletRequest, IPendingTxs, ISigner, MultiSignedWallet } from '../../app/models/multisignedWallet';
 import { CryptoCoin } from '../../app/models/crypto';
 import { Activity } from '../../app/models/activity';
 

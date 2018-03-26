@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Crear Billetera</ion-title>
+    <ion-title>{{'CREATE_MULTIWALLET.title' | translate }}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -8,36 +8,36 @@
 <ion-content padding>
   <img class="confirm-email-img" src="../assets/icons/menu-icon.svg">
   <div class="page-title">
-    Creación de Billeteras Multifirmadas
+    {{'CREATE_MULTIWALLET.sub_title' | translate }}
   </div>
   <ion-list no-lines>
     <form (ngSubmit)="continue(walletForm.value)" #walletForm="ngForm">
       <ion-item class="crypto input">
-        <ion-label>Criptomoneda</ion-label>
+        <ion-label>{{'cryptocoin' | translate }}</ion-label>
         <ion-select class="select-crypto" name="selectedCrypto" [(ngModel)]="selectedCrypto" required>
           <ion-option *ngFor="let c of crypto" value="{{c.value}}">{{c.name}}</ion-option>
         </ion-select>
       </ion-item>
       <ion-item class="crypto input">
-        <ion-label>Tipo</ion-label>
-        <ion-select class="select-crypto"  name="numberOfSigners" [(ngModel)]="numberOfSigners" (ionChange)="onSignersChange()" required>
+        <ion-label class="select-label">{{'FORM.type' | translate }}</ion-label>
+        <ion-select class="select-crypto" placeholder="{{'CREATE_MULTIWALLET.signatures' | translate }}" name="numberOfSigners" [(ngModel)]="numberOfSigners" (ionChange)="onSignersChange()" required>
           <ion-option *ngFor="let s of signers"value="{{s}}">{{s}}</ion-option>
         </ion-select>
-        <ion-select class="select-crypto" name="numberOfSignatures" [(ngModel)]="numberOfSignatures" [disabled] ="!numberOfSigners">
+        <ion-select class="select-crypto" name="numberOfSignatures" placeholder="{{'CREATE_MULTIWALLET.signers' | translate }}" [(ngModel)]="numberOfSignatures" [disabled] ="!numberOfSigners">
           <ion-option *ngFor="let s of signatures"  value="{{s}}">{{s}}</ion-option>
         </ion-select>
       </ion-item>
       <div *ngIf="numberOfSigners">
         <ion-item *ngFor="let user of users; let i = index; trackBy: trackByIndex;" class="input">
-          <ion-label>Firmante {{i + 1}}: </ion-label>
-          <ion-input type="email" placeholder="Correo" [name]="'user-'+i" [(ngModel)]="users[i]" required></ion-input>
+          <ion-label>{{'CREATE_MULTIWALLET.signer' | translate }} {{i + 1}}: </ion-label>
+          <ion-input type="email" placeholder="{{'FORM.email' | translate }}" [name]="'user-'+i" [(ngModel)]="users[i]" required></ion-input>
         </ion-item>
       </div>
       <div *ngIf="error" class="error">
         {{error}}
       </div>
       <button ion-button type="submit" class="footer-button" [disabled]="!walletForm.form.valid" block>
-        Continuar
+        {{'FORM.continue' | translate }}
       </button>
     </form>
   </ion-list>

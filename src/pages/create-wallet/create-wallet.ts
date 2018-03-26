@@ -18,9 +18,7 @@ export class CreateWalletPage {
   private crypto = AppData.cryptoCurrencies;
   private selectedCrypto;
   private mnemonics: string;
-  private mnemonicsInfo;
   private passphrase;
-  private passphraseInfo;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private sharedService: SharedService,
               private loaderService: LoaderService, private viewCtrl: ViewController, private events: Events,
@@ -30,12 +28,6 @@ export class CreateWalletPage {
       this.viewCtrl.showBackButton(false);
       this.newUser();
     }
-    this.message = 'Seleccione una Moneda';
-    this.mnemonicsInfo = 'Debe guardar esta información, ya que le permitira recuperar su billetera' + 
-                          'en caso de perder su contraseña.';
-    this.passphraseInfo = 'Esta clave de seguridad se encargara de suministrar mayor seguridad a su billetera' +
-                          ' debe guardar esta información, ya que es vital para poder recuperar sus datos ' +
-                          ' en caso de perder su contraseña';
   }
 
   public newUser() {

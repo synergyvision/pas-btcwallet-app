@@ -21,6 +21,7 @@ import { IAddress } from '../models/IAddress';
 import { Address } from '../models/address';
 import { AppData } from '../app.data';
 import { Activity } from '../models/activity';
+import { StorageProvider } from '../../providers/firebase/storage';
 
 const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
 @Injectable()
@@ -33,11 +34,11 @@ export class SharedService {
     public currency;
     public requestList;
     public requestNumber: number;
-    public pendingTxs: IPendingTxs[] = [];
+    public pendingTxs;
 
     constructor(public firebaseData: FirebaseProvider, public restService: RestService, public events: Events,
                 public eventService: EventService, public keyService: KeyService, public authService: AuthService,
-                public exchangeService: ExchangeService) {
+                public exchangeService: ExchangeService, public storageProvider: StorageProvider) {
         this.events.subscribe('user:loggedOut', () => {
             this.user = this.wallets = this.balances = this.multiSignedWallets = undefined;
         });
@@ -63,6 +64,10 @@ export class SharedService {
         }
     }
 
+    public changePicture() {
+        this.storageProvider.selectProfileImage(this.user.email);
+    }
+
     public setWallets(wallets: Wallet[]) {
         this.wallets = wallets;
         this.multiSignedWallets = [];
@@ -74,7 +79,17 @@ export class SharedService {
                     });
             }
         });
-        this.getPendingTx();
+        this.pendingTxs = this.getPendingTx();
+    }
+
+    public showNotification() {
+        this.pendingTxs.subscribe((data) => {
+            if (data.length > 0) {
+                console.log('UPDATE');
+            } else {
+                console.log('NO');
+            }
+        });
     }
 
     public getPendingTx(): Observable<IPendingTxs[]> {
@@ -95,6 +110,15 @@ export class SharedService {
     public updateUser() {
         this.user = this.authService.getLoggedUser();
         this.setUser(this.user);
+    }
+
+    // WIP
+
+    public getCurrency() {
+        this.firebaseData.getCurrency(this.user.uid)
+            .subscribe((currency) => {
+                this.currency = currency;
+            });
     }
 
     public getRequests(): Observable<IMSWalletRequest[]> {
@@ -151,13 +175,6 @@ export class SharedService {
         wallets.forEach((wallet) => {
             this.eventService.createTXConfirmationEvent(wallet.name);
         });
-    }
-
-    public getCurrency() {
-        this.firebaseData.getCurrency(this.user.uid)
-            .subscribe((currency) => {
-                this.currency = currency;
-            });
     }
 
     // Home Functions, they are required when the user logs in
@@ -426,12 +443,12 @@ export class SharedService {
         return new Promise((resolve, reject) => {
             this.firebaseData.deleteMultiSignedWalletRequest(request).
             then((deleted) => {
-                const rejectedWallet = new Activity(Date.toString(),
+                /* const rejectedWallet = new Activity(Date.toString(),
                 'El usuario' + this.user.email + 'rechazo su solicitud de billetera multifirmada');
                 this.firebaseData.getUserByEmail(request.createdBy)
                 .subscribe((user) => {
                     this.firebaseData.addActivity(user.pop().key, rejectedWallet);
-                });
+                }); */
                 resolve(true);
             })
             .catch((error) => {
@@ -491,11 +508,13 @@ export class SharedService {
             this.restService.createMultiSignedAddress(request.crypto, pubKeys, script)
                 .first()
                 .subscribe((address: IAddress) => {
+                    console.log(address);
                     const newWallet = new MultiSignedWallet(name, currency, signers, script, address.address);
                     const key = this.firebaseData.addMultiSignedWallet(newWallet, request.signers);
                     resolve(newWallet);
                 },
                     (error) => {
+                        console.log(error);
                         reject(error);
                     });
 /*             } else {
@@ -516,7 +535,9 @@ export class SharedService {
         const msWallet = this.getMultiSignedWallet(wallet.multiSignedKey);
         const pendingTrx: IPendingTxs = {};
         pendingTrx.tx = transaction;
+        console.log(transaction.tx.outputs);
         pendingTrx.to = transaction.tx.outputs.pop().addresses.pop();
+        console.log(transaction.tx.outputs);
         pendingTrx.createdBy = this.user.email;
         pendingTrx.wallet = wallet.multiSignedKey;
         pendingTrx.amount = transaction.tx.total;
@@ -598,6 +619,4 @@ export class SharedService {
         // console.log(trx);
         // return this.restService.sendPayment(trx, wallet.crypto.value);
     }
-
-
 }

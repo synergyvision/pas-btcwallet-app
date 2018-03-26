@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { SendConfirmPage } from './send-confirm';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -8,6 +9,7 @@ import { SendConfirmPage } from './send-confirm';
   ],
   imports: [
     IonicPageModule.forChild(SendConfirmPage),
+    TranslateModule.forChild(),
   ],
 })
 export class SendConfirmPageModule {}

@@ -1,7 +1,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>Exchange</ion-title>
+    <ion-title>{{'EXCHANGE.title' | translate }}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -10,30 +10,30 @@
 <ion-content padding>
   <ion-list no-lines>
     <ion-item class="thin-input">
-      <ion-select (ionChange)="onWalletSelect()" class="select-option" [(ngModel)]="originWallet" placeholder="Billetera Origen">
+      <ion-select (ionChange)="onWalletSelect()" class="select-option" [(ngModel)]="originWallet" placeholder="{{'EXCHANGE.select_origin' | translate }}">
         <ion-option *ngFor="let w of walletList" [value]="w">{{w.name}}
         </ion-option>
       </ion-select>
     </ion-item>
     <ion-item class="wallet-balance" *ngIf="originBalance">
-      Balance: {{originBalance.balance / currency.exchange}} {{currency.name| uppercase}}
+      {{'EXCHANGE.balance' | translate }} {{originBalance.balance / currency.exchange}} {{currency.name| uppercase}}
     </ion-item>
     <ion-item class="thin-input" *ngIf="originWallet">
-      <ion-select (ionChange)="onWalletSelect()" class="select-option" [(ngModel)]="destinationWallet" placeholder="Billetera Destino">
+      <ion-select (ionChange)="onWalletSelect()" class="select-option" [(ngModel)]="destinationWallet" placeholder="{{'EXCHANGE.select_destination' | translate }}">
         <ion-option *ngFor="let w of walletList" [value]="w">{{w.name}}
         </ion-option>
       </ion-select>
     </ion-item>
     <ion-item class="wallet-balance" *ngIf="destinationBalance">
-      Balance {{destinationBalance.balance / currency.exchange }} {{currency.name| uppercase}}
+      {{'EXCHANGE.balance' | translate }} {{destinationBalance.balance / currency.exchange }} {{currency.name| uppercase}}
     </ion-item>
     <div *ngIf="destinationBalance && exchangeRate">
       <ion-item class="input">
-        <ion-label>Monto: </ion-label>
+        <ion-label>{{'EXCHANGE.amount' | translate }} </ion-label>
         <ion-input [(ngModel)]="amount" type="number" [min]="exchangeRate.minerFee"></ion-input>
       </ion-item>
       <ion-item>
-        Monto en {{destinationWallet.crypto.unit.name}}: {{exchangeRate.rate * amount }}
+        {{'EXCHANGE.destination_amount' | translate }} {{destinationWallet.crypto.unit.name}}: {{exchangeRate.rate * amount }}
       </ion-item>
     </div>
   </ion-list>

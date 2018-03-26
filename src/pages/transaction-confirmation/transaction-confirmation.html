@@ -1,43 +1,43 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Transacción</ion-title>
+    <ion-title>{{'TRANSACTION_CONFIRMATION.title' | translate }}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <div class="page-title">
-    Datos de la transacción
+    {{'TRANSACTION_CONFIRMATION.sub_title' | translate }}
   </div>
   <ion-card class="transaction-confirmation">
     <ion-list>
       <ion-item text-wrap>
-        <span class="transaction-title">Hash: </span>
+        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.hash' | translate }} </span>
         {{transaction.hash}}
       </ion-item>
       <ion-item >
-        <span class="transaction-title">Recipientes: </span>
+        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.receiver' | translate }}</span>
         <ul  class= "transaction-list" *ngFor="let o of transaction.outputs">
           <li text-wrap>{{o.addresses}}</li>
         </ul>
       </ion-item>
       <ion-item>
-        <span class="transaction-title">Salidas:</span>
+        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.outputs' | translate }}</span>
         <ul class="transaction-list" *ngFor="let i of transaction.inputs">
           <li text-wrap>{{i.addresses}}</li>
         </ul>
       </ion-item>
       <ion-item>
-        <span class="transaction-title">Monto: </span> {{transaction.total}}
+        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.amount' | translate }} </span> {{transaction.total}}
       </ion-item>
       <ion-item>
-        <span class="transaction-title">Tarifa: </span>{{transaction.fees}}
+        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.fee' | translate }} </span>{{transaction.fees}}
       </ion-item>
       <ion-item>
-        <span class="transaction-title">Recibido: </span>{{transaction.received | date:'MMM dd, y hh:mm a'}}
+        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.received_time' | translate }} </span>{{transaction.received | date:'MMM dd, y hh:mm a'}}
       </ion-item>
     </ion-list>
   </ion-card>
   <button class="send-button button-continue" ion-button block (click)="goBack()">
-    Volver
+    {{'FORM.go_back' | translate }}
   </button>
 </ion-content>

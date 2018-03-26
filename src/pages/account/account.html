@@ -4,7 +4,7 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>
-      Cuenta
+      {{'ACCOUNT.title' | translate}}
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -18,10 +18,16 @@
       </div>
     </ion-item>
     <ion-item class="account-info">
-      Configuración
+      {{'ACCOUNT.sub_title' | translate }}
     </ion-item>
     <button ion-button block outline *ngFor="let o of options" class="account-options" (click)="openOption(o)">
-      {{o.title}}
+      {{o.title  | translate }}
+      <ion-label>
+        <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
+      </ion-label>
+    </button>
+    <button ion-button block outline class="account-options" (click)="changePicture()">
+      changePicture
       <ion-label>
         <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
       </ion-label>

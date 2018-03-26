@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Agregar Dirección</ion-title>
+    <ion-title>{{'ADDRESS.title' | translate }}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -10,18 +10,18 @@
       <ng-container *ngFor="let i of inputs">
         <ion-item class="input" *ngIf="i.name!=='id' && i.name!=='img'">
           <ion-label>
-            {{i.placeholder}}
+            {{i.placeholder | translate}}
           </ion-label>
           <ion-input type="{{i.type}}" formControlName="{{i.name}}" required></ion-input>
         </ion-item>
         <div *ngIf="i.name==='img'">
           <button ion-button color="secondary" block>
-            Seleccionar Imagen
+            {{'FORM.select_image' | translate}}
           </button>
         </div>
       </ng-container>
       <button ion-button type="submit" color="primary" block [disabled]="!addressForm.valid">
-        Guardar
+        {{'FORM.save' | translate}}
       </button>
       <div class="error-message" *ngIf="error">
         {{error}}

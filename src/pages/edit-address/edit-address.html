@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Editar Dirección</ion-title>
+    <ion-title>{{'EDIT_ADDRESS.title' | translate }}</ion-title>
   </ion-navbar>
 </ion-header>
 <ion-content padding>
@@ -9,16 +9,16 @@
       <ng-container *ngFor="let i of inputs">
         <ion-item class="input" *ngIf="(i.name!=='key') && (i.name!=='img')">
           <ion-label>
-            {{i.placeholder}}
+            {{i.placeholder | translate}}
           </ion-label>
           <ion-input type="{{i.type}}" value={{i.value}} formControlName="{{i.name}}" required></ion-input>
         </ion-item>
       </ng-container>
       <button ion-button color="secondary" block (click)="goBack()">
-        Cambiar Imagen
+        {{'FORM.select_image' | translate }}
       </button>
       <button ion-button type="submit" color="primary" block [disabled]="!addressForm.valid">
-        Guardar
+        {{'FORM.save' | translate }}
       </button>
     </ion-list>
   </form>

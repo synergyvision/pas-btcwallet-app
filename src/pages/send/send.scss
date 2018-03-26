@@ -11,3 +11,8 @@
     width: $button-width-md;
 }
 
+.transparent-body {
+    background: none transparent !important;
+    background-color: none;
+    display: none !important;
+}

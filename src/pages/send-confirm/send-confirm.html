@@ -1,12 +1,12 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Enviar</ion-title>
+    <ion-title>{{'SEND_CONFIRM.title' | translate }}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <div class="page-title">
-    Seleccionar monto
+    {{'SEND_CONFIRM.sub_title' | translate }}
   </div>
   <ion-list no-lines>
     <form [formGroup]="sendForm" (ngSubmit)="sendPayment(sendForm)" *ngIf="balance">
@@ -14,21 +14,21 @@
         <ion-input type="number" formControlName="amount" placeholder="amount.value" [min]="fee" [max]="balance.balance - fee"></ion-input>
       </ion-item>
       <div class="send-confirm-info">
-        <span class="send-confirm-subtitle">Disponible: </span>{{balance.balance / balance.wallet.crypto.units.exchange}} {{balance.wallet.crypto.units.name}} <br>     
+        <span class="send-confirm-subtitle">{{'SEND_CONFIRM.balance' | translate }} </span>{{balance.balance / balance.wallet.crypto.units.exchange}} {{balance.wallet.crypto.units.name}} <br>     
         <span class="send-confirm-subtitle">{{currency.name}}: </span> {{sendForm.value.amount / currency.exchange}} <br>
-        <span class="send-confirm-subtitle">Restante: </span> {{(balance.balance / balance.wallet.crypto.units.exchange)- 
+        <span class="send-confirm-subtitle">{{'SEND_CONFIRM.left' | translate }} </span> {{(balance.balance / balance.wallet.crypto.units.exchange)- 
         (sendForm.value.amount / balance.wallet.crypto.units.exchange)}} {{balance.wallet.crypto.units.name}}<br> 
 
-        <div class="send-confirm-subtitle"> Tarifa Minima: </div>
+        <div class="send-confirm-subtitle">{{'SEND_CONFIRM.min_fee' | translate }}</div>
       </div>
       <ion-item class="thin-input">
         <ion-input type="number" formControlName="fee" placeholder="fee" [min]="fee" [max]="balance.balance"></ion-input>
       </ion-item>
       <ion-item class="thin-input">
-        <ion-input type="text" placeholder="Token"></ion-input>
+        <ion-input type="text" placeholder="{{'SEND_CONFIRM.token' | translate }}"></ion-input>
       </ion-item>
       <div class="send-confirm-info">
-        Dirección Seleccionada
+        {{'SEND_CONFIRM.selected_address' | translate }}
       </div>
       <ion-item *ngIf="!inputAddress" class="address-container">
         <img class="address-img" src="{{address.img}}" />
@@ -45,7 +45,7 @@
         </div>
       </ion-item>
       <button class="send-button button-continue" ion-button block type="submit">
-        Enviar
+        {{'FORM.send' | translate }}
       </button>
     </form>
     <ion-item *ngIf="message" class="error-message">

@@ -26,7 +26,6 @@ import { AppData } from '../app.data';
 
 // API Base URL for the Testnet
 const URL = 'https://api.blockcypher.com/v1/';
-const TESTING_URL = 'https://api.blockcypher.com/v1/';
 const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
 const TOKEN2 = '5b3df9346d0e4eac88bc17e6cfb636a6';
 
@@ -96,7 +95,7 @@ export class RestService {
   // Gets every Wallet Transaction
 
   public getWalletTransactions(wallet: Wallet): Observable<IAddress> {
-    if (wallet.crypto.value === 'eth' || wallet.crypto.value === 'tet') {
+    if (wallet.address !== undefined) {
       return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + wallet.address)
       .map((res: Response) => {
         const transactions = res.json() as IAddress;
@@ -193,11 +192,6 @@ export class RestService {
       .catch(this.handleError);
   }
 
-
-/*
-WIP For Multisignature Wallets
-*/
-
   // MultiSigned Wallet Methods
 
   public createMultiSignedAddress(crypto: string, keys: string[], script: string)
@@ -208,6 +202,7 @@ WIP For Multisignature Wallets
     });
     return this.http.post(this.getPath(crypto) + '/addrs?token=' + TOKEN, data)
     .map((res: Response) => {
+      console.log(res);
       return res.json() as IAddress;
     })
     .catch(this.handleError);
@@ -228,6 +223,6 @@ WIP For Multisignature Wallets
     const path = AppData.restAPIPaths.filter((p) => {
       return p.crypto === crypto;
     }).pop().path;
-    return TESTING_URL + path;
+    return URL + path;
   }
 }

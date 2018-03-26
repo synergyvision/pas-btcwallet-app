@@ -53,8 +53,8 @@ export class KeyService {
     }
 
     public signWithPrivateKey(trx: ITransactionSke, keys: IKeys, crypto: string) {
-        const signingKeys = this.getPrivateKey(keys);
-        console.log(signingKeys.getPublicKeyBuffer().toString('hex'));
+        const signingKeys = this.getPrivateKey(keys, crypto);
+
         trx.signatures = trx.tosign.map((tosign, n) => {
             return signingKeys.sign(Buffer.from(tosign, 'hex')).toDER().toString('hex');
         });
@@ -80,8 +80,8 @@ export class KeyService {
         return privKeys;
     }
 
-    public getPrivateKey(keys): ECPair {
-        return HDNode.fromSeedHex(keys.seed).keyPair;
+    public getPrivateKey(keys: IKeys, crypto: string): ECPair {
+        return HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto)).keyPair;
     }
 
     public getWIF(keys: IKeys, crypto: string): string {

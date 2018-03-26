@@ -1,0 +1,207 @@
+
+ {   
+    "wallet": "Wallet",
+    "menu": "Menu",
+    "coin": "Coin",
+    "mnemonic": "Mnemonic",
+    "cryptocoins": "Cryptocoins",
+    "cryptocoin": "Cryptocoin",
+    "passphrase": "Passphrase",
+    "address": "Address",
+
+    "LOGIN": {
+        "recover_password" : "Recover Password",
+        "log_in": "Log In",
+        "register": "Register",
+        "google": "Google"
+    },
+
+    "REGISTER": {
+        "title": "Register"
+    },
+
+    "CONFIRM_EMAIL": {
+        "title": "Register",
+        "sub_title": "You need to verify your account",
+        "resend_email_info": "Didn't receive an email?",
+    },
+
+    "HOME": {
+        "title": "Home",
+        "transactions": "Transactions",
+        "total_received": "Total Received",
+        "total_sent": "Total Sent",
+        "unconfirmed_balance": "Unconfirmed Balance",
+        "unconfirmed_n_tx": "Unconfirmed Transactions"
+    },
+
+    "ACCOUNT": {
+        "title": "Account",
+        "sub_title": "Settings"
+    },
+
+    "SECURITY_SETTINGS": {
+        "title": "Security",
+        "sub_title": "Security Settings",
+        "email_verified_message": "Your account is not verified"
+    },
+
+    "WALLET_SETTINGS": {
+        "title": "Security",
+        "sub_title": "Wallet Settings",
+        "email_verified_message": "Your account is not verified",
+        "crypto_unit": "Unit"
+    },
+
+    "ACTIVITY": {
+        "title":"Activity",
+        "request_title":"Multisignature Wallet ownership request",
+        "request_body": "The user {{ user }} has requested your signature on a {{ type }} wallet",
+        "request_type": "The Wallet type is ",
+        "pending_tx_title": "Pending Transaction",
+        "pending_tx_body": "The user {{ value }} is requesting a transaction approval",
+        "destination": "Destination: ",
+        "amount": "Amount: ",
+        "activity_title": "Recent Activity"
+    },
+
+    "ADDRESS": {
+        "title": "Add Address"
+    },
+
+    "ADDRESS_BOOK": {
+        "title": "Address Book"
+    },
+
+    "BLOCKCHAIN": {
+        "title": "Explorer",
+        "search": "Search Block or TX",
+        "default_block": "Blockchain Bitcoin",
+        "time": "Latest Update: ",
+        "height": "Height: ",
+        "hash": "Latest Block: ",
+        "block_title": "Block",
+        "block_hash": "Block Hash: ",
+        "block_nonce": "Nonce: ",
+        "block_height": "Block Height: ",
+        "block_size": "Size: ",
+        "block_n_tx": "Transactions Number: ",
+        "block_total": "Transactions Volume: ",
+        "block_fees": "Transactions Fees:  ",
+        "block_time": "Time: ",
+        "block_received_time": "Received Time: ",
+        "block_prev_block": "Previous Block:  "
+    },
+
+    "CREATE_MULTIWALLET": {
+        "title": "Wallet Creation",
+        "sub_title:": "Multi Signature Wallet Creation",
+        "signers": "Signers",
+        "signer": "Signer",
+        "signatures": "Signatures"
+    },
+
+    "CREATE_WALLET": {
+        "title": "Wallet Creation",
+        "sub_title": "Wallet Creation",
+        "select_crypto": "Select a Crypto",
+        "mnemonics_title": "Wallet Mnemonics",
+        "mnemonics_info": "Save this information, as it will allow the wallet to be recovered in case of a lost passphrase.",
+        "passphrase_info": "This passphrase brings more security to the wallet. You must save this information for wallet recovery."
+    },
+
+    "EDIT_ADDRESS":{
+        "title":"Edit Address"
+    },
+
+    "EXCHANGE": {
+        "title": "Exchange",
+        "select_origin": "Origin Wallet",
+        "select_destination": "Destination Wallet",
+        "balance": "Balance: ",
+        "amount": "Amount: ",
+        "destination_amount": "Amount in: "
+    },
+    
+    "RECEIVE": {
+        "title": "Receive"
+    },
+
+    "SEND": {
+        "title": "Send",
+        "sub_title": "Select Destination",
+        "address_book": "Address Book",
+        "scan_qr": "Scann QR Code"
+    },
+
+    "SEND_CONFIRM": {
+        "title":"Send",
+        "sub_title": "Select Amount",
+        "balance": "Available: ",
+        "left": "Left: ",
+        "min_fee": "Minimun Fee: ",
+        "selected_address": "Selected Destination",
+        "token": "Token"
+    },
+
+    "TRANSACTION_CONFIRMATION": {
+        "title": "Transaction",
+        "sub_title": "Transaction Data",
+        "hash": "Hash: ",
+        "receiver": "Receiver: ",
+        "ouputs": "Outputs: ",
+        "amount": "Amount: ",
+        "fee": "Fee: ",
+        "received_time": "Received: "
+    },
+
+    "TRANSACTIONS": {
+        "title": "Transactions",
+        "all_segment": "All",
+        "received_segment": "Received",
+        "sent_segment": "Sent",
+        "destination": "Destination: ",
+        "from": "From: ",
+        "hash": "Hash: "
+
+    },
+
+
+    "FORM": {
+        "email": "Email",
+        "password": "Password",
+        "repeat_password": "Repeat Password",
+        "alias": "Alias",
+        "accept": "Accept",
+        "reject": "Reject",
+        "continue": "Continue",
+        "go_back": "Go Back",
+        "receive": "Receive",
+        "send": "Send",
+        "delete": "Delete",
+        "add_wallet": "Add Wallet",
+        "add_multisigned_wallet": "Add Multi Signature Wallet",
+        "log_out": "Log Out",
+        "resend_email_button": "Resend Email",
+        "select_image": "Image Select",
+        "save": "Save",
+        "type": "Type"
+    },
+
+    "ACCOUNT_OPTIONS": {
+        "security_settings": "Security Settings",
+        "walelt_settings": "Wallet Settings"
+    },
+
+    "SECURITY_OPTIONS": {
+        "recover_password": "Password Recovery",
+        "activate_2auf": "Two Factor Auth"
+    },
+
+    "WALLET_OPTIONS": {
+        "change_currency":"Change Local Coin",
+        "change_crypto_unit":"Change Cryptocoin Unit",
+        "export_wallet":"Export Wallet",
+        "show_mnemonics": "Show Wallet Mnemonics"
+    }
+}

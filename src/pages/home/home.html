@@ -4,7 +4,7 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>
-      Inicio
+      {{'HOME.title' | translate }}
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -20,7 +20,7 @@
         {{ w.crypto.coin }}
       </div>
       <div class="page-title">
-        Billetera {{w.crypto.name | uppercase}}
+          {{'wallet' | translate }} {{w.crypto.name | uppercase}}
       </div>
       <div class="home-wallet">
         {{w.name}}
@@ -43,34 +43,34 @@
         </div>
       </div>
       <div class="page-title">
-        Billetera {{b.wallet.crypto.name | uppercase}}
+          {{'wallet' | translate }} {{b.wallet.crypto.name | uppercase}}
       </div>
       <div class="home-wallet">
         {{b.wallet.name}}
       </div>
       <div class="home-info">
-        <p>Transacciones: {{b.n_tx}}</p>
-        <p>Total Recibido: {{b.total_received / b.wallet.crypto.units.exchange }} {{ b.wallet.crypto.units.name }}</p>
-        <p>Total Enviado: {{b.total_sent / b.wallet.crypto.units.exchange }} {{ b.wallet.crypto.units.name }}</p>
-        <p>Balance por Confirmar: {{ b.unconfirmed_balance / b.wallet.crypto.units.exchange }} {{b.wallet.crypto.units.name}}
+        <p> {{'HOME.transactions' | translate }}: {{b.n_tx}}</p>
+        <p> {{'HOME.total_received' | translate }}: {{b.total_received / b.wallet.crypto.units.exchange }} {{ b.wallet.crypto.units.name }}</p>
+        <p> {{'HOME.total_sent' | translate }}: {{b.total_sent / b.wallet.crypto.units.exchange }} {{ b.wallet.crypto.units.name }}</p>
+        <p> {{'HOME.unconfirmed_balance' | translate }}: {{ b.unconfirmed_balance / b.wallet.crypto.units.exchange }} {{b.wallet.crypto.units.name}}
         </p>
-        <p>Transacciones por Confirmar: {{b.unconfirmed_n_tx}}</p>
+        <p>{{'HOME.unconfirmed_n_tx' | translate }}: {{b.unconfirmed_n_tx}}</p>
       </div>
       <button class="home-button receive-button" block ion-button on-click="goToReceive(b.wallet)">
-        Recibir
+          {{'FORM.receive' | translate }}
       </button>
       <button class="home-button send" block ion-button on-click="goToSend(b)">
-        Enviar
+          {{'FORM.send' | translate }}
       </button>
     </ion-slide>
     <ion-slide class="new-wallet-slide">
       <ion-icon class="new-wallet-icon" name="add" on-click="createNewMultiWallet()"></ion-icon>
       <button class="new-wallet-button" block ion-button on-click="createNewMultiWallet()">
-        Agregar Billetera MultiFirmada
+          {{'FORM.add_multisigned_wallet' | translate }}
       </button>
       <ion-icon class="new-wallet-icon" name="add" on-click="createNewWallet()"></ion-icon>
       <button class="new-wallet-button" block ion-button on-click="createNewWallet()">
-        Agregar Billetera
+          {{'FORM.add_wallet' | translate }}
       </button>
     </ion-slide>
   </ion-slides>

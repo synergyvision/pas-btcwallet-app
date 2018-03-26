@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Actividad</ion-title>
+    <ion-title>{{'ACTIVITY.title' | translate }}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -12,24 +12,24 @@
       </div>
       <ion-card-content>
         <ion-card-title class="request-title">
-          Solicitud de participación en una Billetera Multifirmada
+            {{'ACTIVITY.request_title' | translate }}
         </ion-card-title>
         <div class="request-body" text-wrap>
-          El usuario {{r.createdBy}} desea que firme en una billetera {{r.crypto}}
-          <br> El tipo de billetera es {{r.type}}
+            {{'ACTIVITY.request_body' | translate: {'user': r.createdBy, 'type': r.crypto} }}
+          <br> {{'ACTIVITY.request_type' | translate }} {{r.type}}
         </div>
       </ion-card-content>
       <ion-row>
         <ion-col>
           <button class="request-button"ion-button icon-left clear small on-click="acceptRequest(r)">
             <ion-icon name="thumbs-up"></ion-icon>
-            <div>Aceptar</div>
+            <div>{{'FORM.accept' | translate }}</div>
           </button>
         </ion-col>
         <ion-col>
           <button class="request-button"ion-button icon-left clear small on-click="rejectRequest(r)">
             <ion-icon name="thumbs-down"></ion-icon>
-            <div>Rechazar</div>
+            <div>{{'FORM.reject' | translate }}</div>
           </button>
         </ion-col>
       </ion-row>
@@ -42,23 +42,23 @@
         <ion-card-header class="pendingTx-title">
           <ion-icon class="dismiss-icon" style="float: right;" (click)="dismissPendingTx(t)" name="close">
           </ion-icon>
-          Transacción Pendiente
+          {{'ACTIVITY.pending_tx_title' | translate }}
         </ion-card-header>
         <div class="pendingTx-body" text-wrap>
-          El usuario {{t.createdBy}} desea que apruebe una transferencia
-          <br> Destino: {{t.to}}
-          <br> Monto: {{t.amount}}
+            {{'ACTIVITY.pending_tx_body' | translate: {user: t.createdBy } }}
+          <br> {{'ACTIVITY.destination' | translate }} {{t.to}}
+          <br> {{'ACTIVITY.amount' | translate }} {{t.amount}}
         </div>
       </ion-card-content>
           <button class="pendingTx-button" ion-button icon-left outline on-click="acceptPendingTx(t)">
             <ion-icon name="checkmark"></ion-icon>
-            <div>Aceptar</div>
+            <div>{{'FORM.accept' | translate }}</div>
           </button>
     </ion-card>
   </ion-list>
   <ion-list no-lines>
     <ion-item class="thin-input date">
-      Actividad Reciente
+        {{'ACTIVITY.activity_title' | translate }}
     </ion-item>
     <ion-item-sliding *ngFor="let a of activityList" text-wrap>
       <ion-item class="thin-input">
@@ -67,7 +67,7 @@
       </ion-item>
       <ion-item-options>
         <button ion-button color="danger" (click)="removeActivity(a)" icon-start>
-          <ion-icon name="trash"></ion-icon> Delete </button>
+          <ion-icon name="trash"></ion-icon> {{'FORM.delete' | translate }} </button>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>

@@ -9,18 +9,18 @@
         <ion-label>
           <ion-icon [name]="i.icon"></ion-icon>
         </ion-label>
-        <ion-input type="{{i.type}}" formControlName="{{i.name}}" placeholder="{{i.placeholder}}">
+        <ion-input type="{{i.type}}" formControlName="{{i.name}}" placeholder="{{i.placeholder | translate}}">
         </ion-input>
       </ion-item>
       <button ion-button block class="login-recover-button">
-        Recuperar Contraseña
+        {{'LOGIN.recover_password' | translate}}
       </button>
       <button ion-button block [disabled]="!loginForm.valid" type="submit" class="login-button">
-        Iniciar Sesión
+        {{'LOGIN.log_in' | translate }}
       </button>
     </form>
     <button ion-button block class="login-register-button" (click)="goToRegister()">
-      Registrarse
+      {{'LOGIN.register' | translate }}
     </button>
     <button ion-button block color="terciary" (click)="loginGoogle()">
       <ion-icon name="logo-googleplus"></ion-icon>

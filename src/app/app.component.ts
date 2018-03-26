@@ -12,9 +12,12 @@ import { ErrorService } from './services/error.service';
 import { AlertService } from './services/alert.service';
 import { EventService } from './services/events.services';
 import { SharedService } from './services/shared.service';
+import { TranslateService } from '@ngx-translate/core';
+import { StorageProvider } from '../providers/firebase/storage';
 
 @Component({
-  providers: [RestService, AuthService, LoaderService, AlertService, AppSettings, EventService, SharedService],
+  providers: [RestService, AuthService, LoaderService, AlertService, AppSettings,
+              EventService, SharedService, StorageProvider],
   templateUrl: 'app.html',
 })
 
@@ -31,8 +34,12 @@ export class MyApp {
 
   constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen,
               public restService: RestService, public authService: AuthService, public events: Events,
-              public sharedService: SharedService) {
+              public sharedService: SharedService, public translate: TranslateService) {
     this.initializeApp();
+    this.translate.addLangs(['en', 'es']);
+    this.translate.setDefaultLang('es');
+    const browserLang = this.translate.getBrowserLang();
+    // this.translate.use(browserLang);
 
     // Handle Back Button on Android Devices
     platform.registerBackButtonAction(() => {
@@ -54,6 +61,8 @@ export class MyApp {
       this.sharedService.updateUser();
       this.user = this.sharedService.user;
       this.rootPage = 'HomePage';
+      // Function for showing the notification symbol on Activity
+      this.sharedService.showNotification();
     });
     this.events.subscribe('user:newUser', () => {
       this.rootPage = 'CreateWalletPage';
@@ -72,6 +81,7 @@ export class MyApp {
       this.rootPage = 'LoginPage';
       this.splashScreen.hide();
     });
+
   }
 
   // Function for opening the Side Menu Pages

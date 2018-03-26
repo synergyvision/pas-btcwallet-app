@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Registrarse</ion-title>
+    <ion-title>{{'CONFIRM_EMAIL.title'}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -8,7 +8,7 @@
 <ion-content padding>
   <img class="confirm-email-img" src="../assets/icons/menu-icon.svg">
   <div class="page-title">
-    Debe confirmar su cuenta
+    {{'CONFIRM_EMAIL.sub_title' | translate}}
   </div>
   <div class="confirm-email-info">
     {{message}}
@@ -17,14 +17,14 @@
     </div>
   </div>
   <div class="confirm-email-info">
-    ¿No ha recibido ningún correo?
+    {{'CONFIRM_EMAIL.resend_email_info' | translate}}
   </div>
   <button ion-button outline block class="confirm-email-button" (click)="resendEmail" type="submit">
-    Reenviar Correo
+      {{FORM.resend_email_button' | translate}}
   </button>
   <ion-footer>
     <button ion-button class="footer-button" block (click)="goBack()">
-      Volver
+      {{'FORM.go_back' | translate}}
     </button>
   </ion-footer>
 </ion-content>

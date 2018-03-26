@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Registrarse
+      {{ 'REGISTER.title' | translate }}
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -16,11 +16,11 @@
         <ion-label>
           <ion-icon [name]="i.icon"></ion-icon>
         </ion-label>
-        <ion-input type="{{i.type}}" formControlName="{{i.name}}" placeholder="{{i.placeholder}}">
+        <ion-input type="{{i.type}}" formControlName="{{i.name}}" placeholder="{{i.placeholder | translate}}">
         </ion-input>
       </ion-item>
       <button ion-button block [disabled]="!registerForm.valid" type="submit">
-        Continuar
+        {{ 'FORM.continue' | translate }}
       </button>
     </ion-list>
   </form>

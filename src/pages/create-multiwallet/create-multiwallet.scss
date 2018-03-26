@@ -1,3 +1,14 @@
-page-create-multiwallet {
+.select-label  {
+    max-width: 20%;
+    color: $dark !important;
+}
 
+.page-create-multiwallet {
+    .select-crypto {
+            max-width: 40%;
+            min-width: 40%;
+            width: 40%;
+            text-align: right;
+            display: flex;
+    }
 }
