@@ -38,7 +38,10 @@ export class AddressPage {
     this.sharedService.addressExist(form.value.email)
     .subscribe((response) => {
       if (response) {
-        this.validateAddress(form);
+        response = response.pop();
+        const newAddress = new Address(form.value.alias, form.value.email, response.img, response.key);
+        console.log(newAddress);
+        this.validateAddress(newAddress);
       } else {
         this.error = 'Este usuario no existe';
       }
@@ -47,11 +50,11 @@ export class AddressPage {
     }));
   }
 
-  private validateAddress(form: FormGroup) {
-    this.sharedService.isAddressSaved(form.value.email)
+  private validateAddress(address: Address) {
+    this.sharedService.isAddressSaved(address.email)
       .subscribe((response) => {
         if (response.length === 0) {
-          this.sharedService.addAddress(form);
+          this.sharedService.addAddress(address);
           this.navCtrl.pop();
         } else {
           // User already exists on the addressBook

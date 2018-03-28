@@ -54,6 +54,13 @@ export class HomePage {
       this.slides.slideTo(1);
     });
     // this.createRequest();
+    this.sharedService.createProfilePicture('d@d.com');
+    this.restService.putMetadata('a1b904183b2e5e16aa1aeb0cb6164297dc07eadb3fafccc33066b751f2226843', 'tes', {testing: 'This is a test'})
+    .subscribe((data) => {
+      console.log(data);
+    }, (error) => {
+      console.log(error);
+    });
   }
 
   public createRequest() {

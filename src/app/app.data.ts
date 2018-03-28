@@ -10,44 +10,40 @@ export class AppData {
 
     public static registerForm = [
         {
-          placeholder: 'FORM.email', name: 'email', icon: 'wallet-email', type: 'email',
-          validators: [Validators.email, Validators.required, Validators.maxLength(30)],
+            placeholder: 'FORM.email', name: 'email', icon: 'wallet-email', type: 'email',
+            validators: [Validators.email, Validators.required, Validators.maxLength(30)],
         },
         {
-          placeholder: 'FORM.password', name: 'password', icon: 'wallet-password', type: 'password',
-          validators: [Validators.required, Validators.minLength(8)],
+            placeholder: 'FORM.password', name: 'password', icon: 'wallet-password', type: 'password',
+            validators: [Validators.required, Validators.minLength(8)],
         },
         {
-          placeholder: 'FORM.repeat_password', name: 'passwordRe', icon: 'wallet-password', type: 'password',
-          validators: [Validators.required],
+            placeholder: 'FORM.repeat_password', name: 'passwordRe', icon: 'wallet-password', type: 'password',
+            validators: [Validators.required],
         },
-      ];
+    ];
 
-      public static loginForm =  [
+    public static loginForm = [
         {
-          placeholder: 'FORM.email', name: 'email', icon: 'wallet-email', type: 'email',
-          validators: [Validators.email, Validators.required, Validators.maxLength(30)],
+            placeholder: 'FORM.email', name: 'email', icon: 'wallet-email', type: 'email',
+            validators: [Validators.email, Validators.required, Validators.maxLength(30)],
         },
         {
-          placeholder: 'FORM.password', name: 'password', icon: 'wallet-password', type: 'password',
-          validators: [Validators.required, Validators.minLength(8)],
+            placeholder: 'FORM.password', name: 'password', icon: 'wallet-password', type: 'password',
+            validators: [Validators.required, Validators.minLength(8)],
         },
-      ];
+    ];
 
-      public static addressInputs = [
+    public static addressInputs = [
         {
-          placeholder: 'FORM.email', name: 'email', value: '', type: 'email',
-          validators: [Validators.email, Validators.maxLength(30), Validators.required],
+            placeholder: 'FORM.email', name: 'email', value: '', type: 'email',
+            validators: [Validators.email, Validators.maxLength(30), Validators.required],
         },
         {
-          placeholder: 'FORM.alias', name: 'alias', value: '', type: 'text',
-          validators: [Validators.required, Validators.maxLength(30)],
+            placeholder: 'FORM.alias', name: 'alias', value: '', type: 'text',
+            validators: [Validators.required, Validators.maxLength(30)],
         },
-        {
-          placeholder: '', name: 'img', value: '../assets/icons/wallet-user.svg', type: 'null',
-          validators: null,
-        },
-      ];
+    ];
 
     public static cryptoCurrencies = [
         { name: 'Testnet', value: 'tes' },
@@ -56,7 +52,7 @@ export class AppData {
         { name: 'Litecoin', value: 'ltc' },
         { name: 'BlockCypher Testnet', value: 'bcy' },
         { name: 'Ethereum', value: 'eth' },
-        { name: 'Ethereum Testnet', value: 'tet'},
+        { name: 'Ethereum Testnet', value: 'tet' },
     ];
 
     public static multiCryptoCurrencies = [
@@ -68,13 +64,13 @@ export class AppData {
     ];
 
     public static restAPIPaths = [
-        { name: 'TESTNET_URL', path: 'btc/test3', crypto: 'tes'},
-        { name: 'BITCOIN_URL', path: 'btc/main', crypto: 'btc'},
-        { name: 'BLOCKCYPHER_TESTNET_URL', path: 'bcy/test', crypto: 'bcy'},
-        { name: 'ETHER_URL', path: 'eth/main', crypto: 'eth'},
-        { name: 'DOGE_URL', path: 'doge/main', crypto: 'dog'},
-        { name: 'LITECOIN_URL', path: 'ltc/main', crypto: 'ltc'},
-        { name: 'ETHER_TESTNET_URL', path: 'beth/test', crypto: 'tet'},
+        { name: 'TESTNET_URL', path: 'btc/test3', crypto: 'tes' },
+        { name: 'BITCOIN_URL', path: 'btc/main', crypto: 'btc' },
+        { name: 'BLOCKCYPHER_TESTNET_URL', path: 'bcy/test', crypto: 'bcy' },
+        { name: 'ETHER_URL', path: 'eth/main', crypto: 'eth' },
+        { name: 'DOGE_URL', path: 'doge/main', crypto: 'dog' },
+        { name: 'LITECOIN_URL', path: 'ltc/main', crypto: 'ltc' },
+        { name: 'ETHER_TESTNET_URL', path: 'beth/test', crypto: 'tet' },
     ];
 
     public static cryptoUnitList = [
@@ -160,14 +156,14 @@ export class AppData {
     ];
 
     public static exchangePairs = [
-        { crypto: 'btc', name: 'btc'},
-        { crypto: 'ltc', name: 'ltc'},
-        { crypto: 'dog', name: 'doge'},
-        { crypto: 'eth', name: 'eth'},
-        { crypto: 'das', name: 'dash'},
-        { crypto: 'tes', name: 'btc'},
-        { crypto: 'tet', name: 'eth'},
-        { crypto: 'bcy', name: 'btc'},
+        { crypto: 'btc', name: 'btc' },
+        { crypto: 'ltc', name: 'ltc' },
+        { crypto: 'dog', name: 'doge' },
+        { crypto: 'eth', name: 'eth' },
+        { crypto: 'das', name: 'dash' },
+        { crypto: 'tes', name: 'btc' },
+        { crypto: 'tet', name: 'eth' },
+        { crypto: 'bcy', name: 'btc' },
     ];
 
     public static activityList = [
@@ -179,5 +175,5 @@ export class AppData {
         new Activity('28/12/2016', 'Acceso desde dispositivo iPhone 6c', undefined),
     ];
 
-    public static numberOfSigners = [ 2, 3, 4, 5];
+    public static numberOfSigners = [2, 3, 4, 5];
 }

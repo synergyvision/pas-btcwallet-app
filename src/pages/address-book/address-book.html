@@ -10,7 +10,7 @@
   <ion-list no-lines>
     <ion-item-sliding *ngFor="let a of addressBook | async" text-wrap>
       <ion-item class="address-container" (click)="editAddress(a)">
-        <img class="address-img" src="{{a.img}}" />
+        <img class="address-img circular" src="{{a.img}}" />
         <div class="address-alias">
           {{a.alias}}
         </div>
@@ -21,7 +21,7 @@
       <ion-item-options>
         <button ion-button class="button-delete-address" (click)="removeAddress(a.key)" icon-start>
           <ion-icon name="trash">
-            <div>{{'FORM.delete'}}</div>
+            <div>{{'FORM.delete' | translate }}</div>
           </ion-icon>
         </button>
       </ion-item-options>

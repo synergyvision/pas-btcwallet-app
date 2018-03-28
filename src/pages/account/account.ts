@@ -7,6 +7,7 @@ import { NgZone } from '@angular/core';
 import { AppSettings } from '../../app/app.settings';
 import { Events } from 'ionic-angular/util/events';
 import { SharedService } from '../../app/services/shared.service';
+import { ActionSheetController } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -20,7 +21,7 @@ export class AccountPage {
   public options;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private events: Events,
-              private sharedService: SharedService) {
+              private sharedService: SharedService, public actionSheetCtrl: ActionSheetController) {
     this.user = this.sharedService.user;
     this.options = AppSettings.accountOptions;
     this.events.subscribe('user:changedData', () => {
@@ -39,6 +40,30 @@ export class AccountPage {
   }
 
   public changePicture() {
-    console.log(this.sharedService.changePicture());
-  }
+    const actionSheet = this.actionSheetCtrl.create({
+      title: 'Seleccionar',
+      buttons: [
+          {
+            text: 'Take Photo',
+            handler: () => {
+              this.sharedService.changePicture(false);
+            },
+          },
+          {
+            text: 'Select Photo',
+            handler: () => {
+              this.sharedService.changePicture(true);
+            },
+          },
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            handler: () => {
+              console.log('Cancel clicked');
+            },
+          },
+        ],
+      });
+    actionSheet.present();
+    }
 }

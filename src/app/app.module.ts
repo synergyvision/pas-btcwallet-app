@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireModule } from 'angularfire2';
+import { AngularFireStorageModule } from 'angularfire2/storage';
 import { FirebaseProvider } from '../providers/firebase/firebase';
 import { AlertService } from './services/alert.service';
 import { LoaderService } from './services/loader.service';
@@ -29,7 +30,6 @@ import { SharedService } from './services/shared.service';
 import { RestService } from './services/rest.service';
 import { StorageProvider } from '../providers/firebase/storage';
 import { Camera } from '@ionic-native/camera';
-
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -55,6 +55,7 @@ const firebaseConfig = {
   imports: [
     AngularFireDatabaseModule,
     AngularFireAuthModule,
+    AngularFireStorageModule,
     AngularFireModule.initializeApp(firebaseConfig),
     BrowserModule,
     BrowserAnimationsModule,

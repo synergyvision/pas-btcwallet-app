@@ -11,13 +11,15 @@ import { KeyService } from './key.service';
 import { IHDWallet } from '../models/IHDWallet';
 import { Events } from 'ionic-angular';
 import { ErrorService } from './error.service';
+import { StorageProvider } from '../../providers/firebase/storage';
 
 @Injectable()
 
 export class AuthService {
     public user: firebase.User;
 
-    constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider, private events: Events) {
+    constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider, private events: Events,
+                private storageProvider: StorageProvider) {
         this.firebaseAuth.authState.first()
             .subscribe((user) => {
                 if (user) {
@@ -38,9 +40,9 @@ export class AuthService {
         return new Promise((resolve, reject) => {
             this.firebaseAuth.auth.createUserWithEmailAndPassword(user.value.email, user.value.password)
                 .then((response) => {
-                    // Stores the user email on Firebase Realtime DB
                     this.firebaseData.addUser(response.email, response.uid);
                     resolve(response);
+                    // Stores the user email on Firebase Realtime DB
                 })
                 .catch((error) => {
                     // There was an error
@@ -61,11 +63,10 @@ export class AuthService {
             .then(() => {
                 this.firebaseAuth.auth.getRedirectResult()
                 .then((response) => {
-                    this.firebaseData.addUser(response.email, response.uid);
+                    this.firebaseData.addUser(response.user.email, response.user.uid, response.user.photoURL);
                     resolve(response);
                 })
                 .catch((error) => {
-                    console.log(error);
                     reject(error);
                 });
             });
@@ -75,8 +76,6 @@ export class AuthService {
     // Logs out the current user
     public logout() {
         this.firebaseAuth.auth.signOut();
-        console.log(this.user);
-        console.log(this.firebaseAuth.auth);
     }
 
     // Verifies the Email associated with the user (only email and password provider)

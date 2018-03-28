@@ -141,7 +141,8 @@
         "left": "Left: ",
         "min_fee": "Minimun Fee: ",
         "selected_address": "Selected Destination",
-        "token": "Token"
+        "token": "Token",
+        "metadata": "Metadata"
     },
 
     "TRANSACTION_CONFIRMATION": {

@@ -8,17 +8,12 @@
   <form [formGroup]="addressForm" (ngSubmit)="onSubmit(addressForm)">
     <ion-list no-lines>
       <ng-container *ngFor="let i of inputs">
-        <ion-item class="input" *ngIf="i.name!=='id' && i.name!=='img'">
+        <ion-item class="input" *ngIf="i.name!=='id'">
           <ion-label>
             {{i.placeholder | translate}}
           </ion-label>
           <ion-input type="{{i.type}}" formControlName="{{i.name}}" required></ion-input>
         </ion-item>
-        <div *ngIf="i.name==='img'">
-          <button ion-button color="secondary" block>
-            {{'FORM.select_image' | translate}}
-          </button>
-        </div>
       </ng-container>
       <button ion-button type="submit" color="primary" block [disabled]="!addressForm.valid">
         {{'FORM.save' | translate}}

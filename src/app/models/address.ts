@@ -10,9 +10,9 @@ export class Address {
   public uid?: string;
 
   constructor(alias: string, email: string, img?: string, uid?: string) {
-    this.img = img;
     this.alias = alias;
     this.email = email;
+    this.img = img;
     this.uid = uid;
   }
 
@@ -20,7 +20,4 @@ export class Address {
     this.alias = alias;
   }
 
-  public getImg(avatar) {
-    this.img = avatar;
-  }
 }

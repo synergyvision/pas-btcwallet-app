@@ -159,6 +159,17 @@ export class RestService {
       .catch(this.handleError);
   }
 
+  // Puts Metada on a TX
+
+  public putMetadata(trx: string, crypto: string, data: any ): Observable<any> {
+    return this.http.put(this.getPath(crypto) + '/txs/' + trx + '/meta?token=' + TOKEN + '&private=true', data)
+    .map((res: Response) => {
+      console.log(res.json());
+      return res.json();
+    })
+    .catch(this.handleError);
+  }
+
   // Testing Faucet
 
   public addFundsTestnet(address: string, amount: number, crypto: string): Observable<any> {

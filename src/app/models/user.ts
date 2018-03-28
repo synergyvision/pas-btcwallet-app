@@ -9,12 +9,14 @@ export class User {
   public emailVerified: boolean;
   public phoneNumber?: number;
   public photoURL?: string;
+  public displayName?: string;
 
-  constructor(uid, email, emailVerified,  phone?, photoURL?) {
+  constructor(uid, email, emailVerified,  phone?, photoURL?, name?) {
     this.uid = uid,
     this.email = email;
     this.emailVerified = emailVerified;
     this.phoneNumber = phone;
+    this.displayName = name || email;
     if ( photoURL) {
     this.photoURL = photoURL;
     } else {

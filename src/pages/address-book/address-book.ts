@@ -25,6 +25,9 @@ export class AddressBookPage {
     this.zone = new NgZone({ enableLongStackTrace: false });
     this.uid = this.sharedService.user.uid;
     this.addressBook = dataProvider.getAddressBook(this.uid);
+    (this.addressBook.subscribe((Data)=> {
+      console.log(Data);
+    }));
     // If this view parent is SendPage, then we select an Address for sending BTC or CC
     if (this.navCtrl.last().name === 'SendPage') {
       this.selectAddress = true;

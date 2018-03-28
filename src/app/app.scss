@@ -209,6 +209,7 @@ $padding-address: 1em;
 .address-email {
   font-size: $font-size-address-email;
   color: $dark;
+
 }
 
 .address-address{
@@ -218,9 +219,13 @@ $padding-address: 1em;
 
 img.address-img {
   max-width: $address-img-width;
+  min-width: $address-img-width;
   max-height: $address-img-height;
   float: left;
   align-content: left;
+  object-fit: cover;
+  margin-right: $padding-sm;
+  border-radius: 50%;
 }
 
 ion-item.input {
@@ -278,6 +283,7 @@ img.menu-img {
   max-height: 100%;
   margin-left: auto;
   margin-right: auto;
+  object-fit: cover;
 }
 
 .account-header-background{

@@ -7,6 +7,7 @@ import { AlertService } from '../../app/services/alert.service';
 import { LoaderService } from '../../app/services/loader.service';
 import { Conditional } from '@angular/compiler';
 import { AppData } from '../../app/app.data';
+import { SharedService } from '../../app/services/shared.service';
 
 @IonicPage()
 
@@ -23,7 +24,8 @@ export class RegisterPage {
   private registerForm: FormGroup;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService,
-              private formBuilder: FormBuilder, private loaderService: LoaderService) {
+              private formBuilder: FormBuilder, private loaderService: LoaderService,
+              private sharedService: SharedService) {
 
     this.inputs = AppData.registerForm;
     this.registerForm = formBuilder.group({});
@@ -41,6 +43,8 @@ export class RegisterPage {
     this.loaderService.showLoader('Espere');
     this.authService.signup(registerForm).
       then((data) => {
+        //WIP
+        this.sharedService.createProfilePicture(registerForm.value.email);
         this.loaderService.dismissLoader();
         this.navCtrl.push('ConfirmEmailPage', registerForm.value.email);
       })

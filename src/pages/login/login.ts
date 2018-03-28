@@ -6,6 +6,7 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { AlertService } from '../../app/services/alert.service';
 import { EventService } from '../../app/services/events.services';
 import { AppData } from '../../app/app.data';
+import { LoaderService } from '../../app/services/loader.service';
 
 // Component for the Login Page
 @IonicPage()
@@ -19,8 +20,8 @@ export class LoginPage {
   private error: string;
   private inputs;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private events: Events,
-              private authService: AuthService, private formBuilder: FormBuilder, private eventService: EventService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private loaderService: LoaderService,
+              private authService: AuthService, private formBuilder: FormBuilder, private events: Events) {
     this.inputs = AppData.loginForm;
     this.loginForm = formBuilder.group({});
     this.inputs.forEach((control) => {

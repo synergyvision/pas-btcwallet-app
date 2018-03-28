@@ -40,7 +40,8 @@ export class SharedService {
                 public eventService: EventService, public keyService: KeyService, public authService: AuthService,
                 public exchangeService: ExchangeService, public storageProvider: StorageProvider) {
         this.events.subscribe('user:loggedOut', () => {
-            this.user = this.wallets = this.balances = this.multiSignedWallets = undefined;
+            this.user = this.wallets = this.balances =
+            this.multiSignedWallets = undefined;
         });
         // We get all of the logged user information
         this.events.subscribe('user:loggedIn', () => {
@@ -56,6 +57,7 @@ export class SharedService {
     public setUser(user: User) {
         if (user !== undefined) {
             this.user = user;
+            console.log(user);
             this.getWalletsAsync()
                     .subscribe((wallets) => {
                         this.setWallets(wallets);
@@ -64,8 +66,36 @@ export class SharedService {
         }
     }
 
-    public changePicture() {
-        this.storageProvider.selectProfileImage(this.user.email);
+
+    // WIP
+    public changePicture(select: boolean) {
+        let photoURL: Promise<any>;
+        if (select) {
+           photoURL = this.storageProvider.selectProfileImage(this.user.email);
+        } else {
+           photoURL = this.storageProvider.takeProfileImage(this.user.email);
+        }
+        photoURL.then((url) => {
+            console.log(url);
+            this.user.setPhotoURL(url);
+            this.authService.user.updateProfile({
+            displayName: this.user.displayName,
+            photoURL : this.user.photoURL,
+            });
+            this.firebaseData.updateProfilePicture(this.user.uid, url);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
+
+    //WIP
+
+    public createProfilePicture(email: string) {
+        this.storageProvider.createProfileImage(email)
+        .then((url) => {
+            this.firebaseData.updateProfilePicture(this.user.uid, url);
+        });
     }
 
     public setWallets(wallets: Wallet[]) {
@@ -233,7 +263,7 @@ export class SharedService {
             return this.firebaseData.getUserByEmail(email)
                 .map((data) => {
                     if (data.length > 0) {
-                        return true;
+                        return data;
                     } else {
                         return false;
                     }
@@ -246,8 +276,8 @@ export class SharedService {
     }
 
     // Adds another user to the user Address Book
-    public addAddress(form: FormGroup) {
-        this.firebaseData.addAddressToAddressBook(this.user.uid, form.value);
+    public addAddress(address: Address) {
+        this.firebaseData.addAddressToAddressBook(this.user.uid, address);
     }
 
     // Wallet Creation

@@ -27,10 +27,18 @@ export class FirebaseProvider {
 
   // Add User to the DB
 
-  public addUser(email: string, uid: string) {
+  public addUser(email: string, uid: string, pictureURL?: string) {
+    if (pictureURL) {
+      this.angularFire.list('user/' + uid).set('img', pictureURL);
+    }
     this.angularFire.list('user/' + uid).set('userEmail', email);
     this.angularFire.list('user/' + uid).set('currency', 'USD');
   }
+
+  public updateProfilePicture(uid: string, pictureURL: string) {
+    this.angularFire.list('user/' + uid).set('img', pictureURL);
+  }
+
   // Retrieve Data of Signed User
 
   public getCurrency(uid: string) {
@@ -43,7 +51,7 @@ export class FirebaseProvider {
 
   // Update Data of Signed User
 
-  public updateCurreny(uid: string, currency: string) {
+  public updateCurrency(uid: string, currency: string) {
     this.angularFire.list('user/' + uid).set('currency', currency);
   }
 
@@ -99,12 +107,15 @@ export class FirebaseProvider {
       snapshotChanges()
       .map((changes) => {
       return changes.map((c) => ({
-        key: c.payload.key, ...c.payload.val(),
+        key: c.payload.key,
+        ...c.payload.val(),
       }));
     });
   }
 
   public addAddressToAddressBook(uid: string, address: Address) {
+    console.log(address);
+    console.log(uid);
     this.angularFire.list('user/' + uid + '/addressBook/').push(address);
   }
 
@@ -162,6 +173,7 @@ export class FirebaseProvider {
       .map((users) => {
           return users.map((c) => ({
             key: c.payload.key,
+            img: c.payload.val().img,
           }));
       });
   }

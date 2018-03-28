@@ -140,7 +140,8 @@
         "left": "Restante: ",
         "min_fee": "Tarifa Minima: ",
         "selected_address": "Dirección Seleccionada",
-        "token": "Token"
+        "token": "Token",
+        "metadata": "Metadata"
     },
 
     "TRANSACTION_CONFIRMATION": {

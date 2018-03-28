@@ -39,6 +39,8 @@ export class SendConfirmPage {
     this.sendForm = this.formBuilder.group({
       amount: [10000, Validators.compose([Validators.required, Validators.min(this.fee)])],
       fee: [this.fee, null],
+      token: ['Token', null],
+      metadata: ['Metadata', null],
     });
     this.address = this.navParams.get('address');
     this.balance = this.navParams.get('wallet');
@@ -64,7 +66,7 @@ export class SendConfirmPage {
   private createTransactionInput(form: FormGroup) {
     this.sharedService.createPayment(this.address, form.value.amount, this.balance.wallet)
     .subscribe((transaction) => {
-      this.signPayment(transaction);
+      this.signPayment(transaction, form);
     }, (error) => {
       console.log(error);
     });
@@ -76,7 +78,7 @@ export class SendConfirmPage {
         this.sharedService.createPayment(receiverAddress, form.value.amount,
           this.balance.wallet)
           .subscribe((response) => {
-            this.signPayment(response);
+            this.signPayment(response, form);
           });
         }, (error: ErrorService) => {
           this.loaderService.dismissLoader();
@@ -88,10 +90,18 @@ export class SendConfirmPage {
       });
   }
 
-  private signPayment(transaction: ITransactionSke) {
+  private signPayment(transaction: ITransactionSke, form: FormGroup) {
     this.sharedService.sendPayment(transaction, this.balance.wallet)
       .subscribe((response) => {
         this.loaderService.dismissLoader();
+        if (form.value.metadata !== '') {
+          const metadata = { data: form.value.data };
+          this.restService.putMetadata(transaction.tx.hash, this.balance.wallet.crypto.value, JSON.stringify(metadata))
+          .subscribe((res) => {
+            console.log(res);
+          });
+        }
+
         this.navCtrl.push('TransactionConfirmationPage', response);
       }, (error) => {
         this.loaderService.dismissLoader();
