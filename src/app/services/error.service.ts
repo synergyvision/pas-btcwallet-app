@@ -7,33 +7,31 @@ export class ErrorService {
     constructor(errorCode?: number, errorText?) {
         this.title = 'Error';
         if ((errorCode === 0) || (errorText === 'ERROR_CREATING_WALLET')) {
-            this.subTitle = 'Intente mas tarde';
-            this.message = 'No se pudo establecer conexión al servidor';
+            this.subTitle = 'ERROR.connection_subtitle';
+            this.message = 'ERROR.connection_message';
         }
         if (errorText === 'SAME_USER') {
-            this.message = 'No se puede registar como usuario';
+            this.message = 'ERROR.same_user_message';
         }
         if (errorText === 'CAMARA_ERROR') {
-            this.message = 'Debe darle permisos a la aplicación para usar la cámara';
+            this.message = 'ERROR.camera_permission';
         }
         if (errorText === 'NO_WALLET') {
             this.message = 'CREATE_WALLET';
         }
         if (errorText === 'NO_WALLET_FOR_SELECTED_CRYPTO') {
-            this.message = 'El contacto no posee una billetera en la moneda seleccionada';
+            this.message = 'ERROR_no_wallet_for_crypto_message';
         }
         // HTTP Error Handler
         // Too many Requests or CORS Eror
         if (errorCode === 429) {
-            this.message = 'El servidor se encuentra ocupado en este momento';
-            this.subTitle = 'Intente mas tarde';
+            this.message = 'ERROR.connection_message';
+            this.subTitle = 'ERROR.connection_subtitle';
         }
         if (errorCode === 409) {
             if (errorText.error === 'Error: wallet exists') {
                 this.message = 'WALLET_DUPLICATE';
             }
-        }
-        if (errorCode === 400) {
         }
     }
 }

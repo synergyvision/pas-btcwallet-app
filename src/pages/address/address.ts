@@ -5,6 +5,7 @@ import { Address } from '../../app/models/address';
 import { ErrorService } from '../../app/services/error.service';
 import { SharedService } from '../../app/services/shared.service';
 import { AppData } from '../../app/app.data';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -23,7 +24,8 @@ export class AddressPage {
   private error: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
-              public formBuilder: FormBuilder, private sharedService: SharedService) {
+              public formBuilder: FormBuilder, private sharedService: SharedService,
+              private translate: TranslateService) {
     // Form Builder
     this.inputs = AppData.addressInputs;
     this.addressForm = formBuilder.group({});
@@ -40,10 +42,9 @@ export class AddressPage {
       if (response) {
         response = response.pop();
         const newAddress = new Address(form.value.alias, form.value.email, response.img, response.key);
-        console.log(newAddress);
         this.validateAddress(newAddress);
       } else {
-        this.error = 'Este usuario no existe';
+        this.error = this.translate.instant('ADDRESS.user_does_not_exist');
       }
     }, ((error: ErrorService) => {
       this.error = error.message;

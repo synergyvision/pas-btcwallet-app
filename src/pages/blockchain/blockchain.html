@@ -52,22 +52,22 @@
         {{'BLOCKCHAIN.block_size' | translate }} {{block.size}}
       </ion-item>
       <ion-item>
-        {{'BLOCKCHAIN.n_tx' | translate }} {{block.n_tx}}
+        {{'BLOCKCHAIN.block_n_tx' | translate }} {{block.n_tx}}
       </ion-item>
       <ion-item>
-        {{'BLOCKCHAIN.total' | translate }} {{block.total}}
+        {{'BLOCKCHAIN.block_total' | translate }} {{block.total}}
       </ion-item>
       <ion-item>
-        {{'BLOCKCHAIN.fees' | translate }} {{block.fees}}
+        {{'BLOCKCHAIN.block_fees' | translate }} {{block.fees}}
       </ion-item>
       <ion-item>
-        {{'BLOCKCHAIN.time' | translate }} {{block.time | date:'dd MMM, y hh:mm a'}}
+        {{'BLOCKCHAIN.block_time' | translate }} {{block.time | date:'dd MMM, y hh:mm a'}}
       </ion-item>
       <ion-item>
-        {{'BLOCKCHAIN.received_time' | translate }}: {{block.received_time | date:'dd MMM, y hh:mm a' }}
+        {{'BLOCKCHAIN.block_received_time' | translate }}: {{block.received_time | date:'dd MMM, y hh:mm a' }}
       </ion-item>
       <button ion-item (click)="getBlock(block.prev_block, true)">
-        {{'BLOCKCHAIN.prev_block' | translate }} {{block.prev_block}}
+        {{'BLOCKCHAIN.block_prev_block' | translate }} {{block.prev_block}}
         <ion-icon name="arrow-dropright" item-end></ion-icon>
       </button>
     </div>

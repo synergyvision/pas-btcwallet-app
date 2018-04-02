@@ -18,8 +18,7 @@ import { StorageProvider } from '../../providers/firebase/storage';
 export class AuthService {
     public user: firebase.User;
 
-    constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider, private events: Events,
-                private storageProvider: StorageProvider) {
+    constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider, private events: Events) {
         this.firebaseAuth.authState.first()
             .subscribe((user) => {
                 if (user) {
@@ -40,7 +39,7 @@ export class AuthService {
         return new Promise((resolve, reject) => {
             this.firebaseAuth.auth.createUserWithEmailAndPassword(user.value.email, user.value.password)
                 .then((response) => {
-                    this.firebaseData.addUser(response.email, response.uid);
+                    this.firebaseData.addUser(response.email, response.uid, undefined);
                     resolve(response);
                     // Stores the user email on Firebase Realtime DB
                 })

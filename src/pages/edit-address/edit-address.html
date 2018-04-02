@@ -14,9 +14,6 @@
           <ion-input type="{{i.type}}" value={{i.value}} formControlName="{{i.name}}" required></ion-input>
         </ion-item>
       </ng-container>
-      <button ion-button color="secondary" block (click)="goBack()">
-        {{'FORM.select_image' | translate }}
-      </button>
       <button ion-button type="submit" color="primary" block [disabled]="!addressForm.valid">
         {{'FORM.save' | translate }}
       </button>

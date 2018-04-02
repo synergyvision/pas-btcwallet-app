@@ -95,20 +95,25 @@ export class RestService {
   // Gets every Wallet Transaction
 
   public getWalletTransactions(wallet: Wallet): Observable<IAddress> {
-    if (wallet.address !== undefined) {
+    if (wallet.crypto.value === 'bet' || wallet.crypto.value === 'tet') {
       return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + wallet.address)
       .map((res: Response) => {
         const transactions = res.json() as IAddress;
         transactions.crypto = wallet.crypto;
+        transactions.txs = transactions.txrefs;
         return transactions;
       })
       .catch(this.handleError);
     } else {
-    return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + wallet.name + '/full?token=' + TOKEN)
-      .map((res: Response) => {
-        const transactions = res.json() as IAddress;
-        transactions.crypto = wallet.crypto;
-        return transactions;
+      let path = wallet.name + '/full?token=' + TOKEN;
+      if (wallet.address !== '') {
+        path = wallet.address + '/full';
+      }
+      return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + path)
+        .map((res: Response) => {
+          const transactions = res.json() as IAddress;
+          transactions.crypto = wallet.crypto;
+          return transactions;
       })
       .catch(this.handleError);
     }
@@ -162,7 +167,16 @@ export class RestService {
   // Puts Metada on a TX
 
   public putMetadata(trx: string, crypto: string, data: any ): Observable<any> {
-    return this.http.put(this.getPath(crypto) + '/txs/' + trx + '/meta?token=' + TOKEN + '&private=true', data)
+    return this.http.put(this.getPath(crypto) + '/txs/' + trx + '/meta?token=' + TOKEN, data)
+    .map((res: Response) => {
+      console.log(res.json());
+      return res.json();
+    })
+    .catch(this.handleError);
+  }
+
+  public getMetadata(trx: string, crypto: string) {
+    return this.http.get(this.getPath(crypto) + '/txs/' + trx + '/meta?token=' + TOKEN + '&private=true')
     .map((res: Response) => {
       console.log(res.json());
       return res.json();

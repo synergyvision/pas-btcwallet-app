@@ -22,7 +22,8 @@
     "CONFIRM_EMAIL": {
         "title": "Registro",
         "sub_title": "Debe confirmar su cuenta",
-        "resend_email_info": "¿No ha recibido ningún correo?"
+        "resend_email_info": "¿No ha recibido ningún correo?",
+        "resend_email_success": "Se ha enviado un correo de verificación a "
     },
 
     "HOME": {
@@ -36,7 +37,8 @@
 
     "ACCOUNT": {
         "title": "Cuenta",
-        "sub_title": "Configuración"
+        "sub_title": "Configuración",
+        "change_picture": "Cambiar Imagen de Pérfil"
     },
 
     "SECURITY_SETTINGS": {
@@ -65,7 +67,9 @@
     },
 
     "ADDRESS": {
-        "title": "Agregar Dirección"
+        "title": "Agregar Dirección",
+        "user_does_not_exist": "Este usuario no existe",
+        "duplicated_user": "Este usuario ya se encuentra en su libreta"
     },
 
     "ADDRESS_BOOK": {
@@ -149,7 +153,7 @@
         "sub_title": "Datos de la Transacción",
         "hash": "Hash: ",
         "receiver": "Recipientes: ",
-        "ouputs": "Salidas: ",
+        "outputs": "Salidas: ",
         "amount": "Monto: ",
         "fee": "Tarifa: ",
         "received_time": "Recibido: "
@@ -184,17 +188,20 @@
         "resend_email_button": "Reenviar Correo",
         "select_image": "Seleccionar Imagen",
         "save": "Guardar",
-        "type": "Tipo"
+        "type": "Tipo",
+        "cancel": "Cancelar"
     },
 
     "ACCOUNT_OPTIONS": {
         "security_settings": "Configuración de Seguridad",
-        "wallet_settings": "Configuración de Billeteras"
+        "wallet_settings": "Configuración de Billeteras",
+        "success": "Cambio exitoso"
     },
 
     "SECURITY_OPTIONS": {
         "recover_password": "Restablecer Contraseña",
-        "activate_2auf": "Verificación de dos Pasos"
+        "activate_2auf": "Verificación de dos Pasos",
+        "email_sent": "Se envió un correo a "
     },
 
     "WALLET_OPTIONS": {
@@ -202,5 +209,32 @@
         "change_crypto_unit":"Cambiar Unidades de Moneda",
         "export_wallet":"Exportar Billetera",
         "show_mnemonics": "Mostrar Clave de Recuperacion"
+    },
+    
+    "ERROR": {
+        "unknown": "Se ha detectado un error, intente más tarde",
+        "connection_subtitle": "Intente mas tarde",
+        "connection_message": "No se pudo establecer conexión al servidor",
+        "same_user_message": "No se puede registar como usuario",
+        "camara_permission_message": "Debe darle permisos a la aplicación para usar la cámara",
+        "no_wallet_for_crypto_message": "El contacto no posee una billetera en la moneda seleccionada",
+        "request_user_error": "Error, uno o más de los usuarios no se encuentra registrado"
+    },
+
+    "ALERT": {
+        "error": "Error",
+        "success": "Éxito",
+        "request_created": "Solicitud Creada",
+        "try_later": "Intente mas tarde"
+    },
+
+    "ACTION_SHEET": {
+        "select": "Seleccionar",
+        "take_photo": "Tomar Foto",
+        "choose_photo": "Seleccionar Foto"
+    },
+
+    "LOADER": {
+        "wait": "Espere"
     }
 }

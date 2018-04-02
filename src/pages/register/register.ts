@@ -33,6 +33,7 @@ export class RegisterPage {
       this.registerForm.addControl(control.name, new FormControl(control.value));
       this.registerForm.controls[control.name].setValidators(control.validators);
     });
+    // Uncomment for checking if password is the same
 
       // , (formGroup: FormGroup) => {
       //  return this.checkMatching(formGroup.controls.password, formGroup.controls.passwordRe);
@@ -43,8 +44,6 @@ export class RegisterPage {
     this.loaderService.showLoader('Espere');
     this.authService.signup(registerForm).
       then((data) => {
-        //WIP
-        this.sharedService.createProfilePicture(registerForm.value.email);
         this.loaderService.dismissLoader();
         this.navCtrl.push('ConfirmEmailPage', registerForm.value.email);
       })

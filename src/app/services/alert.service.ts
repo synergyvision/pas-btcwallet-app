@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { App, NavController } from 'ionic-angular/index';
 import { Alert } from 'ionic-angular/components/alert/alert';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class AlertService {
@@ -11,17 +12,17 @@ export class AlertService {
   private nav: NavController;
   private buttonList;
 
-  constructor(private alertCtrl: AlertController, private app: App) { }
+  constructor(private alertCtrl: AlertController, private app: App, private translate: TranslateService) { }
 
   public showError(msg?, title?, subtitle?) {
     return new Promise((resolve, reject) => {
       const alert = this.alertCtrl.create({
-        title: title || 'Error',
-        message: msg || 'Se ha detectado un error, intente más tarde',
-        subTitle: subtitle || '',
+        title: this.translate.instant(title) || this.translate.instant('ALERT.error'),
+        message: this.translate.instant(msg) || this.translate.instant('ALERT.try_later'),
+        subTitle: this.translate.instant(subtitle) || '',
         buttons: [
           {
-            text: 'Volver',
+            text: this.translate.instant('FORM.go_back'),
             role: 'dismiss',
             handler: () => {
               reject(false);
@@ -36,12 +37,12 @@ export class AlertService {
   public showAlert(msg?, title?, subtitle?) {
     return new Promise((resolve, reject) => {
       const alert = this.alertCtrl.create({
-        title: title || '',
-        message: msg || '',
-        subTitle: subtitle || '',
+        title: this.translate.instant(title) || '',
+        message: this.translate.instant(msg) || '',
+        subTitle: this.translate.instant(subtitle) || '',
         buttons: [
           {
-            text: 'Continuar',
+            text: this.translate.instant('FORM.continue'),
             handler: () => {
               resolve(true);
             },
@@ -55,13 +56,13 @@ export class AlertService {
   public showFullAlert(msg?, title?, subtitle?) {
     return new Promise((resolve, reject) => {
       const alert = this.alertCtrl.create({
-        title: title || '',
-        message: msg || '',
-        subTitle: subtitle || '',
+        title: this.translate.instant(title) || '',
+        message: this.translate.instant(msg) || '',
+        subTitle: this.translate.instant(subtitle) || '',
         cssClass: 'fullAlert',
         buttons: [
           {
-            text: 'Continuar',
+            text: this.translate.instant('FORM.continue'),
             handler: () => {
               resolve(true);
             },
@@ -75,13 +76,13 @@ export class AlertService {
   public showFullError(msg?, title?, subtitle?) {
     return new Promise((resolve, reject) => {
       const alert = this.alertCtrl.create({
-        title: title || 'Error',
-        message: msg || 'Se ha detectado un error, intente más tarde',
-        subTitle: subtitle || '',
+        title: this.translate.instant(title) || this.translate.instant('ALERT.error'),
+        message: this.translate.instant(msg) || this.translate.instant('ALERT.try_later'),
+        subTitle: this.translate.instant(subtitle) || '',
         cssClass: 'fullAlert',
         buttons: [
           {
-            text: 'Volver',
+            text: this.translate.instant('FORM.go_back'),
             role: 'dismiss',
             handler: () => {
               reject(false);

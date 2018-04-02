@@ -34,7 +34,7 @@ export class ActivityPage {
   }
 
   private acceptRequest(request: IMSWalletRequest) {
-    this.loaderService.showFullLoader('Espere');
+    this.loaderService.showFullLoader('LOADER.wait');
     this.sharedService.acceptMultiSignedWalletRequest(request);
     this.loaderService.dismissLoader();
   }

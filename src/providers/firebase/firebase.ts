@@ -15,24 +15,37 @@ import { IKeys } from '../../app/models/IKeys';
 import { IMSWalletRequest, IPendingTxs, ISigner, MultiSignedWallet } from '../../app/models/multisignedWallet';
 import { CryptoCoin } from '../../app/models/crypto';
 import { Activity } from '../../app/models/activity';
+import { StorageProvider } from './storage';
 
 @Injectable()
 export class FirebaseProvider {
 
   public wallets: Observable<any>;
 
-  constructor(private angularFire: AngularFireDatabase) {
+  constructor(private angularFire: AngularFireDatabase, private storageProvider: StorageProvider) {
 
   }
 
   // Add User to the DB
 
   public addUser(email: string, uid: string, pictureURL?: string) {
-    if (pictureURL) {
+    if (pictureURL === undefined) {
+      this.createProfilePicture(email, uid);
+    } else {
       this.angularFire.list('user/' + uid).set('img', pictureURL);
     }
     this.angularFire.list('user/' + uid).set('userEmail', email);
     this.angularFire.list('user/' + uid).set('currency', 'USD');
+  }
+
+  public createProfilePicture(email: string, uid: string) {
+    console.log(uid);
+    console.log(email);
+    this.storageProvider.createProfileImage(email)
+      .then((url) => {
+        console.log(url);
+        this.angularFire.list('user/' + uid).set('img', url);
+      });
   }
 
   public updateProfilePicture(uid: string, pictureURL: string) {

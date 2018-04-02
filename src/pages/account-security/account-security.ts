@@ -5,6 +5,7 @@ import { User } from '../../app/models/user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SharedService } from '../../app/services/shared.service';
 import { AuthService } from '../../app/services/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -20,7 +21,8 @@ export class AccountSecurityPage {
   private changeEmailForm: FormGroup;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService,
-              public events: Events, private sharedService: SharedService, private formBuilder: FormBuilder) {
+              public events: Events, private sharedService: SharedService, private formBuilder: FormBuilder,
+              public translate: TranslateService) {
     this.securityOptions = AppSettings.securityOptions;
     this.user = this.sharedService.user;
     this.showEmailInput = false;
@@ -37,20 +39,20 @@ export class AccountSecurityPage {
   private sendVerificationEmail() {
     this.authService.sendVerificationEmail()
       .then(() => {
-        this.message = 'Correo Enviado a ' + this.user.email;
+        this.message = this.translate.instant('SECURITY_OPTIONS.email_sent') + this.user.email;
       })
       .catch((error) => {
-        this.message = 'Ha ocurrido un error, intente mas tarde';
+        this.message = this.translate.instant('ERROR.unknown');
       });
   }
 
   private restorePassword() {
     this.authService.restorePassword()
     .then(() => {
-      this.message = 'Se envió un correo a ' + this.user.email;
+      this.message = this.translate.instant('SECURITY_OPTIONS.email_sent') + this.user.email;
     })
     .catch((error) => {
-      this.message = 'Ha ocurrido un error, intente mas tarde';
+      this.message = this.translate.instant('ERROR.unknown');
     });
   }
   private ionViewDidLeave() {

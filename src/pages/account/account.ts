@@ -8,6 +8,7 @@ import { AppSettings } from '../../app/app.settings';
 import { Events } from 'ionic-angular/util/events';
 import { SharedService } from '../../app/services/shared.service';
 import { ActionSheetController } from 'ionic-angular';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -21,7 +22,8 @@ export class AccountPage {
   public options;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private events: Events,
-              private sharedService: SharedService, public actionSheetCtrl: ActionSheetController) {
+              private sharedService: SharedService, public actionSheetCtrl: ActionSheetController,
+              public translate: TranslateService) {
     this.user = this.sharedService.user;
     this.options = AppSettings.accountOptions;
     this.events.subscribe('user:changedData', () => {
@@ -41,22 +43,22 @@ export class AccountPage {
 
   public changePicture() {
     const actionSheet = this.actionSheetCtrl.create({
-      title: 'Seleccionar',
+      title: this.translate.instant('ACTION_SHEET.select'),
       buttons: [
           {
-            text: 'Take Photo',
+            text: this.translate.instant('ACTION_SHEET.take_photo'),
             handler: () => {
               this.sharedService.changePicture(false);
             },
           },
           {
-            text: 'Select Photo',
+            text: this.translate.instant('ACTION_SHEET.choose_photo'),
             handler: () => {
               this.sharedService.changePicture(true);
             },
           },
           {
-            text: 'Cancel',
+            text: this.translate.instant('FORM.cancel'),
             role: 'cancel',
             handler: () => {
               console.log('Cancel clicked');

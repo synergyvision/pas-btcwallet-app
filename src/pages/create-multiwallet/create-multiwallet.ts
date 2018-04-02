@@ -4,6 +4,7 @@ import { SharedService } from '../../app/services/shared.service';
 import { AppData } from '../../app/app.data';
 import { LoaderService } from '../../app/services/loader.service';
 import { AlertService } from '../../app/services/alert.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -22,7 +23,8 @@ export class CreateMultiwalletPage {
   private users: string[] = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public sharedService: SharedService,
-              private loaderService: LoaderService, public alertService: AlertService) {
+              private loaderService: LoaderService, public alertService: AlertService,
+              public translate: TranslateService) {
   }
 
   private onSignersChange() {
@@ -38,11 +40,11 @@ export class CreateMultiwalletPage {
     this.sharedService.addressesExist(this.users)
     .subscribe((data) => {
       if (data) {
-        this.loaderService.showLoader('Espere');
+        this.loaderService.showLoader('LOADER.wait');
         this.sharedService.createMultisignWalletRequest(form, this.users.slice(0))
         .subscribe((d) => {
           this.loaderService.dismissLoader();
-          this.alertService.showAlert('Solicitud Creada', 'Éxito')
+          this.alertService.showAlert('ALERT.request_created', 'ALERT.success')
           .then(() => {
             this.navCtrl.popToRoot();
           });
@@ -51,7 +53,7 @@ export class CreateMultiwalletPage {
           this.error = error;
         });
       } else {
-        this.error = 'Error, uno o más de los usuarios no se encuentra registrado';
+        this.error =  this.translate.instant('ERROR.request_user_error');
       }
     }, (error) => {
       console.log(error);

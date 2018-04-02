@@ -34,7 +34,7 @@ export class HomePage {
 
   constructor(public navCtrl: NavController, private restService: RestService, private sharedService: SharedService,
               private loaderService: LoaderService, private zone: NgZone, private events: Events) {
-    this.loaderService.showFullLoader('Espere');
+    this.loaderService.showFullLoader('LOADER.wait');
     this.currency = {
       name: 'USD',
       exchange: 8656,
@@ -54,8 +54,8 @@ export class HomePage {
       this.slides.slideTo(1);
     });
     // this.createRequest();
-    this.sharedService.createProfilePicture('d@d.com');
-    this.restService.putMetadata('a1b904183b2e5e16aa1aeb0cb6164297dc07eadb3fafccc33066b751f2226843', 'tes', {testing: 'This is a test'})
+    this.restService.getMetadata('4042d167a9ee21eca150e8f08fe7f2a4eb5bfee101222161c1f2a1fe159c8028',
+    'bcy')
     .subscribe((data) => {
       console.log(data);
     }, (error) => {
@@ -86,7 +86,6 @@ export class HomePage {
       this.sharedService.updateBalances()
       .subscribe((wallets) => {
         this.balances = wallets;
-        console.log(wallets);
         if (this.balances.length > 6) {
           this.canCreateNewWallet = false;
         } else {

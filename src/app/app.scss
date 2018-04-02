@@ -221,6 +221,7 @@ img.address-img {
   max-width: $address-img-width;
   min-width: $address-img-width;
   max-height: $address-img-height;
+  min-height: $address-img-height;
   float: left;
   align-content: left;
   object-fit: cover;

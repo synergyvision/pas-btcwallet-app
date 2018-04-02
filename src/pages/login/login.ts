@@ -7,6 +7,7 @@ import { AlertService } from '../../app/services/alert.service';
 import { EventService } from '../../app/services/events.services';
 import { AppData } from '../../app/app.data';
 import { LoaderService } from '../../app/services/loader.service';
+import { TranslateService } from '@ngx-translate/core';
 
 // Component for the Login Page
 @IonicPage()
@@ -21,7 +22,8 @@ export class LoginPage {
   private inputs;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private loaderService: LoaderService,
-              private authService: AuthService, private formBuilder: FormBuilder, private events: Events) {
+              private authService: AuthService, private formBuilder: FormBuilder, private events: Events,
+              private translate: TranslateService) {
     this.inputs = AppData.loginForm;
     this.loginForm = formBuilder.group({});
     this.inputs.forEach((control) => {
@@ -34,7 +36,7 @@ export class LoginPage {
     this.authService.loginGoogle().then((success) => {
       this.events.publish('user:loggedIn');
     }).catch((error) => {
-      this.error = 'Ha ocurrido un error, intente nuevamente';
+      this.error = this.translate.instant('ERROR.unknown');
     });
   }
 
@@ -43,7 +45,11 @@ export class LoginPage {
       .then((success) => {
         this.events.publish('user:loggedIn');
       }).catch((error) => {
-        this.error = error.message;
+        // Cableo
+        setTimeout(() => {
+          console.log(error);
+          this.error = error.message;
+      }, 500);
       });
   }
 

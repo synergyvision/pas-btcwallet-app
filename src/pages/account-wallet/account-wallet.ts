@@ -7,6 +7,7 @@ import { AppData } from '../../app/app.data';
 import { Wallet } from '../../app/models/wallet';
 import { CryptoCoin } from '../../app/models/crypto';
 import { SharedService } from '../../app/services/shared.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -29,7 +30,8 @@ export class AccountWalletPage {
   private wif: string;
   private showWalletSelect: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private sharedService: SharedService) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private sharedService: SharedService,
+              private translate: TranslateService) {
     this.wallets = this.sharedService.wallets;
     this.user = this.sharedService.user;
     this.cryptoUnit = this.cryptoUnitsList.pop();
@@ -39,7 +41,7 @@ export class AccountWalletPage {
   private changeCurrency() {
     // this.sharedService.changeCurrency(this.selectedCurrency);
     this.clearData();
-    this.message = 'Cambio exitoso';
+    this.message = this.translate.instant('ACCOUNT_OPTIONS.success');
   }
 
   private selectOption(value) {
@@ -57,10 +59,10 @@ export class AccountWalletPage {
     this.sharedService.updateWalletCryptoUnit(this.selectedWallet)
     .then((success) => {
       this.clearData();
-      this.message = 'Cambio exitoso';
+      this.message = this.translate.instant('ACCOUNT_OPTIONS.success');
     })
     .catch((error) => {
-      this.message = 'Ocurrio un error, intente mas tarde';
+      this.message = this.translate.instant('ERROR.unknown');
     });
   }
 

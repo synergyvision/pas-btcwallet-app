@@ -66,16 +66,15 @@ export class SharedService {
         }
     }
 
-
     // WIP
-    public changePicture(select: boolean) {
+    public changePicture(select: boolean): Promise<any> {
         let photoURL: Promise<any>;
         if (select) {
            photoURL = this.storageProvider.selectProfileImage(this.user.email);
         } else {
            photoURL = this.storageProvider.takeProfileImage(this.user.email);
         }
-        photoURL.then((url) => {
+        return photoURL.then((url) => {
             console.log(url);
             this.user.setPhotoURL(url);
             this.authService.user.updateProfile({
@@ -86,15 +85,6 @@ export class SharedService {
         })
         .catch((error) => {
             console.log(error);
-        });
-    }
-
-    //WIP
-
-    public createProfilePicture(email: string) {
-        this.storageProvider.createProfileImage(email)
-        .then((url) => {
-            this.firebaseData.updateProfilePicture(this.user.uid, url);
         });
     }
 
