@@ -1,9 +1,7 @@
+import { IHDWallet } from './IHDWallet';
+
 // Interface for the HD Wallet Balance Object
 // https://www.blockcypher.com/dev/bitcoin/?javascript#address
-
-import { IHDWallet } from './IHDWallet';
-import { Wallet } from './wallet';
-import { CryptoCoin } from './crypto';
 
 export interface IBalance {
     balance?: number;

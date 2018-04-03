@@ -1,5 +1,3 @@
-import { IAddress } from './IAddress';
-
 // Placeholder Class/Interface for the user registered addresses
 // Used for Sending BTC or CC to an user that also has a Vision Wallet
 

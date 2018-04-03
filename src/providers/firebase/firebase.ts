@@ -1,4 +1,4 @@
-import { IAddress } from '../../app/models/IAddress';
+
 import { Injectable, keyframes } from '@angular/core';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireList, AngularFireObject } from 'angularfire2/database/interfaces';
@@ -7,7 +7,6 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
 import { User } from '../../app/models/user';
-import { IHDWallet } from '../../app/models/IHDWallet';
 import { Wallet } from '../../app/models/wallet';
 import { Address } from '../../app/models/address';
 import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';

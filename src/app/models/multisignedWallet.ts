@@ -1,8 +1,7 @@
 import { IKeys } from './IKeys';
-import { IBalance } from './IBalance';
 import { CryptoCoin } from './crypto';
 import { Wallet } from './wallet';
-import { ITransaction, ITransactionSke } from './ITransaction';
+import { ITransactionSke } from '../interfaces/ITransactionSke';
 
 // Object to be Stored on the Firebase RealTime DB
 export interface IPendingTxs {
@@ -40,14 +39,17 @@ export class MultiSignedWallet {
     public type?: string;
     // For ethereum wallets
     public address?: string;
+    // public rejectCancels?: boolean;
 
-    constructor(name?: string, crypto?: CryptoCoin, users?: ISigner[], type?: string, address?: string) {
+    constructor(name?: string, crypto?: CryptoCoin, users?: ISigner[], type?: string,
+                address?: string, rejectsCancels?: boolean) {
         this.name = name;
         this.crypto = crypto;
         this.signers = Object.values(Object.assign({}, users));
         this.iKeyToString();
         this.type = type;
         this.address = address;
+        // this.rejectCancels = rejectCancels || false;
     }
 
     public toWallet(key?: string): Wallet {

@@ -4,12 +4,14 @@ import { RestService } from '../../app/services/rest.service';
 import { LoaderService } from '../../app/services/loader.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Address } from '../../app/models/address';
-import { ITransactionSke } from '../../app/models/ITransaction';
 import { Transaction } from '../../app/models/transaction';
 import { AlertService } from '../../app/services/alert.service';
-import { IBalance } from '../../app/models/IBalance';
 import { ErrorService } from '../../app/services/error.service';
 import { SharedService } from '../../app/services/shared.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ITransactionSke } from '../../app/interfaces/ITransactionSke';
+import { IBalance } from '../../app/interfaces/IBalance';
+import { IBlockchain } from '../../app/interfaces/IBlockchain';
 
 @IonicPage()
 @Component({
@@ -26,21 +28,24 @@ export class SendConfirmPage {
   private unit;
   private currency;
   private fee;
+  private block: IBlockchain;
+  private feeOptions: any[] = ['Low', 'Medium', 'High'];
   private error: ErrorService;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private loaderService: LoaderService,
               private restService: RestService, private formBuilder: FormBuilder, private sharedService: SharedService,
-              private alertService: AlertService) {
+              private alertService: AlertService, private translate: TranslateService) {
     this.currency = {
       name: 'USD',
       exchange: 8656,
     };
-    this.fee = this.calculateMinFee();
+    this.fee = 5000;
     this.sendForm = this.formBuilder.group({
       amount: [10000, Validators.compose([Validators.required, Validators.min(this.fee)])],
       fee: [this.fee, null],
       token: ['Token', null],
       metadata: ['Metadata', null],
+      feeOption: ['FeeOption', null],
     });
     this.address = this.navParams.get('address');
     this.balance = this.navParams.get('wallet');
@@ -51,7 +56,7 @@ export class SendConfirmPage {
 
   private sendPayment(form: FormGroup) {
     // First we get an address from the recipient of the money
-    this.loaderService.showFullLoader('Realizando Pago');
+    this.loaderService.showFullLoader('LOADER.sending_payment');
     if (this.balance) {
       // If it is a QR Code or manually inputted address
       if (this.inputAddress) {
@@ -101,18 +106,13 @@ export class SendConfirmPage {
             console.log(res);
           });
         }
-
         this.navCtrl.push('TransactionConfirmationPage', response);
       }, (error) => {
         this.loaderService.dismissLoader();
-        this.message = error;
+        this.message = this.translate.instant(error);
       });
   }
 
-  private calculateMinFee() {
-    // We calculate the minimun fee
-    // Blockcypher uses 
-    return 50000;
-  }
+  //TD
 
 }

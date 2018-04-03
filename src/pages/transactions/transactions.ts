@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { RestService } from '../../app/services/rest.service';
 import { Transaction } from '../../app/models/transaction';
-import { ITransaction, IWalletTrx } from '../../app/models/ITransaction';
 import { Observable } from 'rxjs';
-import { IAddress } from '../../app/models/IAddress';
 import { LoaderService } from '../../app/services/loader.service';
 import { Wallet } from '../../app/models/wallet';
 import { SharedService } from '../../app/services/shared.service';
+import { TranslateService } from '@ngx-translate/core';
+import { IAddress } from '../../app/interfaces/IAddress';
+import { ITransaction } from '../../app/interfaces/ITransaction';
 
 @IonicPage()
 @Component({
@@ -27,7 +28,8 @@ export class TransactionsPage {
   private message: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private restService: RestService,
-              private sharedService: SharedService, private loaderService: LoaderService) {
+              private sharedService: SharedService, private loaderService: LoaderService,
+              private translate: TranslateService) {
     this.segmentTxs = 'all';
     this.walletList = this.sharedService.wallets;
   }
@@ -53,7 +55,7 @@ export class TransactionsPage {
 
   private receivedtransactions(txs: ITransaction[], addresses?: string[], address?: string, crypto?: string) {
     if (txs === undefined) {
-      this.message = 'No se han registrado transacciones';
+      this.message = this.translate.instant('TRANSACTIONS.no_transactions');
     } else if ((crypto === 'tet' || crypto === 'bet')) {
       this.isEthereum = true;
       return this.filterEthereum(txs, address);

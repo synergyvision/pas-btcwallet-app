@@ -4,7 +4,6 @@ import { LoaderService } from '../../app/services/loader.service';
 import { RestService } from '../../app/services/rest.service';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
 import { Observable } from 'rxjs/Observable';
-import { IHDWallet } from '../../app/models/IHDWallet';
 import { AlertService } from '../../app/services/alert.service';
 import { SharedService } from '../../app/services/shared.service';
 
@@ -23,7 +22,7 @@ export class ReceivePage {
               private loaderService: LoaderService, private sharedService: SharedService,
               private alertService: AlertService) {
     // We show a loader while we check the data using the rest service
-    this.loaderService.showFullLoader('Generando Código');
+    this.loaderService.showFullLoader('LOADER.generating_code');
     // We check if last generated address was used for another transaction
     this.getAddress();
 

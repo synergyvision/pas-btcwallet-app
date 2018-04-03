@@ -1,4 +1,4 @@
-// Placeholder Class/Interface for the log of user activity
+// Placeholder Class for the log of user activity
 // Related to LogIns and new Devices
 
 export class Activity {

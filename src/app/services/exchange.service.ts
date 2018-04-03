@@ -3,7 +3,8 @@ import { Headers, Http, RequestMethod, RequestOptions, Response } from '@angular
 import { AppData } from '../app.data';
 import { Observable } from 'rxjs/Observable';
 import { ErrorService } from './error.service';
-import { IExchange } from '../models/IExchange';
+import { IExchange } from '../interfaces/IExchange';
+
 
 const URL = 'https://cors.shapeshift.io';
 const MARKET_URL = 'https://api.coinmarketcap.com/v1/';

@@ -1,5 +1,4 @@
 import { IKeys } from './IKeys';
-import { IBalance } from './IBalance';
 import { CryptoCoin } from './crypto';
 import { KeysPipe } from 'ngx-pipes';
 

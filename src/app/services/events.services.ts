@@ -3,22 +3,16 @@ import { Activity } from '../models/activity';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Rx';
 import { LoaderService } from './loader.service';
-import { IAddress } from '../models/IAddress';
 import { User } from '../models/user';
 import { Address } from '../models/address';
-import { IBlockchain } from '../models/IBlockchain';
 import { Headers, Http, RequestMethod, RequestOptions, Response } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { Wallet } from '../models/wallet';
-import { IBalance } from '../models/IBalance';
 import { ErrorService } from './error.service';
 import { KeyService } from './key.service';
-import { IHDWallet } from '../models/IHDWallet';
-import { ITransaction, ITransactionSke } from '../models/ITransaction';
-import { IHDChain } from '../models/IHDChain';
 import { AppData } from '../app.data';
-import { IEvent } from '../models/IEvent';
 import { Events } from 'ionic-angular';
+import { IEvent } from '../interfaces/IEvent';
 
 // REST Service for getting data from APIs and the Database
 

@@ -4,8 +4,3 @@ export interface IHDAddress {
     path: string;
     public?: string;
 }
-
-export interface IHDChain {
-    chain_addresses: IHDAddress[];
-    index: number;
-}

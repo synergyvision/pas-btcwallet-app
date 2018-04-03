@@ -45,10 +45,9 @@ export class LoginPage {
       .then((success) => {
         this.events.publish('user:loggedIn');
       }).catch((error) => {
-        // Cableo
         setTimeout(() => {
           console.log(error);
-          this.error = error.message;
+          this.error = this.translate.instant('ERROR.' + error.code);
       }, 500);
       });
   }

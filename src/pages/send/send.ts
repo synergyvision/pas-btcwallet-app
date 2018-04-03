@@ -8,6 +8,7 @@ import { RestService } from '../../app/services/rest.service';
 import { ErrorService } from '../../app/services/error.service';
 import { LoaderService } from '../../app/services/loader.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -17,14 +18,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class SendPage {
 
   private selectedAddress: Address;
-  private cameraError = new ErrorService(null, 'CAMARA_ERROR');
   private selectAddressForm: FormGroup;
   private inputError: string;
   private inputAddress: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
               private qrScanner: QRScanner, private formBuilder: FormBuilder, private alertService: AlertService,
-              private restService: RestService, private loaderService: LoaderService) {
+              private restService: RestService, private loaderService: LoaderService, private errorService: ErrorService,
+              private translate: TranslateService) {
     this.event.subscribe('selected:address', (addressData) => {
       this.selectedAddress = this.duplicateAddress(addressData);
       this.selectAddressForm.disable();
@@ -55,7 +56,7 @@ export class SendPage {
           window.document.querySelector('ion-app').classList.add('transparent-body');
           // wait for user to scan something, then the observable callback will be called
         } else if (status.denied) {
-          this.alertService.showAlert(this.cameraError)
+          this.alertService.showError('ERROR.camera_permission')
             .then((rest) => {
               // Implement method for getting user permissions on settings
               // camera permission was permanently denied
@@ -68,7 +69,9 @@ export class SendPage {
         }
       })
       .catch((error) => {
-        this.alertService.showAlert(error).then((rest) => {
+        // We need to handle the errors from https://github.com/bitpay/cordova-plugin-qrscanner
+        this.alertService.showError(this.errorService.cameraError(error);)
+        .then((rest) => {
           // Do nothing
         });
       });
@@ -91,7 +94,7 @@ export class SendPage {
       .subscribe((response) => {
         this.goToSendConfirm(address);
       }, (error) => {
-        this.inputError = 'Esta dirección no es válida';
+        this.inputError = this.translate.instant(error);
       });
   }
 

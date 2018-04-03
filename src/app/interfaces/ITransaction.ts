@@ -1,12 +1,15 @@
+import { ITInput } from "./ITInput";
+import { ITOutput } from "./ITOutput";
+
 // Interface for the Transaction Object received by the API
 // Info on https://www.blockcypher.com/dev/bitcoin/?javascript#tx
 
 // TX Object
-
 export interface IWalletTrx {
     wallet: any;
     trxList: ITransaction[];
 }
+
 export interface ITransaction {
     block_height: number;
     hash: string;
@@ -36,48 +39,10 @@ export interface ITransaction {
     data_protocol?: string;
     hex?: string;
     filtering_value?: string;
-
     // Ethereum only
     gas_used?: number;
     gas_price?: number;
     tx_input_n?: number;
     tx_output_n?: number;
     value?: number;
-}
-
-// TXSKeleton Object
-export interface ITransactionSke {
-    tx: ITransaction;
-    tosign: string[];
-    signatures: string[];
-    pubkeys?: string[];
-    tosign_tx?: string[];
-    errors?: string[];
-}
-
-// TXInput Object
-export interface ITInput {
-    addresses: string[];
-    hd_path: string;
-    output_index: number;
-    output_value: number;
-    prev_hash: string;
-    script_type: string;
-    script: string;
-    sequence: number;
-    age?: number;
-    wallet_name?: string;
-    wallet_token?: string;
-
-}
-
-// TXOutpu Object
-export interface ITOutput {
-    addresses: string[];
-    script: string;
-    script_type: string;
-    value: number;
-    spent_by?: string;
-    data_hex?: string;
-    data_string?: string;
 }

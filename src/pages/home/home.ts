@@ -1,9 +1,8 @@
-import { ITransactionSke } from '../../app/models/ITransaction';
+
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { User } from '../../app/models/user';
 import { RestService } from '../../app/services/rest.service';
 import { Observable } from 'rxjs/Observable';
-import { IBalance } from '../../app/models/IBalance';
 import { LoaderService } from '../../app/services/loader.service';
 import { ErrorService } from '../../app/services/error.service';
 import { IonicPage, NavController, Slides } from 'ionic-angular';
@@ -13,7 +12,9 @@ import { AppData } from '../../app/app.data';
 import { EventService } from '../../app/services/events.services';
 import { ExchangeService } from '../../app/services/exchange.service';
 import { SharedService } from '../../app/services/shared.service';
-import { ISigner, IMSWalletRequest } from '../../app/models/multisignedWallet';
+import { TranslateService } from '@ngx-translate/core';
+import { IMSWalletRequest } from '../../app/models/multisignedWallet';
+import { IBalance } from '../../app/interfaces/IBalance';
 
 // Component for the Home Page, displays user balance, and options
 
@@ -33,7 +34,8 @@ export class HomePage {
   private wallets;
 
   constructor(public navCtrl: NavController, private restService: RestService, private sharedService: SharedService,
-              private loaderService: LoaderService, private zone: NgZone, private events: Events) {
+              private loaderService: LoaderService, private zone: NgZone, private events: Events,
+              private translate: TranslateService) {
     this.loaderService.showFullLoader('LOADER.wait');
     this.currency = {
       name: 'USD',
@@ -54,13 +56,13 @@ export class HomePage {
       this.slides.slideTo(1);
     });
     // this.createRequest();
-    this.restService.getMetadata('4042d167a9ee21eca150e8f08fe7f2a4eb5bfee101222161c1f2a1fe159c8028',
+    /* this.restService.getMetadata('4042d167a9ee21eca150e8f08fe7f2a4eb5bfee101222161c1f2a1fe159c8028',
     'bcy')
     .subscribe((data) => {
       console.log(data);
     }, (error) => {
       console.log(error);
-    });
+    }); */
   }
 
   public createRequest() {
@@ -72,9 +74,9 @@ export class HomePage {
     request.type = 'multisig-2-of-2';
     this.sharedService.addMultiSignedWalletRequest(request)
        .subscribe((data) => {
+         console.log(data);
        });
   }
-
 
   public newUser() {
     this.events.publish('user:newUser');
@@ -140,7 +142,8 @@ export class HomePage {
       this.newUser();
     } else {
     // Error accessing REST Services
-      this.error = error;
+      console.log(error);
+      this.error = this.translate.instant(error);
       this.wallets = this.sharedService.wallets;
     }
   }

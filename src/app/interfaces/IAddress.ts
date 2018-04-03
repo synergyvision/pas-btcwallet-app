@@ -1,6 +1,7 @@
+import { CryptoCoin } from '../models/crypto';
 import { IHDWallet } from './IHDWallet';
 import { ITransaction } from './ITransaction';
-import { CryptoCoin } from './crypto';
+
 
 // Interface for Address Data received by the API
 // Info on https://www.blockcypher.com/api

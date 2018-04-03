@@ -50,7 +50,8 @@ export class CreateMultiwalletPage {
           });
         },
         (error) => {
-          this.error = error;
+          console.log(error);
+          this.error = this.translate.instant(error);
         });
       } else {
         this.error =  this.translate.instant('ERROR.request_user_error');

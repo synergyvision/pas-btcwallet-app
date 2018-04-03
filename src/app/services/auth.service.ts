@@ -8,7 +8,6 @@ import { AngularFireList } from 'angularfire2/database/interfaces';
 import { User } from '../models/user';
 import { database } from 'firebase/app';
 import { KeyService } from './key.service';
-import { IHDWallet } from '../models/IHDWallet';
 import { Events } from 'ionic-angular';
 import { ErrorService } from './error.service';
 import { StorageProvider } from '../../providers/firebase/storage';

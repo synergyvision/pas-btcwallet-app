@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { ITransaction } from '../../app/models/ITransaction';
+import { ITransaction } from '../../app/interfaces/ITransaction';
 
 
 @IonicPage()

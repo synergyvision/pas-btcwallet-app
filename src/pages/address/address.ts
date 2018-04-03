@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Events, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Address } from '../../app/models/address';
-import { ErrorService } from '../../app/services/error.service';
 import { SharedService } from '../../app/services/shared.service';
 import { AppData } from '../../app/app.data';
 import { TranslateService } from '@ngx-translate/core';
@@ -44,10 +43,10 @@ export class AddressPage {
         const newAddress = new Address(form.value.alias, form.value.email, response.img, response.key);
         this.validateAddress(newAddress);
       } else {
-        this.error = this.translate.instant('ADDRESS.user_does_not_exist');
+        this.error = this.translate.instant('ERROR.user_does_not_exist');
       }
-    }, ((error: ErrorService) => {
-      this.error = error.message;
+    }, ((error) => {
+      this.translate.instant(error);
     }));
   }
 
@@ -59,10 +58,10 @@ export class AddressPage {
           this.navCtrl.pop();
         } else {
           // User already exists on the addressBook
-          this.error = 'Este usuario ya se encuentra en su libreta';
+          this.error = this.translate.instant('ERROR.duplicated_user');
         }
       }, (error) => {
-        this.error = error;
+        this.error = this.translate.instant(error);
       });
   }
 }

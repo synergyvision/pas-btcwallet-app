@@ -67,9 +67,7 @@
     },
 
     "ADDRESS": {
-        "title": "Agregar Dirección",
-        "user_does_not_exist": "Este usuario no existe",
-        "duplicated_user": "Este usuario ya se encuentra en su libreta"
+        "title": "Agregar Dirección"
     },
 
     "ADDRESS_BOOK": {
@@ -106,6 +104,9 @@
 
     "CREATE_WALLET": {
         "title": "Crear Billetera",
+        "welcome_message": "Bienvenido a Vision Wallet",
+        "new_user_message": "Necesitamos unos datos para continuar",
+        "new_user_title": "'Creación de una billetera",
         "sub_title": "Creación de Billeteras",
         "select_crypto": "Seleccione una Moneda",
         "mnemonics_title": "Mnemonics de la Billetera",
@@ -166,7 +167,8 @@
         "sent_segment": "Enviadas",
         "destination": "Destino: ",
         "from": "Origen: ",
-        "hash": "Hash: "
+        "hash": "Hash: ",
+        "no_transactions": "No se han registrado transacciones"
 
     },
 
@@ -218,7 +220,13 @@
         "same_user_message": "No se puede registar como usuario",
         "camara_permission_message": "Debe darle permisos a la aplicación para usar la cámara",
         "no_wallet_for_crypto_message": "El contacto no posee una billetera en la moneda seleccionada",
-        "request_user_error": "Error, uno o más de los usuarios no se encuentra registrado"
+        "request_user_error": "Error, uno o más de los usuarios no se encuentra registrado",
+        "user_does_not_exist": "Este usuario no existe",
+        "duplicated_user": "Este usuario ya se encuentra en su libreta",
+        "invalid_address": "Esta dirección no es válida",
+        "auth/wrong-password": "La contraseña es inválida",
+        "auth/user-not-found": "El usuario no se encuentra registrado",
+        "auth/email-already-in-use": "Este correo esta siendo utilzado por otro usuario"
     },
 
     "ALERT": {
@@ -235,6 +243,9 @@
     },
 
     "LOADER": {
-        "wait": "Espere"
+        "wait": "Espere",
+        "creating_data": "Generando Datos",
+        "generating_code": "Generando Código",
+        "sending_payment": "Realizando Pago"
     }
 }

@@ -20,10 +20,12 @@
       </ion-item>
       <ion-item class="crypto input">
         <ion-label class="select-label">{{'FORM.type' | translate }}</ion-label>
-        <ion-select class="select-crypto" placeholder="{{'CREATE_MULTIWALLET.signatures' | translate }}" name="numberOfSigners" [(ngModel)]="numberOfSigners" (ionChange)="onSignersChange()" required>
+        <ion-select class="select-crypto" placeholder="{{'CREATE_MULTIWALLET.signatures' | translate }}" 
+                    name="numberOfSigners" [(ngModel)]="numberOfSigners" (ionChange)="onSignersChange()" required>
           <ion-option *ngFor="let s of signers"value="{{s}}">{{s}}</ion-option>
         </ion-select>
-        <ion-select class="select-crypto" name="numberOfSignatures" placeholder="{{'CREATE_MULTIWALLET.signers' | translate }}" [(ngModel)]="numberOfSignatures" [disabled] ="!numberOfSigners">
+        <ion-select class="select-crypto" name="numberOfSignatures" placeholder="{{'CREATE_MULTIWALLET.signers' | translate }}" 
+                    [(ngModel)]="numberOfSignatures" [disabled] ="!numberOfSigners">
           <ion-option *ngFor="let s of signatures"  value="{{s}}">{{s}}</ion-option>
         </ion-select>
       </ion-item>

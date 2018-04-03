@@ -7,6 +7,7 @@ import { IMSWalletRequest, IPendingTxs } from '../../app/models/multisignedWalle
 import { Observable } from 'rxjs/Observable';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
 import { LoaderService } from '../../app/services/loader.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
@@ -20,7 +21,7 @@ export class ActivityPage {
   private pendingTxList: Observable<IPendingTxs[]>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private sharedService: SharedService,
-              private loaderService: LoaderService) {
+              private loaderService: LoaderService, private translate: TranslateService) {
     this.activityList = AppData.activityList;
     this.requestList = this.sharedService.getRequests();
     this.pendingTxList = this.sharedService.pendingTxs;
@@ -51,7 +52,7 @@ export class ActivityPage {
     .subscribe((transaction) => {
       this.navCtrl.push('TransactionConfirmationPage', transaction);
     }, (error) => {
-      // we show an error
+      this.translate.instant(error);
     });
 
   }

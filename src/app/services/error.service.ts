@@ -4,17 +4,11 @@ export class ErrorService {
     public subTitle: string;
     public code?: number;
 
-    constructor(errorCode?: number, errorText?) {
+    constructor(errorCode?, errorText?) {
         this.title = 'Error';
         if ((errorCode === 0) || (errorText === 'ERROR_CREATING_WALLET')) {
             this.subTitle = 'ERROR.connection_subtitle';
             this.message = 'ERROR.connection_message';
-        }
-        if (errorText === 'SAME_USER') {
-            this.message = 'ERROR.same_user_message';
-        }
-        if (errorText === 'CAMARA_ERROR') {
-            this.message = 'ERROR.camera_permission';
         }
         if (errorText === 'NO_WALLET') {
             this.message = 'CREATE_WALLET';

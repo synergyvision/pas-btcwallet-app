@@ -2,8 +2,8 @@
 $font-size-header: 1.375em;
 $font-size-input: 1.1em;
 $font-size-input-thin: 1em;
-$font-size-menu: 0.84em;
-$font-size-menu-lg: 0.87em;
+$font-size-menu: 1em;
+$font-size-menu-lg: 1.1em;
 $font-size-title:1.375em;
 $font-size-buttons: 1.26em;
 $font-size-info-text: 0.9em;
@@ -36,6 +36,8 @@ $container-height-md: 25%;
 $container-height-lg: 30%;
 $account-img-height: 72px;
 $account-img-width: 72px;
+$menu-img-height: 62px;
+$menu-img-width: 62px;
 $confirm-email-img: 144px;
 
 // Transaction Container Styles
@@ -121,6 +123,7 @@ $padding-address: 1em;
   margin-top: $padding-sm;
   margin-bottom: $padding-sm;
   font-size: $font-size-buttons;
+  width: $button-width-md;
 }
 
 .ios, .md{
@@ -263,6 +266,7 @@ ion-item.menu-user {
   text-align: center;
   font-size: $font-size-menu-lg;
   color: $primary;
+  height: calc(#{$menu-img-height} * 1.3);
 }
 
 ion-icon.icon-arrow {
@@ -278,8 +282,8 @@ button.menu-option {
 }
 
 img.menu-img {
-  widows: 62px;
-  height: 62px;
+  width: $menu-img-width;
+  height: $menu-img-height;
   max-width: 100%;
   max-height: 100%;
   margin-left: auto;

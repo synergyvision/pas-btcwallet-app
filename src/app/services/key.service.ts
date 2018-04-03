@@ -3,9 +3,10 @@ import { IKeys } from '../models/IKeys';
 import * as bip39 from 'bip39';
 import * as hdKey from 'ethereumjs-wallet/hdkey';
 import * as ethereumjsWallet from 'ethereumjs-wallet';
-import { ITInput, ITransaction, ITransactionSke } from '../models/ITransaction';
 import { ECPair, HDNode, TransactionBuilder, networks } from 'bitcoinjs-lib';
 import { ISigner } from '../models/multisignedWallet';
+import { ITransactionSke } from '../interfaces/ITransactionSke';
+import { ITInput } from '../interfaces/ITInput';
 
 @Injectable()
 

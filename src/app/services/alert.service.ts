@@ -14,12 +14,11 @@ export class AlertService {
 
   constructor(private alertCtrl: AlertController, private app: App, private translate: TranslateService) { }
 
-  public showError(msg?, title?, subtitle?) {
+  public showError(errorCode) {
     return new Promise((resolve, reject) => {
       const alert = this.alertCtrl.create({
-        title: this.translate.instant(title) || this.translate.instant('ALERT.error'),
-        message: this.translate.instant(msg) || this.translate.instant('ALERT.try_later'),
-        subTitle: this.translate.instant(subtitle) || '',
+        title: this.translate.instant('ALERT.error'),
+        message: this.translate.instant(errorCode),
         buttons: [
           {
             text: this.translate.instant('FORM.go_back'),

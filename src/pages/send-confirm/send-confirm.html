@@ -22,6 +22,12 @@
         <div class="send-confirm-subtitle">{{'SEND_CONFIRM.min_fee' | translate }}</div>
       </div>
       <ion-item class="thin-input">
+          <ion-select class="select-option" (ionChange)="changeFee()" formControlName="feeOption" placeholder="fee">
+            <ion-option *ngFor="let o of feeOptions" [value]="o">{{o}}
+            </ion-option>
+          </ion-select>
+      </ion-item>
+      <ion-item class="thin-input">
         <ion-input type="number" formControlName="fee" placeholder="fee" [min]="fee" [max]="balance.balance"></ion-input>
       </ion-item>
       <ion-item class="thin-input">

@@ -32,9 +32,9 @@ export class CreateWalletPage {
 
   public newUser() {
     if (this.newUser) {
-      this.alertService.showFullAlert('Bienvenido a Vision Wallet')
+      this.alertService.showFullAlert('CREATE_WALLET.welcome_message')
       .then(() => {
-        this.alertService.showAlert('Necesitamos unos datos para continuar', 'Creación de una billetera')
+        this.alertService.showAlert('CREATE_WALLET.new_user_message', 'CREATE.WALLET.new_user_title');
       }).catch((error) => {
         this.events.publish('user:loggedOut');
       })
@@ -46,7 +46,7 @@ export class CreateWalletPage {
 
   public continue() {
     if (this.mnemonics === undefined) {
-      this.loaderService.showFullLoader('Generando Datos');
+      this.loaderService.showFullLoader('LOADER.creating_data');
       this.sharedService.createWallet(this.selectedCrypto, this.passphrase)
         .then((success) => {
           this.mnemonics = success.keys.mnemonics;

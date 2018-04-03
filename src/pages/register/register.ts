@@ -8,6 +8,7 @@ import { LoaderService } from '../../app/services/loader.service';
 import { Conditional } from '@angular/compiler';
 import { AppData } from '../../app/app.data';
 import { SharedService } from '../../app/services/shared.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 
@@ -25,7 +26,7 @@ export class RegisterPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService,
               private formBuilder: FormBuilder, private loaderService: LoaderService,
-              private sharedService: SharedService) {
+              private sharedService: SharedService, private translate: TranslateService) {
 
     this.inputs = AppData.registerForm;
     this.registerForm = formBuilder.group({});
@@ -41,7 +42,7 @@ export class RegisterPage {
   }
 
   private registerUser(registerForm: FormGroup) {
-    this.loaderService.showLoader('Espere');
+    this.loaderService.showLoader('LOADER.wait');
     this.authService.signup(registerForm).
       then((data) => {
         this.loaderService.dismissLoader();
@@ -49,8 +50,7 @@ export class RegisterPage {
       })
       .catch((error) => {
         this.loaderService.dismissLoader();
-        this.errorTitle = error.title;
-        this.error = error.message;
+        this.error = this.translate.instant('ERROR.' + error.code);
       });
   }
 

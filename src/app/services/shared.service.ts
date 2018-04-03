@@ -7,21 +7,20 @@ import { Observable } from 'rxjs/Observable';
 import { ErrorService } from './error.service';
 import { EventService } from './events.services';
 import { FormGroup } from '@angular/forms';
-import { ITransactionSke } from '../models/ITransaction';
-import { IHDWallet } from '../models/IHDWallet';
-import { IBalance } from '../models/IBalance';
 import { AuthService } from './auth.service';
 import { User } from '../models/user';
 import { Events } from 'ionic-angular';
 import { IKeys } from '../models/IKeys';
 import { ExchangeService } from './exchange.service';
-import { IExchange } from '../models/IExchange';
 import { IMSWalletRequest, IPendingTxs, ISigner, MultiSignedWallet } from '../models/multisignedWallet';
-import { IAddress } from '../models/IAddress';
 import { Address } from '../models/address';
 import { AppData } from '../app.data';
 import { Activity } from '../models/activity';
 import { StorageProvider } from '../../providers/firebase/storage';
+import { IBalance } from '../interfaces/IBalance';
+import { IHDWallet } from '../interfaces/IHDWallet';
+import { ITransactionSke } from '../interfaces/ITransactionSke';
+import { IAddress } from '../interfaces/IAddress';
 
 const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
 @Injectable()
@@ -57,7 +56,6 @@ export class SharedService {
     public setUser(user: User) {
         if (user !== undefined) {
             this.user = user;
-            console.log(user);
             this.getWalletsAsync()
                     .subscribe((wallets) => {
                         this.setWallets(wallets);
@@ -116,15 +114,22 @@ export class SharedService {
         return this.firebaseData.getPendingTrx(this.user.uid)
         .map((pending) => {
             return pending.filter((tx) => {
-                if (tx.dismissed !== undefined) {
-                    return (!tx.dismissed.includes(this.user.email) &&
-                           (!tx.approved.includes(this.user.email)));
-                } else if (!tx.approved.includes(this.user.email)) {
-                    return tx;
+                if (this.validPendingTx(tx)) {
+                    if (tx.dismissed !== undefined) {
+                        return (!tx.dismissed.includes(this.user.email) &&
+                            (!tx.approved.includes(this.user.email)));
+                    } else if (!tx.approved.includes(this.user.email)) {
+                        return tx;
+                    }
                 }
-
             });
         });
+    }
+
+    public validPendingTx(tx: IPendingTxs): boolean {
+        const time = new Date().getTime() - tx.createdDate.getTime();
+        console.log(time);
+        return (time < 604800000);
     }
 
     public updateUser() {
@@ -261,7 +266,7 @@ export class SharedService {
                     return Observable.throw(error);
                 });
         } else {
-            return Observable.throw(new ErrorService(null, 'SAME_USER'));
+            return Observable.throw('ERROR.same_user_message');
         }
     }
 
@@ -421,18 +426,18 @@ export class SharedService {
     // We Verify that all signers are registered on the App
 
     public addressesExist(emails: string[]): Observable<any> {
-        console.log(emails);
         const response: Array<Observable<any>> = [];
         emails.forEach((email) => {
             response.push(this.addressExist(email));
         });
         return Observable.combineLatest(response)
             .map((result) => {
-                if (result.includes(false)) {
+                return (!result.includes(false)); /*  {
                     return false;
                 } else {
                     return true;
                 }
+            */
             }, (error) => {
                 return Observable.throw(error);
         });
@@ -526,25 +531,17 @@ export class SharedService {
             const signers = JSON.parse(JSON.stringify(request.signers)) as ISigner[];
             // if ((request.crypto !== 'tet') && (request.crypto !== 'eth')) {
             this.restService.createMultiSignedAddress(request.crypto, pubKeys, script)
-                .first()
-                .subscribe((address: IAddress) => {
-                    console.log(address);
-                    const newWallet = new MultiSignedWallet(name, currency, signers, script, address.address);
-                    const key = this.firebaseData.addMultiSignedWallet(newWallet, request.signers);
-                    resolve(newWallet);
-                },
-                    (error) => {
-                        console.log(error);
-                        reject(error);
-                    });
-/*             } else {
-                /* // Ethereum wallets
-                 // const address = this.keyService.generateAddress(keys);
-                const newWallet = new Wallet(name, keys, currency);
-                newWallet.address = address;
-                this.firebaseData.addWallet(newWallet, this.user.uid);
-                resolve(newWallet); */
-            // }
+            .first()
+            .subscribe((address: IAddress) => {
+                console.log(address);
+                const newWallet = new MultiSignedWallet(name, currency, signers, script, address.address);
+                const key = this.firebaseData.addMultiSignedWallet(newWallet, request.signers);
+                resolve(newWallet);
+            },
+            (error) => {
+                console.log(error);
+                reject(error);
+            });
         });
     }
 
@@ -555,10 +552,9 @@ export class SharedService {
         const msWallet = this.getMultiSignedWallet(wallet.multiSignedKey);
         const pendingTrx: IPendingTxs = {};
         pendingTrx.tx = transaction;
-        console.log(transaction.tx.outputs);
         pendingTrx.to = transaction.tx.outputs.pop().addresses.pop();
-        console.log(transaction.tx.outputs);
         pendingTrx.createdBy = this.user.email;
+        pendingTrx.createdDate = new Date();
         pendingTrx.wallet = wallet.multiSignedKey;
         pendingTrx.amount = transaction.tx.total;
         pendingTrx.approved = [];
@@ -568,8 +564,6 @@ export class SharedService {
         }));
         console.log('DONE!');
         console.log(pendingTrx);
-        console.log('Hash');
-        console.log(pendingTrx.tx.tx.hash);
         return this.acceptPendingTrx(pendingTrx, wallet, msWallet);
     }
 
@@ -624,19 +618,5 @@ export class SharedService {
         }
         pendingTrx.dismissed.push(this.user.email);
         this.firebaseData.updatePendingTrx(pendingTrx);
-    }
-
-    public signPaymentMultiSigned(transaction: ITransactionSke, wallet: IHDWallet) {
-        const mSWallet = this.getMultiSignedWallet(wallet.multiSignedKey);
-        const pubKeys = [];
-        const uids = [];
-        mSWallet.signers.forEach((signer) => {
-            pubKeys.push(signer.pubKey);
-            uids.push(signer.uid);
-        });
-        // this.firebaseData.getSignersKey(uids, wallet.multiSignedKey);
-        // const trx = this.keyService.signMultiWithPrivKey(transaction, pubKeys, wallet.crypto.value);
-        // console.log(trx);
-        // return this.restService.sendPayment(trx, wallet.crypto.value);
     }
 }

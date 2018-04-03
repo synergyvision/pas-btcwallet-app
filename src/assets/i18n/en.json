@@ -1,5 +1,4 @@
-
- {   
+{   
     "wallet": "Wallet",
     "menu": "Menu",
     "coin": "Coin",
@@ -24,6 +23,7 @@
         "title": "Register",
         "sub_title": "You need to verify your account",
         "resend_email_info": "Didn't receive an email?",
+        "resend_email_success": "A verification email has been sent to "
     },
 
     "HOME": {
@@ -37,7 +37,8 @@
 
     "ACCOUNT": {
         "title": "Account",
-        "sub_title": "Settings"
+        "sub_title": "Settings",
+        "change_picture": "Change Profile Picture"
     },
 
     "SECURITY_SETTINGS": {
@@ -103,6 +104,9 @@
 
     "CREATE_WALLET": {
         "title": "Wallet Creation",
+        "welcome_message": "Welcome to Vision Wallet",
+        "new_user_message": "We need some info to start",
+        "new_user_title": "Wallet Creation",
         "sub_title": "Wallet Creation",
         "select_crypto": "Select a Crypto",
         "mnemonics_title": "Wallet Mnemonics",
@@ -163,7 +167,8 @@
         "sent_segment": "Sent",
         "destination": "Destination: ",
         "from": "From: ",
-        "hash": "Hash: "
+        "hash": "Save this information, as it will allow the wallet to be recovered in case of a lost passphrase.",
+        "no_transactions": "No transactions have been registered"
 
     },
 
@@ -186,17 +191,20 @@
         "resend_email_button": "Resend Email",
         "select_image": "Image Select",
         "save": "Save",
-        "type": "Type"
+        "type": "Type",
+        "cancel": "Cancel"
     },
 
     "ACCOUNT_OPTIONS": {
         "security_settings": "Security Settings",
-        "walelt_settings": "Wallet Settings"
+        "walelt_settings": "Wallet Settings",
+        "success": "Change successful"
     },
 
     "SECURITY_OPTIONS": {
         "recover_password": "Password Recovery",
-        "activate_2auf": "Two Factor Auth"
+        "activate_2auf": "Two Factor Auth",
+        "email_sent": "An email was sent to "
     },
 
     "WALLET_OPTIONS": {
@@ -204,5 +212,41 @@
         "change_crypto_unit":"Change Cryptocoin Unit",
         "export_wallet":"Export Wallet",
         "show_mnemonics": "Show Wallet Mnemonics"
+    },
+
+    "ERROR": {
+        "unknown": "There has been an error, try again later",
+        "connection_subtitle": "Try again later",
+        "connection_message": "There was a problem connecting to the server",
+        "same_user_message": "The user cannot be registered",
+        "camara_permission_message": "You need to give the application camera permission",
+        "no_wallet_for_crypto_message": "The user does not have a wallet on the selected cryptocoin",
+        "request_user_error": "Error, one or more users are not registered",
+        "user_does_not_exist": "The user is not registered",
+        "duplicated_user": "The user you are trying to add is already on the address book",
+        "invalid_address": "This address is not valid",
+        "auth/wrong-password": "The password is invalid",
+        "auth/user-not-found": "The user is not registered",
+        "auth/email-already-in-use": "This email is already in use by another user"
+    },
+
+    "ALERT": {
+        "error": "Error",
+        "success": "Success",
+        "request_created": "Request Created",
+        "try_later": "Try again later"
+    },
+
+    "ACTION_SHEET": {
+        "select": "Select",
+        "take_photo": "Take Photo",
+        "choose_photo": "Select Photo"
+    },
+
+    "LOADER": {
+        "wait": "Wait",
+        "creating_data": "Creating Data",
+        "generating_code": "Generating Code",
+        "sending_payment": "Sending Payment"
     }
 }

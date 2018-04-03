@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { Events, IonicPage, NavController, NavParams } from 'ionic-angular';
 import { SharedService } from '../../app/services/shared.service';
-import { IBalance } from '../../app/models/IBalance';
 import { Wallet } from '../../app/models/wallet';
 import { ExchangeService } from '../../app/services/exchange.service';
-import { IExchange } from '../../app/models/IExchange';
+import { IBalance } from '../../app/interfaces/IBalance';
+import { IExchange } from '../../app/interfaces/IExchange';
 
 
 @IonicPage()
