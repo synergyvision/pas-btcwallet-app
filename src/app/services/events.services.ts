@@ -8,7 +8,6 @@ import { Address } from '../models/address';
 import { Headers, Http, RequestMethod, RequestOptions, Response } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { Wallet } from '../models/wallet';
-import { ErrorService } from './error.service';
 import { KeyService } from './key.service';
 import { AppData } from '../app.data';
 import { Events } from 'ionic-angular';
@@ -60,8 +59,7 @@ export class EventService {
     if (er.title) {
       return Observable.throw(er);
     } else {
-      const error = new ErrorService(er.status, er._body);
-      return Observable.throw(error);
+      return Observable.throw('ERROR.unknown');
     }
   }
 

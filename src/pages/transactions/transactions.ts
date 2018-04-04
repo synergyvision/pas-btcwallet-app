@@ -25,7 +25,7 @@ export class TransactionsPage {
   public txsList: ITransaction[];
   public segmentTxs: string;
   private isEthereum: boolean;
-  private message: string;
+  private error: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private restService: RestService,
               private sharedService: SharedService, private loaderService: LoaderService,
@@ -36,12 +36,13 @@ export class TransactionsPage {
 
   private onWalletChange() {
     this.getTransactions(this.selectedWallet);
-    this.message = undefined;
+    this.error = undefined;
   }
 
   private getTransactions(wallet: Wallet) {
     this.restService.getWalletTransactions(wallet)
       .subscribe((data) => {
+        console.log(data);
         if (wallet.address !== '') {
           this.txsList = this.receivedtransactions(data.txs, [], wallet.address, wallet.crypto.value);
         } else {
@@ -49,13 +50,13 @@ export class TransactionsPage {
         }
       }, (error) => {
         // We need to show an error
-        console.log(error);
+        this.error = this.translate.instant(error);
       });
   }
 
   private receivedtransactions(txs: ITransaction[], addresses?: string[], address?: string, crypto?: string) {
-    if (txs === undefined) {
-      this.message = this.translate.instant('TRANSACTIONS.no_transactions');
+    if (txs === undefined || txs.length < 1) {
+      this.error = this.translate.instant('TRANSACTIONS.no_transactions');
     } else if ((crypto === 'tet' || crypto === 'bet')) {
       this.isEthereum = true;
       return this.filterEthereum(txs, address);
@@ -69,7 +70,6 @@ export class TransactionsPage {
   }
 
   private filterWallet(txs: ITransaction[], addresses: string[]) {
-    console.log('here');
     txs.forEach((tx) => {
       const sent = tx.inputs.some((input) =>
         input.addresses.some((ad) =>

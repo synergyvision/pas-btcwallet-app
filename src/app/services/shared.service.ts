@@ -4,7 +4,6 @@ import { Wallet } from '../models/wallet';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
 import { RestService } from './rest.service';
 import { Observable } from 'rxjs/Observable';
-import { ErrorService } from './error.service';
 import { EventService } from './events.services';
 import { FormGroup } from '@angular/forms';
 import { AuthService } from './auth.service';
@@ -101,13 +100,15 @@ export class SharedService {
     }
 
     public showNotification() {
-        this.pendingTxs.subscribe((data) => {
-            if (data.length > 0) {
-                console.log('UPDATE');
-            } else {
-                console.log('NO');
-            }
-        });
+        if (this.pendingTxs) {
+            this.pendingTxs.subscribe((data) => {
+                if (data.length > 0) {
+                    console.log('UPDATE');
+                } else {
+                    console.log('NO');
+                }
+            });
+        }
     }
 
     public getPendingTx(): Observable<IPendingTxs[]> {
@@ -158,6 +159,8 @@ export class SharedService {
     public setBalances(balances) {
         Observable.combineLatest(balances).subscribe((data: IBalance[]) => {
             this.balances = this.formatBalanceData(data);
+        }, (error) => {
+            console.log(error);
         });
     }
 
@@ -219,11 +222,11 @@ export class SharedService {
                     return Observable.combineLatest(balances);
                 } else {
                     // The user is new, and has not created a wallet yet
-                    const error = new ErrorService(null, 'NO_WALLET');
-                    return Observable.throw(error);
+                    return Observable.throw('NO_WALLET');
                 }
             })
             .catch((error) => {
+                console.log(error);
                 // Error either accessing the Firebase Service
                 return Observable.throw(error);
             });
@@ -326,11 +329,11 @@ export class SharedService {
                 if (wallet.name) {
                     return this.restService.deriveAddress(wallet.name, coin);
                 } else {
-                    const error = new ErrorService(null, 'NO_WALLET_FOR_SELECTED_CRYPTO');
-                    return Observable.throw(error);
+                    return Observable.throw('NO_WALLET_FOR_SELECTED_CRYPTO');
                 }
             })
             .catch((error) => {
+                console.log(error);
                 return Observable.throw(error);
             });
     }

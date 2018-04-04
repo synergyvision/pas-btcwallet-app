@@ -8,7 +8,6 @@ import { User } from './models/user';
 import { Events } from 'ionic-angular/util/events';
 import { AppSettings } from './app.settings';
 import { LoaderService } from './services/loader.service';
-import { ErrorService } from './services/error.service';
 import { AlertService } from './services/alert.service';
 import { EventService } from './services/events.services';
 import { SharedService } from './services/shared.service';

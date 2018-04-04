@@ -5,6 +5,9 @@
 </ion-header>
 
 <ion-content>
+  <span class="error-message" *ngIf="error!==undefined">
+        {{error}}
+  </span>
   <ion-list no-lines>
     <ion-item class="crypto input">
       <ion-label>{{'cryptocoins' | translate }}</ion-label>
@@ -16,7 +19,7 @@
       <ion-label>
         <ion-icon name="search"></ion-icon>
       </ion-label>
-      <ion-input type="text" [(ngModel)]="searchValue" placeholder="{{'BLOCKCHAIN.search' | translate }}">
+      <ion-input type="text" [(ngModel)]="searchValue" minlength="64" maxlength="64" placeholder="{{'BLOCKCHAIN.search' | translate }}">
       </ion-input>
     </ion-item>
     <div *ngIf="selectedCrypto && blockchain" class="blockchain-info">

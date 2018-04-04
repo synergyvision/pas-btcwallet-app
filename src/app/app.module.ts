@@ -7,7 +7,7 @@ import { MyApp } from './app.component';
 import { HttpModule } from '@angular/http';
 import { QRScanner } from '@ionic-native/qr-scanner';
 import { NgPipesModule } from 'ngx-pipes';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 // i18n Imports
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -30,6 +30,7 @@ import { SharedService } from './services/shared.service';
 import { RestService } from './services/rest.service';
 import { StorageProvider } from '../providers/firebase/storage';
 import { Camera } from '@ionic-native/camera';
+import { HttpErrorInterceptor } from './interceptor/http.error.interceptor';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -85,6 +86,11 @@ const firebaseConfig = {
     SplashScreen,
     SharedService,
     RestService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true,
+    },
     {
       provide: ErrorHandler,
       useClass: IonicErrorHandler,

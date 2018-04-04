@@ -26,7 +26,7 @@
         {{w.name}}
       </div>
       <div class="home-info">
-        <p>{{error.message}}</p>
+        <p>{{error}}</p>
       </div>
     </ion-slide>
   </ion-slides>
@@ -55,6 +55,9 @@
         <p> {{'HOME.unconfirmed_balance' | translate }}: {{ b.unconfirmed_balance / b.wallet.crypto.units.exchange }} {{b.wallet.crypto.units.name}}
         </p>
         <p>{{'HOME.unconfirmed_n_tx' | translate }}: {{b.unconfirmed_n_tx}}</p>
+      </div>
+      <div class="home-info" *ngIf="error">
+        <p>{{error}}</p>
       </div>
       <button class="home-button receive-button" block ion-button on-click="goToReceive(b.wallet)">
           {{'FORM.receive' | translate }}

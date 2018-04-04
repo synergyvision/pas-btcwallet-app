@@ -6,7 +6,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Address } from '../../app/models/address';
 import { Transaction } from '../../app/models/transaction';
 import { AlertService } from '../../app/services/alert.service';
-import { ErrorService } from '../../app/services/error.service';
 import { SharedService } from '../../app/services/shared.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ITransactionSke } from '../../app/interfaces/ITransactionSke';
@@ -30,7 +29,6 @@ export class SendConfirmPage {
   private fee;
   private block: IBlockchain;
   private feeOptions: any[] = ['Low', 'Medium', 'High'];
-  private error: ErrorService;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private loaderService: LoaderService,
               private restService: RestService, private formBuilder: FormBuilder, private sharedService: SharedService,
@@ -85,9 +83,9 @@ export class SendConfirmPage {
           .subscribe((response) => {
             this.signPayment(response, form);
           });
-        }, (error: ErrorService) => {
+        }, (error) => {
           this.loaderService.dismissLoader();
-          this.alertService.showAlert(error.message, error.title, error.subTitle)
+          this.alertService.showError(error)
           .then(() => {
             this.navCtrl.popToRoot();
           });

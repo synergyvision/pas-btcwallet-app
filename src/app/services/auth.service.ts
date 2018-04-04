@@ -9,7 +9,6 @@ import { User } from '../models/user';
 import { database } from 'firebase/app';
 import { KeyService } from './key.service';
 import { Events } from 'ionic-angular';
-import { ErrorService } from './error.service';
 import { StorageProvider } from '../../providers/firebase/storage';
 
 @Injectable()

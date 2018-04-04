@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AppData } from '../../app/app.data';
 import { RestService } from '../../app/services/rest.service';
-import { ErrorService } from '../../app/services/error.service';
 import { animate, state, style, transition, trigger} from '@angular/animations';
 import { AlertService } from '../../app/services/alert.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -45,7 +44,7 @@ export class BlockchainPage {
     .subscribe((blockchain) => {
       this.blockchain = blockchain;
     }, (error) => {
-      this.error = error = this.translate.instant(error);
+      this.error = this.translate.instant(error);
     });
   }
 
@@ -61,7 +60,8 @@ export class BlockchainPage {
     if (only) {
       this.blockchain = undefined;
     }
-    this.restService.getBlock(hash, this.selectedCrypto).subscribe((block) => {
+    this.restService.getBlock(hash, this.selectedCrypto)
+    .subscribe((block) => {
       this.showBlock = true;
       this.block = block;
     }, (error) => {
@@ -71,6 +71,7 @@ export class BlockchainPage {
 
   // Needs to be changed when error service is correctly implemented
   private handleError(error) {
+    console.log(error);
     this.alertService.showAlert()
     .then((res) => {
       this.navCtrl.pop();

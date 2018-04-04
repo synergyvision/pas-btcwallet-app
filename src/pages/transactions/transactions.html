@@ -7,25 +7,23 @@
 <ion-content>
   <ion-segment [(ngModel)]="segmentTxs">
     <ion-segment-button value="all" class="segment-button">
-      {{'TRANSACTIONS.all_segment' | translate }} 
+      {{'TRANSACTIONS.all_segment' | translate }}
     </ion-segment-button>
     <ion-segment-button value="received" class="segment-button">
-      {{'TRANSACTIONS.received_segment' | translate }}  
+      {{'TRANSACTIONS.received_segment' | translate }}
     </ion-segment-button>
     <ion-segment-button value="sent" class="segment-button">
-      {{'TRANSACTIONS.sent_segment' | translate }} 
+      {{'TRANSACTIONS.sent_segment' | translate }}
     </ion-segment-button>
   </ion-segment>
-
   <ion-item class="thin-input">
-    <ion-select (ionChange)="onWalletChange()" class="select-option" 
-                [(ngModel)]="selectedWallet" placeholder="Billetera">
+    <ion-select (ionChange)="onWalletChange()" class="select-option" [(ngModel)]="selectedWallet" placeholder="Billetera">
       <ion-option *ngFor="let w of walletList" [value]="w">{{w.name}}
       </ion-option>
     </ion-select>
   </ion-item>
-  <span class="error" *ngIf="message">
-    {{message}}
+  <span class="error-message" *ngIf="error!==undefined">
+    {{error}}
   </span>
   <span *ngIf="!isEthereum">
     <ion-list no-lines *ngIf="segmentTxs === 'all'">

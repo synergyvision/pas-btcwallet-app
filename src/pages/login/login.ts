@@ -47,7 +47,7 @@ export class LoginPage {
       }).catch((error) => {
         setTimeout(() => {
           console.log(error);
-          this.error = this.translate.instant('ERROR.' + error.code);
+          this.error = this.translate.instant('ERROR.FIREBASE.' + error.code);
       }, 500);
       });
   }

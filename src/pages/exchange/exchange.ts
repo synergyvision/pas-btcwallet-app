@@ -5,6 +5,8 @@ import { Wallet } from '../../app/models/wallet';
 import { ExchangeService } from '../../app/services/exchange.service';
 import { IBalance } from '../../app/interfaces/IBalance';
 import { IExchange } from '../../app/interfaces/IExchange';
+import { TranslateService } from '@ngx-translate/core';
+import { AlertService } from '../../app/services/alert.service';
 
 
 @IonicPage()
@@ -17,16 +19,22 @@ export class ExchangePage {
   private balances: IBalance[];
   private walletList: Wallet[];
   private walletDestinationList: Wallet[];
-  private originWallet;
-  private destinationWallet;
+  private originWallet: Wallet;
+  private destinationWallet: Wallet;
   private originBalance: IBalance;
   private destinationBalance: IBalance;
   private currency: any;
   private exchangeRate: IExchange;
+  private amount: number = 0;
+  private error: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public events: Events,
-              private sharedService: SharedService, private exchangeService: ExchangeService) {
+              private sharedService: SharedService, private exchangeService: ExchangeService,
+              private translate: TranslateService, private alertService: AlertService) {
       this.balances =  this.sharedService.balances;
+      if (this.balances === undefined) {
+        this.error = this.translate.instant('ERROR.no_internet');
+      }
       this.walletList = this.walletDestinationList = this.sharedService.wallets;
       this.currency = {
         name: 'USD',
@@ -35,19 +43,31 @@ export class ExchangePage {
   }
 
   private onWalletSelect() {
-    console.log(this.destinationWallet);
-    console.log(this.originWallet);
     if (this.destinationWallet === undefined) {
       this.originBalance = this.findBalance(this.originWallet, this.walletList);
-      const index = this.walletDestinationList.indexOf(this.originWallet);
+      this.filterWallets(this.originWallet.crypto.coin);
     } else {
+      console.log(this.destinationWallet);
+      console.log(this.originWallet);
       this.exchangeService.getExchangeRate(this.originWallet.crypto.value,
         this.destinationWallet.crypto.value)
         .subscribe((exchange) => {
           this.exchangeRate = exchange;
+          console.log(exchange);
+        }, (error) => {
+          this.alertService.showError(error)
+          .then(() => {
+            this.navCtrl.pop();
+          });
         });
       this.destinationBalance = this.findBalance(this.destinationWallet, this.walletDestinationList);
     }
+  }
+
+  private filterWallets(crypto: string) {
+    this.walletDestinationList = this.walletList.filter((w) => {
+      return w.crypto.coin !== crypto;
+    });
   }
 
   private findBalance(wallet: Wallet, walletList: Wallet[]): IBalance {

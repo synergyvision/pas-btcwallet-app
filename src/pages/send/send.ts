@@ -5,7 +5,6 @@ import { Address } from '../../app/models/address';
 import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner';
 import { AlertService } from '../../app/services/alert.service';
 import { RestService } from '../../app/services/rest.service';
-import { ErrorService } from '../../app/services/error.service';
 import { LoaderService } from '../../app/services/loader.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
@@ -24,7 +23,7 @@ export class SendPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
               private qrScanner: QRScanner, private formBuilder: FormBuilder, private alertService: AlertService,
-              private restService: RestService, private loaderService: LoaderService, private errorService: ErrorService,
+              private restService: RestService, private loaderService: LoaderService,
               private translate: TranslateService) {
     this.event.subscribe('selected:address', (addressData) => {
       this.selectedAddress = this.duplicateAddress(addressData);
@@ -56,7 +55,7 @@ export class SendPage {
           window.document.querySelector('ion-app').classList.add('transparent-body');
           // wait for user to scan something, then the observable callback will be called
         } else if (status.denied) {
-          this.alertService.showError('ERROR.camera_permission')
+          this.alertService.showError('ERROR.CAMERA.permission')
             .then((rest) => {
               // Implement method for getting user permissions on settings
               // camera permission was permanently denied
@@ -70,7 +69,7 @@ export class SendPage {
       })
       .catch((error) => {
         // We need to handle the errors from https://github.com/bitpay/cordova-plugin-qrscanner
-        this.alertService.showError(this.errorService.cameraError(error);)
+        this.alertService.showError(this.cameraError(error.name))
         .then((rest) => {
           // Do nothing
         });
@@ -101,5 +100,19 @@ export class SendPage {
   private goToSendConfirm(address) {
     this.navCtrl.push('SendConfirmPage', {address: address, wallet: this.navParams.data});
   }
+
+  private cameraError(error: string): string {
+    // Manages the errors from https://github.com/bitpay/cordova-plugin-qrscanner
+    console.log(error);
+    if (error.includes('CAMERA_UNAVAILABLE')) {
+        return 'ERROR.CAMERA.unavailable';
+    } else if (error.includes('DENIED') || (error.includes('RESTRICTED'))) {
+        return 'ERROR.CAMERA.permission';
+    } else if (error === 'SCAN_CANCELED') {
+        return 'ERROR.CAMERA.scan_canceled';
+    } else {
+        return 'ERROR.CAMERA.unknown_error';
+    }
+}
 
 }

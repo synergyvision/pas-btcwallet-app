@@ -4,7 +4,6 @@ import { User } from '../../app/models/user';
 import { RestService } from '../../app/services/rest.service';
 import { Observable } from 'rxjs/Observable';
 import { LoaderService } from '../../app/services/loader.service';
-import { ErrorService } from '../../app/services/error.service';
 import { IonicPage, NavController, Slides } from 'ionic-angular';
 import { Events } from 'ionic-angular/util/events';
 import { Wallet } from '../../app/models/wallet';
@@ -27,7 +26,7 @@ import { IBalance } from '../../app/interfaces/IBalance';
 export class HomePage {
   @ViewChild(Slides) public slides: Slides;
   private user: User;
-  private error: ErrorService;
+  private error: string;
   private balances: IBalance[];
   private canCreateNewWallet: boolean = true;
   private currency: {};
@@ -95,6 +94,7 @@ export class HomePage {
         }
         resolve();
       }, (error) => {
+        console.log(error);
         reject(error);
       });
     });
@@ -138,13 +138,16 @@ export class HomePage {
   }
 
   private handleError(error) {
-    if (error.message === 'CREATE_WALLET') {
-      this.newUser();
-    } else {
-    // Error accessing REST Services
-      console.log(error);
-      this.error = this.translate.instant(error);
-      this.wallets = this.sharedService.wallets;
+    try {
+      if (error === 'NO_WALLET') {
+        this.newUser();
+      } else {
+      // Error accessing REST Services
+        this.error = this.translate.instant(error);
+        this.wallets = this.sharedService.wallets;
+      }
+    } catch (e) {
+      this.error = this.translate.instant('ERROR.unknown');
     }
   }
 }

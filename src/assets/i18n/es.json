@@ -124,7 +124,7 @@
         "select_destination": "Billetera Destino",
         "balance": "Balance: ",
         "amount": "Monto: ",
-        "destination_amount": "Monto en: "
+        "destination_amount": "Monto en "
     },
     
     "RECEIVE": {
@@ -218,15 +218,23 @@
         "connection_subtitle": "Intente mas tarde",
         "connection_message": "No se pudo establecer conexión al servidor",
         "same_user_message": "No se puede registar como usuario",
-        "camara_permission_message": "Debe darle permisos a la aplicación para usar la cámara",
         "no_wallet_for_crypto_message": "El contacto no posee una billetera en la moneda seleccionada",
         "request_user_error": "Error, uno o más de los usuarios no se encuentra registrado",
         "user_does_not_exist": "Este usuario no existe",
         "duplicated_user": "Este usuario ya se encuentra en su libreta",
         "invalid_address": "Esta dirección no es válida",
-        "auth/wrong-password": "La contraseña es inválida",
-        "auth/user-not-found": "El usuario no se encuentra registrado",
-        "auth/email-already-in-use": "Este correo esta siendo utilzado por otro usuario"
+        "no_internet": "No se encuentra conectado, intente más tarde",
+        "FIREBASE": {
+            "auth/wrong-password": "La contraseña es inválida",
+            "auth/user-not-found": "El usuario no se encuentra registrado",
+            "auth/email-already-in-use": "Este correo esta siendo utilzado por otro usuario"
+        },
+        "CAMERA": {
+            "unavailable": "La camara no se encuentra disponible en este momento",
+            "permission": "Debe darle permisos a la aplicación para usar la cámara",
+            "scan_canceled": "",
+            "unknown_error": "Ha ocurrido un error, intente más tarde"
+        }
     },
 
     "ALERT": {
