@@ -137,6 +137,12 @@ export class HomePage {
     this.navCtrl.push('CreateMultiwalletPage');
   }
 
+  private goToWalletPage(b: IBalance) {
+    if (b.wallet.multiSignedKey !== '' ) {
+      this.navCtrl.push('WalletPage', b.wallet);
+    }
+  }
+
   private handleError(error) {
     try {
       if (error === 'NO_WALLET') {

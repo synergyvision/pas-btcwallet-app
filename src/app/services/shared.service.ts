@@ -127,6 +127,10 @@ export class SharedService {
         });
     }
 
+    public getWalletPendingTx(wallet: string): Observable<IPendingTxs[]> {
+        return this.firebaseData.getWalletPendingTrx(wallet);
+    }
+
     public validPendingTx(tx: IPendingTxs): boolean {
         const time = new Date().getTime() - tx.createdDate.getTime();
         console.log(time);
@@ -319,10 +323,11 @@ export class SharedService {
     // Functions for creating and sending Payments
 
     // Returns another app user wallet information *** NO MULTI WALLET IMPLEMENTATION
-    public getWalletByEmail(email: string, coin: string): Observable<any> {
-        return this.firebaseData.getWalletByEmail(email, coin)
+    public getWalletByEmail(email: string, coin: string, multiSignedKey: string): Observable<any> {
+        return this.firebaseData.getWalletByEmail(email, coin, multiSignedKey)
             .first()
             .flatMap((wallet) => {
+                console.log(wallet);
                 if (wallet.address) {
                     return Observable.of(wallet.address);
                 }
@@ -426,33 +431,13 @@ export class SharedService {
  */
     // MultiSigned Wallets Functions 
 
-    // We Verify that all signers are registered on the App
-
-    public addressesExist(emails: string[]): Observable<any> {
-        const response: Array<Observable<any>> = [];
-        emails.forEach((email) => {
-            response.push(this.addressExist(email));
-        });
-        return Observable.combineLatest(response)
-            .map((result) => {
-                return (!result.includes(false)); /*  {
-                    return false;
-                } else {
-                    return true;
-                }
-            */
-            }, (error) => {
-                return Observable.throw(error);
-        });
-    }
-
     // We create the MultiSigned Walled Request for the other users on the App
 
-    public createMultisignWalletRequest(data: any, users: string[]): Observable<any> {
+    public createMultisignWalletRequest(data: any, users: ISigner[]): Observable<any> {
         const request: IMSWalletRequest = {};
         request.createdBy = this.user.email;
         request.crypto = data.selectedCrypto;
-        users.push(this.user.email);
+        users.push({uid: this.user.uid, email: this.user.email});
         request.signers = users;
         request.accepted = [];
         request.accepted.push(this.user.email);
@@ -486,18 +471,11 @@ export class SharedService {
     }
 
     public addMultiSignedWalletRequest(request: IMSWalletRequest): Observable<any> {
-        return this.firebaseData.getSignerByEmail(request.signers)
-        .first()
-        .map((keys) => {
-            request.signers = Object.assign({}, ...keys.map((key) => {
+        request.signers = Object.assign({}, ...request.signers.map((key) => {
                 return {[key.uid] : true};
-            }));
-            console.log(keys);
-            console.log(request.signers);
-            return Observable.of(this.firebaseData.addMultiSignedWalletRequest(request));
-        }, (error) => {
-            return Observable.throw(error);
-        });
+        }));
+        console.log(request.signers);
+        return Observable.of(this.firebaseData.addMultiSignedWalletRequest(request));
     }
 
     public acceptMultiSignedWalletRequest(request: IMSWalletRequest) {

@@ -11,25 +11,7 @@ page-home {
     margin-top: $padding-lg;
     margin-bottom: $padding-lg;
   }
-  .home-balance {
-    font-family: "Wallet-Bold";
-    text-align: center;
-    display: flex;
-    height: 3.5em;
-    font-size: $font-size-home-balance;
-  }
-  .home-balance-unit {
-    font-size: 0.8em;
-  }
-  .home-btc-balance {
-    font-size: 30%;
-  }
-  .home-wallet {
-    font-family: "Wallet";
-    font-size: $font-size-home-wallet;
-    color: $secondary;
-    text-align: center;
-  }
+  
   .home-button {
     width: $home-button-width;
     height: $home-button-height;

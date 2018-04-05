@@ -14,7 +14,7 @@
   <ion-list no-lines *ngIf="error===undefined">
 
     <ion-item class="thin-input">
-      <ion-select (ionChange)="onWalletSelect()" class="select-option" [(ngModel)]="originWallet" placeholder="{{'EXCHANGE.select_origin' | translate }}">
+      <ion-select (ionChange)="onOriginWalletSelect()" class="select-option" [(ngModel)]="originWallet" placeholder="{{'EXCHANGE.select_origin' | translate }}">
         <ion-option *ngFor="let w of walletList" [value]="w">{{w.name}}
         </ion-option>
       </ion-select>
@@ -23,7 +23,7 @@
       {{'EXCHANGE.balance' | translate }} {{originBalance.balance / currency.exchange}} {{currency.name| uppercase}}
     </ion-item>
     <ion-item class="thin-input" *ngIf="originWallet">
-      <ion-select (ionChange)="onWalletSelect()" class="select-option" [(ngModel)]="destinationWallet" placeholder="{{'EXCHANGE.select_destination' | translate }}">
+      <ion-select (ionChange)="onDestinationWalletSelect()" class="select-option" [(ngModel)]="destinationWallet" placeholder="{{'EXCHANGE.select_destination' | translate }}">
         <ion-option *ngFor="let w of walletDestinationList" [value]="w">{{w.name}}
         </ion-option>
       </ion-select>
@@ -37,7 +37,7 @@
         <ion-input [(ngModel)]="amount" type="number" [min]="exchangeRate.minerFee"></ion-input>
       </ion-item>
       <ion-item>
-        {{'EXCHANGE.destination_amount' | translate }} {{destinationWallet.crypto.coin}}: {{amount / exchange.rate }}
+        {{'EXCHANGE.destination_amount' | translate }} {{destinationWallet.crypto.coin}}: {{amount / exchangeRate.rate }}
       </ion-item>
     </div>
   </ion-list>

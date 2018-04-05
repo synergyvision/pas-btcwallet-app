@@ -38,33 +38,35 @@ export class ExchangePage {
       this.walletList = this.walletDestinationList = this.sharedService.wallets;
       this.currency = {
         name: 'USD',
-        exchange: 8656,
+        exchange: 381.23,
       };
   }
 
-  private onWalletSelect() {
-    if (this.destinationWallet === undefined) {
-      this.originBalance = this.findBalance(this.originWallet, this.walletList);
-      this.filterWallets(this.originWallet.crypto.coin);
-    } else {
-      console.log(this.destinationWallet);
-      console.log(this.originWallet);
-      this.exchangeService.getExchangeRate(this.originWallet.crypto.value,
-        this.destinationWallet.crypto.value)
-        .subscribe((exchange) => {
-          this.exchangeRate = exchange;
-          console.log(exchange);
-        }, (error) => {
-          this.alertService.showError(error)
-          .then(() => {
-            this.navCtrl.pop();
-          });
+  private onOriginWalletSelect() {
+    this.originBalance = this.findBalance(this.originWallet, this.walletList);
+    console.log(this.originBalance);
+    this.filterWallets(this.originWallet.crypto.coin);
+  }
+
+  private onDestinationWalletSelect() {
+    console.log(this.destinationWallet);
+    console.log(this.originWallet);
+    this.exchangeService.getExchangeRate(this.originWallet.crypto.value,
+      this.destinationWallet.crypto.value)
+      .subscribe((exchange) => {
+        this.exchangeRate = exchange;
+        console.log(exchange);
+      }, (error) => {
+        this.alertService.showError(error)
+        .then(() => {
+          this.navCtrl.pop();
         });
-      this.destinationBalance = this.findBalance(this.destinationWallet, this.walletDestinationList);
-    }
+      });
+    this.destinationBalance = this.findBalance(this.destinationWallet, this.walletDestinationList);
   }
 
   private filterWallets(crypto: string) {
+    this.destinationWallet = undefined;
     this.walletDestinationList = this.walletList.filter((w) => {
       return w.crypto.coin !== crypto;
     });

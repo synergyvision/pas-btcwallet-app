@@ -6,7 +6,7 @@ import { IExchange } from '../interfaces/IExchange';
 import { HttpClient } from '@angular/common/http';
 
 const URL = 'https://cors.shapeshift.io';
-const MARKET_URL = 'https://api.coinmarketcap.com/v1/';
+const MARKET_URL = 'https://min-api.cryptocompare.com/data/';
 
 @Injectable()
 
@@ -20,7 +20,11 @@ export class ExchangeService {
         const pair = this.getExchangePair(input, output);
         return this.getExchange(pair);
     }
-
+/* 
+    private getCurrencyRate(currency: string[]): number {
+        this.http.get.
+    }
+ */
     private getExchange(pair: string): Observable<IExchange> {
         return this.http.get(URL + '/marketinfo/' + pair)
         .map((res) => {

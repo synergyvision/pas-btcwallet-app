@@ -75,7 +75,7 @@
     },
 
     "BLOCKCHAIN": {
-        "title": "Explorer",
+        "title": "Explorador",
         "search": "Buscar Bloque o TX",
         "default_block": "Blockchain Bitcoin",
         "time": "Última Actualización: ",
@@ -99,7 +99,9 @@
         "sub_title": "Creación de Billeteras Multifirmadas",
         "signers": "Firmantes ",
         "signer": "Firmante",
-        "signatures": "Firmas "
+        "signatures": "Firmas ",
+        "select_signers": "Seleccione a los firmantes",
+        "go_to_address_book": "Libreta de Contactos"
     },
 
     "CREATE_WALLET": {

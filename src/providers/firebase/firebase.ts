@@ -16,6 +16,7 @@ import { CryptoCoin } from '../../app/models/crypto';
 import { Activity } from '../../app/models/activity';
 import { StorageProvider } from './storage';
 
+
 @Injectable()
 export class FirebaseProvider {
 
@@ -38,8 +39,6 @@ export class FirebaseProvider {
   }
 
   public createProfilePicture(email: string, uid: string) {
-    console.log(uid);
-    console.log(email);
     this.storageProvider.createProfileImage(email)
       .then((url) => {
         console.log(url);
@@ -155,7 +154,7 @@ export class FirebaseProvider {
 
   // Gets an especific Wallet from another user by using the email
 
-  public getWalletByEmail(email: string, coin: string): Observable<any> {
+  public getWalletByEmail(email: string, coin: string, multisigned?: string): Observable<any> {
     return this.angularFire.list('/user', (ref) =>
       ref.orderByChild('userEmail').equalTo(email))
       .valueChanges()
@@ -166,8 +165,11 @@ export class FirebaseProvider {
           return (w.crypto.value === coin);
         });
         if (wallet.length > 0) {
-          const userWallet = wallet.pop();
-          if ((userWallet.crypto.value === 'tet') || (userWallet.crypto.value === 'eth')) {
+          const userWallet = wallet.filter((w) => {
+            return w.multiSignedKey !== multisigned;
+          }).pop();
+          if ((userWallet.multiSignedKey !== '') || (userWallet.crypto.value === 'tet') ||
+            (userWallet.crypto.value === 'eth')) {
             return {address: userWallet.address};
           }
           return {name: userWallet.name};
@@ -291,8 +293,22 @@ export class FirebaseProvider {
     });
   }
 
+  public getWalletPendingTrx(wallet: string): Observable<IPendingTxs[]> {
+    return this.angularFire.list('pendingTxs', (ref) =>
+    ref.orderByChild('wallet')
+    .equalTo(wallet))
+    .snapshotChanges()
+    .map((changes) => {
+      return changes.map((c) =>
+      ({
+        key: c.payload.key,
+        ... c.payload.val(),
+      }));
+    });
+  }
+
   public addPendingTrx(pendingTrx: IPendingTxs) {
-    return this.angularFire.list('pendingTxs/').push(pendingTrx);
+    this.angularFire.list('pendingTxs/').push(pendingTrx);
   }
 
   public deletePendingTrx(pendingTrx: string) {

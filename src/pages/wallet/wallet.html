@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{'WALLET.title' | translate }}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+  <ion-list>
+    <div class="display-img wallet-balance">
+      <ion-icon class="currency" name="currency-{{wallet.crypto.value}}" item-top></ion-icon>
+      {{ wallet.crypto.coin }}
+    </div>
+    <div class="page-title">
+      {{'wallet' | translate }} {{wallet.crypto.name | uppercase}}
+    </div>
+    <div class="wallet-name">
+      {{wallet.name}}
+    </div>
+    <div class="error" *ngIf="error">
+      <p>{{error}}</p>
+    </div>
+    <ion-item>
+      
+    </ion-item>
+  </ion-list>
+</ion-content>

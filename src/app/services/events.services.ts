@@ -34,12 +34,9 @@ export class EventService {
       const ws = new WebSocket(this.getPath('tes'));
       ws.onmessage = ((event) => {
           // We get the Notificaction that a TX has been made
-          console.log(event);
           this.events.publish('wallet:update', walletName);
       });
       ws.onopen = ((message) => {
-        console.log(message);
-        console.log(walletEvent);
         ws.send(JSON.stringify(walletEvent));
       });
   }
@@ -55,7 +52,6 @@ export class EventService {
 
   // Error Handling for HTTP Errors
   private handleError(er): Observable<any> {
-    console.log(er);
     if (er.title) {
       return Observable.throw(er);
     } else {

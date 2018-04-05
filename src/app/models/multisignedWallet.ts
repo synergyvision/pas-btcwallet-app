@@ -29,7 +29,8 @@ export interface IMSWalletRequest {
 
 export interface ISigner {
     pubKey?: any;
-    uid: string;
+    uid?: string;
+    email?: string;
 }
 export class MultiSignedWallet {
     public key?: string;

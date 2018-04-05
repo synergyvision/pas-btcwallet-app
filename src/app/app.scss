@@ -327,15 +327,27 @@ button.account-options {
     background:$clear;
 }
 
-.wallet-info{
-    color: $secondary;
-    font-size: $font-size-account-options;
-    text-align: center;
+.wallet-balance {
+  font-family: "Wallet-Bold";
+  text-align: center;
+  display: flex;
+  height: 3.5em;
+  font-size: $font-size-home-balance;
 }
 
-.wallet-info-detail{
-    color: $dark;
-    font-size: $font-size-info-text;
+.wallet-balance-unit {
+  font-size: 0.8em;
+}
+
+.wallet-balance-crypto {
+  font-size: 30%;
+}
+
+.wallet-name {
+    font-family: "Wallet";
+    font-size: $font-size-home-wallet;
+    color: $secondary;
+    text-align: center;
 }
 
 .selectable {

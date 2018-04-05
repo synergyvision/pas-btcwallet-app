@@ -7,7 +7,7 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list no-lines>
+  <ion-list no-lines *ngIf="!selectContact">
     <ion-item-sliding *ngFor="let a of addressBook | async" text-wrap>
       <ion-item class="address-container" (click)="editAddress(a)">
         <img class="address-img circular" src="{{a.img}}" />
@@ -27,9 +27,27 @@
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
+  <ion-list radio-group *ngIf="selectContact" no-lines>
+      <ion-item *ngFor="let a of addressBook | async" text-wrap class="address-container">
+        <ion-label>
+        <img class="address-img circular" src="{{a.img}}" />
+        <div class="address-alias">
+          {{a.alias}}
+        </div>
+        <div class="address-email">
+          {{a.email}}
+        </div>
+      </ion-label>
+        <ion-checkbox item-right (ionChange)="onChange(a.uid, a.email)"></ion-checkbox>
+      </ion-item>
+      <button ion-button class="footer-button" [disabled]="!(selectedSigners.length === signers)" block (click)="sendSigners()">
+          {{'FORM.continue' | translate }}
+        </button>
+  </ion-list>
   <ion-fab bottom right>
-    <button ion-fab mini on-click="addAddress()">
-      <ion-icon name="add"></ion-icon>
-    </button>
+      <button ion-fab mini on-click="addAddress()">
+        <ion-icon name="add"></ion-icon>
+      </button>
   </ion-fab>
+
 </ion-content>

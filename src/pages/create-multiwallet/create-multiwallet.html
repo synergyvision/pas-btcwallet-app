@@ -29,10 +29,19 @@
           <ion-option *ngFor="let s of signatures"  value="{{s}}">{{s}}</ion-option>
         </ion-select>
       </ion-item>
-      <div *ngIf="numberOfSigners">
+      <div>
+        Tiempo de Expiracion de las transacciones
+      </div>
+      <div>
+        {{"CREATE_MULTIWALLET.select_signers" | translate}}
+      </div>
+      <button ion-button type="button" block [disabled]="!numberOfSignatures" (click)="goToAddressBook()">
+        {{'CREATE_MULTIWALLET.go_to_address_book' | translate }}
+      </button>
+      <div *ngIf="numberOfSigners && users">
         <ion-item *ngFor="let user of users; let i = index; trackBy: trackByIndex;" class="input">
           <ion-label>{{'CREATE_MULTIWALLET.signer' | translate }} {{i + 1}}: </ion-label>
-          <ion-input type="email" placeholder="{{'FORM.email' | translate }}" [name]="'user-'+i" [(ngModel)]="users[i]" required></ion-input>
+          <ion-input type="email" disabled placeholder="{{'FORM.email' | translate }}" [name]="'user-'+i" [(ngModel)]="users[i].email" required></ion-input>
         </ion-item>
       </div>
       <div *ngIf="error" class="error">

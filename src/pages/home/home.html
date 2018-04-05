@@ -13,16 +13,18 @@
   <ion-refresher class="home-refresher" (ionRefresh)="refresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
+
+  <!-- BlockCypher is unavailable Error-->
   <ion-slides pager="true" class="balances-slides" *ngIf="!balances">
     <ion-slide class="wallet-slide" *ngFor="let w of wallets">
-      <div class="display-img home-balance">
+      <div class="display-img wallet-balance"  (click)="goToWalletPage(b)">
         <ion-icon class="currency" name="currency-{{w.crypto.value}}" item-top></ion-icon>
         {{ w.crypto.coin }}
       </div>
       <div class="page-title">
           {{'wallet' | translate }} {{w.crypto.name | uppercase}}
       </div>
-      <div class="home-wallet">
+      <div class="wallet-name">
         {{w.name}}
       </div>
       <div class="home-info">
@@ -30,22 +32,24 @@
       </div>
     </ion-slide>
   </ion-slides>
+
+  <!--  Balances -->
   <ion-slides pager="true" class="balances-slides" *ngIf="balances">
     <ion-slide class="wallet-slide" *ngFor="let b of balances">
-      <div class="display-img home-balance">
+      <div class="display-img wallet-balance" (click)="goToWalletPage(b)">
         {{ b.balance / b.wallet.crypto.units.exchange }}
-        <span class="home-balance-unit">
+        <span class="wallet-balance-unit">
           <b class="crypto">
             <ion-icon [name]="b.wallet.crypto.coin" item-left></ion-icon>
           </b>{{b.wallet.crypto.units.name}}</span>
-        <div class="home-btc-balance">
+        <div class="wallet-balance-crypto">
           {{b.balance / currency.exchange }} {{currency.name| uppercase}}
         </div>
       </div>
       <div class="page-title">
           {{'wallet' | translate }} {{b.wallet.crypto.name | uppercase}}
       </div>
-      <div class="home-wallet">
+      <div class="wallet-name">
         {{b.wallet.name}}
       </div>
       <div class="home-info">
@@ -66,6 +70,8 @@
           {{'FORM.send' | translate }}
       </button>
     </ion-slide>
+    
+    <!-- New Wallet Pages -->
     <ion-slide class="new-wallet-slide">
       <ion-icon class="new-wallet-icon" name="add" on-click="createNewMultiWallet()"></ion-icon>
       <button class="new-wallet-button" block ion-button on-click="createNewMultiWallet()">

@@ -76,7 +76,8 @@ export class SendConfirmPage {
   }
 
   private createTransactionWalletUser(form: FormGroup) {
-    this.sharedService.getWalletByEmail(this.address.email, this.balance.wallet.crypto.value)
+    this.sharedService.getWalletByEmail(this.address.email, this.balance.wallet.crypto.value,
+      this.balance.wallet.multiSignedKey)
       .subscribe((receiverAddress) => {
         this.sharedService.createPayment(receiverAddress, form.value.amount,
           this.balance.wallet)

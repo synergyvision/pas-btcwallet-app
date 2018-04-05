@@ -4,6 +4,7 @@ import { NgZone } from '@angular/core';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
 import { Observable } from 'rxjs';
 import { SharedService } from '../../app/services/shared.service';
+import { ISigner } from '../../app/models/multisignedWallet';
 
 @IonicPage()
 @Component({
@@ -18,17 +19,37 @@ export class AddressBookPage {
   public addressBook: Observable<any>;
   public uid;
   private selectAddress: boolean;
+  private selectContact: boolean;
   private zone: NgZone;
+  private selectedSigners: ISigner[] = [];
+  private signers: number;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
               public dataProvider: FirebaseProvider, public sharedService: SharedService) {
     this.zone = new NgZone({ enableLongStackTrace: false });
     this.uid = this.sharedService.user.uid;
     this.addressBook = dataProvider.getAddressBook(this.uid);
-    // If this view parent is SendPage, then we select an Address for sending BTC or CC
+    this.signers = this.navParams.data;
+    if (this.signers) {
+      this.selectContacts();
+    } else
     if (this.navCtrl.last().name === 'SendPage') {
+      // If this view parent is SendPage, then we select an Address for sending BTC or CC
       this.selectAddress = true;
     }
+  }
+  private onChange(uid, email) {
+    const user = { uid: uid, email: email};
+    console.log(user);
+    this.selectedSigners.push(user);
+  }
+  private selectContacts() {
+    this.selectContact = true;
+  }
+
+  private sendSigners() {
+    this.event.publish('selected:signers', this.selectedSigners);
+    this.navCtrl.pop();
   }
 
   // Pushes a new Address to the Address List
