@@ -1,3 +1,15 @@
-page-wallet {
+.wallet-info {
+    font-size: $font-size-info-text;
+    color: $dark;
+    text-align: center;
+    margin-top: $padding-lg;
+    margin-bottom: $padding-lg;
+  }
+.pendingTx-info {
 
 }
+
+.pendingTx-container{
+    background: $secondary;
+}
+  

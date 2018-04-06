@@ -24,6 +24,7 @@ export interface IMSWalletRequest {
     createdBy?: string;
     crypto?: string;
     signers?: any;
+    users?: ISigner[];
     accepted?: string[];
 }
 
@@ -38,9 +39,7 @@ export class MultiSignedWallet {
     public signers?: ISigner[];
     public crypto?: CryptoCoin;
     public type?: string;
-    // For ethereum wallets
     public address?: string;
-    // public rejectCancels?: boolean;
 
     constructor(name?: string, crypto?: CryptoCoin, users?: ISigner[], type?: string,
                 address?: string, rejectsCancels?: boolean) {
@@ -50,7 +49,6 @@ export class MultiSignedWallet {
         this.iKeyToString();
         this.type = type;
         this.address = address;
-        // this.rejectCancels = rejectCancels || false;
     }
 
     public toWallet(key?: string): Wallet {

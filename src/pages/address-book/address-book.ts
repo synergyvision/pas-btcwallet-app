@@ -29,7 +29,8 @@ export class AddressBookPage {
     this.zone = new NgZone({ enableLongStackTrace: false });
     this.uid = this.sharedService.user.uid;
     this.addressBook = dataProvider.getAddressBook(this.uid);
-    this.signers = this.navParams.data;
+    this.signers = this.navParams.get('signer');
+    console.log(this.signers);
     if (this.signers) {
       this.selectContacts();
     } else

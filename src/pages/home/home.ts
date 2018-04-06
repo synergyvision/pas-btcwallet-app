@@ -137,9 +137,11 @@ export class HomePage {
     this.navCtrl.push('CreateMultiwalletPage');
   }
 
-  private goToWalletPage(b: IBalance) {
-    if (b.wallet.multiSignedKey !== '' ) {
+  private goToWalletPage(b) {
+    if (b.wallet && b.wallet.multiSignedKey !== '' ) {
       this.navCtrl.push('WalletPage', b.wallet);
+    } else if (b.multiSignedKey !== '') {
+     this.navCtrl.push('WalletPage', b);
     }
   }
 

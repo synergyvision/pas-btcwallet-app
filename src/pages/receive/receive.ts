@@ -61,7 +61,7 @@ export class ReceivePage {
 
   public handleError(error) {
     this.loaderService.dismissLoader();
-    this.alertService.showAlert(error)
+    this.alertService.showError(error)
     .then((res) => {
       this.navCtrl.pop();
     }, (err) => {

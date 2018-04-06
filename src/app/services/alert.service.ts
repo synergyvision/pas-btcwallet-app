@@ -33,12 +33,11 @@ export class AlertService {
     });
   }
 
-  public showAlert(msg?, title?, subtitle?) {
+  public showAlert(msg?, title?) {
     return new Promise((resolve, reject) => {
       const alert = this.alertCtrl.create({
         title: this.translate.instant(title) || '',
         message: this.translate.instant(msg) || '',
-        subTitle: this.translate.instant(subtitle) || '',
         buttons: [
           {
             text: this.translate.instant('FORM.continue'),
@@ -52,12 +51,10 @@ export class AlertService {
     });
   }
 
-  public showFullAlert(msg?, title?, subtitle?) {
+  public showFullAlert(msg) {
     return new Promise((resolve, reject) => {
       const alert = this.alertCtrl.create({
-        title: this.translate.instant(title) || '',
         message: this.translate.instant(msg) || '',
-        subTitle: this.translate.instant(subtitle) || '',
         cssClass: 'fullAlert',
         buttons: [
           {

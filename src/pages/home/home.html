@@ -17,7 +17,7 @@
   <!-- BlockCypher is unavailable Error-->
   <ion-slides pager="true" class="balances-slides" *ngIf="!balances">
     <ion-slide class="wallet-slide" *ngFor="let w of wallets">
-      <div class="display-img wallet-balance"  (click)="goToWalletPage(b)">
+      <div class="display-img wallet-balance"  (click)="goToWalletPage(w)">
         <ion-icon class="currency" name="currency-{{w.crypto.value}}" item-top></ion-icon>
         {{ w.crypto.coin }}
       </div>

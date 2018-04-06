@@ -52,6 +52,7 @@ export class ActivityPage {
     .subscribe((transaction) => {
       this.navCtrl.push('TransactionConfirmationPage', transaction);
     }, (error) => {
+      console.log(error);
       this.translate.instant(error);
     });
 

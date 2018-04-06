@@ -40,7 +40,7 @@ export class CreateMultiwalletPage {
   }
 
   private goToAddressBook() {
-    this.navCtrl.push('AddressBookPage', this.numberOfSigners - 1);
+    this.navCtrl.push('AddressBookPage', {signer: this.numberOfSigners - 1});
   }
 
   private continue(form) {

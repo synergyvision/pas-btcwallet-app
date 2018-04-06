@@ -7,7 +7,7 @@
 
 
 <ion-content>
-  <ion-list>
+  <ion-list no-lines>
     <div class="display-img wallet-balance">
       <ion-icon class="currency" name="currency-{{wallet.crypto.value}}" item-top></ion-icon>
       {{ wallet.crypto.coin }}
@@ -21,8 +21,36 @@
     <div class="error" *ngIf="error">
       <p>{{error}}</p>
     </div>
-    <ion-item>
-      
+    <ion-item class="wallet-info" text-wrap>
+        Tipo: {{mSWallet.type}} <br>
+        Dirección: {{mSWallet.address}}
+    </ion-item>
+    <div class="wallet-subtitle">
+      Firmantes
+    </div>
+    <ion-item *ngFor="let a of users | async" text-wrap class="address-container">
+      <img class="address-img circular" src="{{a.img}}" />
+      <div class="address-alias">
+        {{a.alias}}
+      </div>
+      <div class="address-email">
+        {{a.email}}
+      </div>
+    </ion-item>
+    <div class="wallet-subtitle">
+      Transacciones Pendientes
+    </div>
+    <ion-item *ngFor="let p of pendingTx | async" text-wrap class="pendingTx-container">
+      <div class="pendingTx-info">
+      Monto {{p.amount / wallet.crypto.units.exchange }} {{wallet.crypto.units.name }} <br>
+      Recipiente {{p.to}} <br>
+      Fecha de Creación: {{p.createdDate}} <br>
+      Creada por {{p.createdBy}} <br>
+      Aprovada por: 
+      </div>
+      <div *ngFor="let u of p.approved">
+        {{u}}
+      </div>
     </ion-item>
   </ion-list>
 </ion-content>

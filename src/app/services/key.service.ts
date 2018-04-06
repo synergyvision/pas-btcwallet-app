@@ -106,6 +106,8 @@ export class KeyService {
     public createMultiSignedKeys(users: number, crypto: string): IKeys[] {
         const keys: IKeys[] = [];
         let key: IKeys = {};
+        console.log('here');
+        console.log(users);
         while ( users > 0 ) {
             key = this.createKeys(crypto);
             key.xpriv = '';

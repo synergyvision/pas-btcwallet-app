@@ -72,7 +72,7 @@ export class BlockchainPage {
   // Needs to be changed when error service is correctly implemented
   private handleError(error) {
     console.log(error);
-    this.alertService.showAlert()
+    this.alertService.showError(error)
     .then((res) => {
       this.navCtrl.pop();
     },
