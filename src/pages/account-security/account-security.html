@@ -18,7 +18,7 @@
       </div>
     </ion-item>
     <ion-item class="account-info">
-        {{'SECURITY_SETTINGS.sub_title' | translate }}
+      {{'SECURITY_SETTINGS.sub_title' | translate }}
     </ion-item>
     <button ion-button block outline *ngFor="let o of securityOptions" class="account-options" (click)="self[o.function]()">
       {{o.title | translate }}
@@ -26,12 +26,18 @@
         <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
       </ion-label>
     </button>
+    <button ion-button block outline *ngIf="!user.token" class="account-options" (click)="activateTwoFactorAuth()">
+      {{'SECURITY_OPTIONS.activate_2auf' | translate}}
+      <ion-label>
+        <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
+      </ion-label>
+    </button>
     <span *ngIf="(!user.emailVerified)" class="error-message">
-        {{'SECURITY_SETTINGS.email_verified_message' | translate }}
-        <button ion-button clear color="positive" block (click)="sendVerificationEmail()">
-          {{'FORM.resend_email_button' | translate }}
-        </button>
-      </span>
+      {{'SECURITY_SETTINGS.email_verified_message' | translate }}
+      <button ion-button clear color="positive" block (click)="sendVerificationEmail()">
+        {{'FORM.resend_email_button' | translate }}
+      </button>
+    </span>
     <div class="error-message" *ngIf="message">
       {{message}}
     </div>

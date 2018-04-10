@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { EventService } from './events.services';
 import { FormGroup } from '@angular/forms';
 import { AuthService } from './auth.service';
-import { User } from '../models/user';
+import { User, IToken } from '../models/user';
 import { Events } from 'ionic-angular';
 import { IKeys } from '../models/IKeys';
 import { ExchangeService } from './exchange.service';
@@ -60,7 +60,15 @@ export class SharedService {
                         this.setWallets(wallets);
                     });
             this.getCurrency();
+            this.getToken();
         }
+    }
+
+    public getToken() {
+        this.firebaseData.getToken(this.user.uid)
+        .subscribe((token) => {
+            this.user.token = token;
+        });
     }
 
     // WIP
@@ -72,7 +80,6 @@ export class SharedService {
            photoURL = this.storageProvider.takeProfileImage(this.user.email);
         }
         return photoURL.then((url) => {
-            console.log(url);
             this.user.setPhotoURL(url);
             this.authService.user.updateProfile({
             displayName: this.user.displayName,
@@ -115,11 +122,13 @@ export class SharedService {
         return this.firebaseData.getPendingTrx(this.user.uid)
         .map((pending) => {
             return pending.filter((tx) => {
-                    (this.validPendingTx(tx));
+                    // (this.validPendingTx(tx));
+                    console.log(!tx.approved.includes(this.user.email));
                     if (tx.dismissed !== undefined) {
                         return (!tx.dismissed.includes(this.user.email) &&
                             (!tx.approved.includes(this.user.email)));
                     } else if (!tx.approved.includes(this.user.email)) {
+                        console.log(tx);
                         return tx;
                     }
                 // }
@@ -364,7 +373,7 @@ export class SharedService {
     public createPayment(address: string, amount: number, wallet: IHDWallet) {
         let data: {};
         // MultiSigned Wallets
-        if (wallet.multiSignedKey !== '') {
+        if (wallet.multiSignedKey !== '' && wallet.multiSignedKey !== undefined) {
             const mSWallet = this.getMultiSignedWallet(wallet.multiSignedKey);
             const addresses = [];
             mSWallet.signers.forEach((signer) => {
@@ -382,9 +391,9 @@ export class SharedService {
                     value: Number(amount),
                 }],
             });
-        }
         // Ethereum and Ethereum Testnet Wallets
-        if ((wallet.address !== '') && ((wallet.crypto.value === 'tet') || (wallet.crypto.value === 'bet'))) {
+        } else if ((wallet.address !== '' && wallet.address !== undefined) &&
+        ((wallet.crypto.value === 'tet') || (wallet.crypto.value === 'bet'))) {
             data = JSON.stringify({
                 inputs: [{
                     addresses: [
@@ -400,7 +409,7 @@ export class SharedService {
             });
 
         // HD Wallets
-        } else if (wallet.address === '') {
+        } else {
             data = JSON.stringify({
                 inputs: [{
                     wallet_name: wallet.name,
@@ -414,6 +423,7 @@ export class SharedService {
                 }],
             });
         }
+        console.log(data);
         return this.restService.createPayment(data, wallet.crypto.value);
     }
 

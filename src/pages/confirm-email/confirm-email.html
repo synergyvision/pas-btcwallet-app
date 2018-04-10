@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>{{'CONFIRM_EMAIL.title'}}</ion-title>
+    <ion-title>{{'CONFIRM_EMAIL.title' | translate}}</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -20,7 +20,7 @@
     {{'CONFIRM_EMAIL.resend_email_info' | translate}}
   </div>
   <button ion-button outline block class="confirm-email-button" (click)="resendEmail" type="submit">
-      {{FORM.resend_email_button' | translate}}
+      {{'FORM.resend_email_button' | translate}}
   </button>
   <ion-footer>
     <button ion-button class="footer-button" block (click)="goBack()">

@@ -19,7 +19,6 @@ export class AppSettings {
 
   public static securityOptions =  [
     { title: 'SECURITY_OPTIONS.recover_password', function: 'restorePassword' },
-    { title: 'SECURITY_OPTIONS.activate_2auf', function: 'activateTwoFactorAuth' },
   ];
 
   public static walletOptions = [

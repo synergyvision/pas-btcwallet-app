@@ -60,6 +60,12 @@ export class AccountSecurityPage {
   }
 
   private activateTwoFactorAuth() {
-    console.log('Here');
+    this.authService.activate2FAU()
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      this.message = this.translate.instant('ERROR.2FA.' + error);
+    });
   }
 }

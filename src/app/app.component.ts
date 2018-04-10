@@ -13,10 +13,11 @@ import { EventService } from './services/events.services';
 import { SharedService } from './services/shared.service';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageProvider } from '../providers/firebase/storage';
+import { TwoFactorAuthService } from './services/twofactorauth.service';
 
 @Component({
   providers: [RestService, AuthService, LoaderService, AlertService, AppSettings,
-              EventService, SharedService, StorageProvider],
+              EventService, SharedService, StorageProvider, TwoFactorAuthService],
   templateUrl: 'app.html',
 })
 

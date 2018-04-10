@@ -50,7 +50,7 @@ export class ActivityPage {
   private acceptPendingTx(pendingTx: IPendingTxs) {
     this.sharedService.acceptPendingTrx(pendingTx)
     .subscribe((transaction) => {
-      this.navCtrl.push('TransactionConfirmationPage', transaction);
+      this.navCtrl.push('TransactionConfirmationPage', transaction.tx);
     }, (error) => {
       console.log(error);
       this.translate.instant(error);

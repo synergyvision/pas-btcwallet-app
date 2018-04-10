@@ -11,10 +11,10 @@ export class HttpErrorInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler,
   ): Observable<HttpEvent<any>> {
+    request = request.clone({ headers: request.headers.set('Content-Type', 'application/json') });
     return next.handle(request)
       .catch((response) => {
         if (response instanceof HttpErrorResponse) {
-          console.log('Processing http error', response);
           return Observable.throw(this.handleError(response, request.url));
         }
         return Observable.throw('ERROR.unknown');
@@ -22,10 +22,12 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   }
 
   public handleError(response: HttpErrorResponse, url: string): string {
+    console.log(response);
+    console.log(url);
     if (url.search(BlockCypher) !== -1) {
       return this.blockCypherError(response);
-    } else {
-      return 'ERROR.unknown';
+    } else if (url.search('twofactor') !== -1) {
+      return response.error;
     }
   }
 

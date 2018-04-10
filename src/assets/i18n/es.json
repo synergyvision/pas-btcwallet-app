@@ -51,7 +51,8 @@
         "title": "Seguridad",
         "sub_title": "Configuración de Billeteras",
         "email_verified_message": "Su cuenta no se encuentra verificada",
-        "crypto_unit": "Unidad"
+        "select_crypto_unit": "Seleccione Unidad",
+        "select_wallet": "Seleccione Billetera"
     },
 
     "ACTIVITY": {

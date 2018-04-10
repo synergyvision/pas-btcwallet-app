@@ -95,4 +95,9 @@ export class TransactionsPage {
       });
       return txs;
     }
+
+    private goToTxDetails(tx: ITransaction[]) {
+      console.log(tx);
+      this.navCtrl.push('TransactionConfirmationPage', tx);
+    }
   }

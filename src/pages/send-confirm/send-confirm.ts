@@ -105,8 +105,9 @@ export class SendConfirmPage {
             console.log(res);
           });
         }
-        this.navCtrl.push('TransactionConfirmationPage', response);
+        this.navCtrl.push('TransactionConfirmationPage', response.tx);
       }, (error) => {
+        console.log(error);
         this.loaderService.dismissLoader();
         this.message = this.translate.instant(error);
       });

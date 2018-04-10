@@ -19,6 +19,7 @@ export class WalletPage {
   private pendingTx: Observable<IPendingTxs[]>;
   private users: Observable<Address[]>;
   private error;
+  private showPendingTx: boolean = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public sharedService: SharedService) {
     this.getWallet();
@@ -28,6 +29,12 @@ export class WalletPage {
     this.wallet = this.navParams.data;
     this.mSWallet = this.sharedService.getMultiSignedWallet(this.wallet.multiSignedKey);
     this.pendingTx = this.sharedService.getWalletPendingTx(this.mSWallet.key);
+    this.pendingTx.subscribe((data) => {
+      if (data) {
+        console.log(data);
+        this.showPendingTx = true;
+      }
+    });
     this.getSigners(this.mSWallet.signers);
   }
 

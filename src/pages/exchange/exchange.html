@@ -36,7 +36,7 @@
         <ion-label>{{'EXCHANGE.amount' | translate }} </ion-label>
         <ion-input [(ngModel)]="amount" type="number" [min]="exchangeRate.minerFee"></ion-input>
       </ion-item>
-      <ion-item>
+      <ion-item class="wallet-balance">
         {{'EXCHANGE.destination_amount' | translate }} {{destinationWallet.crypto.coin}}: {{amount / exchangeRate.rate }}
       </ion-item>
     </div>

@@ -138,9 +138,11 @@ export class HomePage {
   }
 
   private goToWalletPage(b) {
-    if (b.wallet && b.wallet.multiSignedKey !== '' ) {
+    console.log(b);
+    if (b.wallet && (b.wallet.multiSignedKey !== '' && b.wallet.multiSignedKey !== undefined)) {
+      console.log('here');
       this.navCtrl.push('WalletPage', b.wallet);
-    } else if (b.multiSignedKey !== '') {
+    } else if (b.multiSignedKey !== '' && b.multiSignedKey !== undefined) {
      this.navCtrl.push('WalletPage', b);
     }
   }

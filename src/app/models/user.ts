@@ -3,6 +3,12 @@
 // Using the firebase.User Interface
 // More info on https://firebase.google.com/docs/reference/js/firebase.User
 
+export interface IToken {
+  secret?: string;
+  tempSecret?: string;
+  dataURL?: string;
+  otpURL?: string;
+}
 export class User {
   public uid: string;
   public email: string;
@@ -10,8 +16,9 @@ export class User {
   public phoneNumber?: number;
   public photoURL?: string;
   public displayName?: string;
+  public token?: IToken;
 
-  constructor(uid, email, emailVerified,  phone?, photoURL?, name?) {
+  constructor(uid, email, emailVerified,  phone?, photoURL?, name?, token?) {
     this.uid = uid,
     this.email = email;
     this.emailVerified = emailVerified;
@@ -22,6 +29,7 @@ export class User {
     } else {
       this.photoURL = 'http://icons.iconarchive.com/icons/icons8/ios7/256/Users-User-Male-2-icon.png';
     }
+    this.token = token || undefined;
   }
 
   public setPhone(phone: number) {

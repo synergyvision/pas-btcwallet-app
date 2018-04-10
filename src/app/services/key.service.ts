@@ -44,7 +44,9 @@ export class KeyService {
 
     public signWithDerivedPrivateKey(trx: ITransactionSke, keys: IKeys, crypto: string) {
         const inputAddress = trx.tx.inputs;
-        const signingKeys = this.derivePrivKey(keys, inputAddress, this.getNetwork(crypto));
+        const signingKeys = this.derivePrivKey(keys, inputAddress, crypto);
+        trx.pubkeys = [];
+
         // We Sign and add the Public Keys to the Transaction Skeleton
         trx.signatures = trx.tosign.map((tosign, n) => {
             trx.pubkeys.push(signingKeys[n].getPublicKeyBuffer().toString('hex'));
@@ -90,6 +92,7 @@ export class KeyService {
     }
 
     public getNetwork(crypto: string): any {
+        console.log('here');
         if (crypto === 'btc') {
             return networks.bitcoin;
         } else if (crypto === 'ltc') {

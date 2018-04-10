@@ -37,7 +37,7 @@
         {{a.email}}
       </div>
     </ion-item>
-    <div class="wallet-subtitle">
+    <div class="wallet-subtitle" *ngIf="showPendingTx">
       Transacciones Pendientes
     </div>
     <ion-item *ngFor="let p of pendingTx | async" text-wrap class="pendingTx-container">

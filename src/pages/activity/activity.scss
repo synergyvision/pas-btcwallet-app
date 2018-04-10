@@ -48,6 +48,11 @@
 
 .request-button{
   margin-top: 0;
+  display: inline-block;
+  text-align: center;
+  padding: none;
+  margin: none !important;
+  width: fit-content;
 }
 
 .pendingTx-button{

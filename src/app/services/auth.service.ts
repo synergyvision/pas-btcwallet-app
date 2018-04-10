@@ -10,13 +10,15 @@ import { database } from 'firebase/app';
 import { KeyService } from './key.service';
 import { Events } from 'ionic-angular';
 import { StorageProvider } from '../../providers/firebase/storage';
+import { TwoFactorAuthService } from './twofactorauth.service';
 
 @Injectable()
 
 export class AuthService {
     public user: firebase.User;
 
-    constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider, private events: Events) {
+    constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider, private events: Events,
+                private twoFactorAuthService: TwoFactorAuthService) {
         this.firebaseAuth.authState.first()
             .subscribe((user) => {
                 if (user) {
@@ -92,6 +94,25 @@ export class AuthService {
         this.user = firebase.auth().currentUser;
         return new User(this.user.uid, this.user.email, this.user.emailVerified,
                         this.user.phoneNumber, this.user.photoURL);
+    }
+
+    public activate2FAU(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.user.getIdToken(true)
+            .then((token) => {
+                this.twoFactorAuthService.active2FAU(this.user.uid, token)
+                .subscribe((res) => {
+                    console.log(res);
+                    resolve(res);
+                }, (error) => {
+                    console.log(error);
+                    reject(error);
+                });
+            })
+            .catch((error) => {
+                reject(error);
+            });
+        });
     }
 
 }

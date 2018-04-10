@@ -27,7 +27,7 @@
   </span>
   <span *ngIf="!isEthereum">
     <ion-list no-lines *ngIf="segmentTxs === 'all'">
-      <ion-item class="transactions-container" *ngFor="let t of txsList" no-lines>
+      <ion-item class="transactions-container" *ngFor="let t of txsList" (click) ="goToTxDetails(t)" no-lines>
         <ion-row>
           <ion-col col-9 text-wrap>
             <div class="transactions-date">

@@ -34,7 +34,7 @@
 
     <div class="change-option" *ngIf="showWalletSelect">
       <ion-item class="thin-input">
-        <ion-select (ionChange)="onWalletChange()" class="select-option" [(ngModel)]="selectedWallet" placeholder="{{'WALLET_SETTINGS.crypto_unit' | translate }}">
+        <ion-select (ionChange)="onWalletChange()" class="select-option" [(ngModel)]="selectedWallet" placeholder="{{'WALLET_SETTINGS.select_wallet' | translate }}">
           <ion-option *ngFor="let w of wallets" [value]="w">{{w.name}}
           </ion-option>
         </ion-select>
@@ -45,7 +45,7 @@
 
     <div class="change-option" *ngIf="selectedOption ==='changeCryptoUnit'">
       <ion-item class="thin-input">
-        <ion-select (ionChange)="changeCryptoUnit()" class="select-option" [(ngModel)]="selectedCrypto" placeholder="{{'WALLET_SETTINGS.crypto_unit' | translate }}" [disabled]="!selectedWallet">
+        <ion-select (ionChange)="changeCryptoUnit()" class="select-option" [(ngModel)]="selectedCrypto" placeholder="{{'WALLET_SETTINGS.select_crypto_unit' | translate }}" [disabled]="!selectedWallet">
           <ion-option *ngFor="let c of cryptoUnit.units" [value]="c">{{c.name}}
           </ion-option>
         </ion-select>
@@ -72,7 +72,7 @@
           {{selectedWallet.name}}
         </div>
       </ion-item>
-      <ion-item *ngIf="(selectedOption==='showMnemonics')"class="wallet-info">
+      <ion-item *ngIf="(selectedOption==='showMnemonics')" class="wallet-info">
         {{'mnemonic' | translate }}
         <div class="wallet-info-detail" text-wrap>
           - {{selectedWallet.keys.mnemonics}}

@@ -6,7 +6,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
-import { User } from '../../app/models/user';
+import { User, IToken } from '../../app/models/user';
 import { Wallet } from '../../app/models/wallet';
 import { Address } from '../../app/models/address';
 import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
@@ -36,6 +36,14 @@ export class FirebaseProvider {
     }
     this.angularFire.list('user/' + uid).set('userEmail', email);
     this.angularFire.list('user/' + uid).set('currency', 'USD');
+  }
+
+  public getToken(uid: string) {
+    return this.angularFire.object('user/' + uid + '/token')
+    .valueChanges()
+    .map((token) => {
+      return token as IToken;
+    });
   }
 
   public createProfilePicture(email: string, uid: string) {

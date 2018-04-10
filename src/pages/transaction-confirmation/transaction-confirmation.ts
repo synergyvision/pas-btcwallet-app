@@ -13,7 +13,8 @@ export class TransactionConfirmationPage {
   private transaction: ITransaction;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.transaction = navParams.data.tx;
+    this.transaction = navParams.data;
+    console.log(navParams.data);
     console.log(this.transaction);
   }
 
