@@ -22,13 +22,21 @@ export class HttpErrorInterceptor implements HttpInterceptor {
   }
 
   public handleError(response: HttpErrorResponse, url: string): string {
-    console.log(response);
-    console.log(url);
     if (url.search(BlockCypher) !== -1) {
       return this.blockCypherError(response);
     } else if (url.search('twofactor') !== -1) {
+      return this.twoFactorError(response);
+    }
+  }
+
+  public twoFactorError(response): string {
+    console.log(response);
+    if (response.statusText === 'Unknown Error') {
+      return 'ERROR.connection_message';
+    } else {
       return response.error;
     }
+
   }
 
   public blockCypherError(error: HttpErrorResponse): string {

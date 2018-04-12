@@ -8,6 +8,7 @@ export interface IToken {
   tempSecret?: string;
   dataURL?: string;
   otpURL?: string;
+  activated?: boolean;
 }
 export class User {
   public uid: string;

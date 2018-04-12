@@ -44,7 +44,9 @@
     "SECURITY_SETTINGS": {
         "title": "Seguridad",
         "sub_title": "Configuración de seguridad",
-        "email_verified_message": "Su cuenta no se encuentra verificada"
+        "email_verified_message": "Su cuenta no se encuentra verificada",
+        "activate_2FA": "Para activar el segundo factor de autentificación, siga las instrucciones enviadas a su correo {{email}}",
+        "activate_2FA_instructions": "Introduzca el código generado por la aplicación de autentificación para activar el segundo factor: "
     },
 
     "WALLET_SETTINGS": {
@@ -138,7 +140,8 @@
         "title": "Enviar",
         "sub_title": "Seleccionar Destinatario",
         "address_book": "Libreta de Contactos",
-        "scan_qr": "Escanear Código QR"
+        "scan_qr": "Escanear Código QR",
+        "token": "Token"
     },
 
     "SEND_CONFIRM": {
@@ -148,7 +151,6 @@
         "left": "Restante: ",
         "min_fee": "Tarifa Minima: ",
         "selected_address": "Dirección Seleccionada",
-        "token": "Token",
         "metadata": "Metadata"
     },
 
@@ -194,7 +196,9 @@
         "select_image": "Seleccionar Imagen",
         "save": "Guardar",
         "type": "Tipo",
-        "cancel": "Cancelar"
+        "cancel": "Cancelar",
+        "token": "Token",
+        "address": "Dirección"
     },
 
     "ACCOUNT_OPTIONS": {
@@ -205,7 +209,8 @@
 
     "SECURITY_OPTIONS": {
         "recover_password": "Restablecer Contraseña",
-        "activate_2auf": "Verificación de dos Pasos",
+        "activate_2auf": "Activar Verificación 2FA",
+        "deactivate_2auf": "Desactivar Verificación 2FA",
         "email_sent": "Se envió un correo a "
     },
 
@@ -237,6 +242,10 @@
             "permission": "Debe darle permisos a la aplicación para usar la cámara",
             "scan_canceled": "",
             "unknown_error": "Ha ocurrido un error, intente más tarde"
+        },
+        "2FA": {
+            "invalid_otp" : "El código es inválido, lo más probable es que haya expirado. Intente nuevemente",
+            "invalid_id_token": "Su sesión ha caducado, intente nuevamente"
         }
     },
 

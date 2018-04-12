@@ -17,15 +17,13 @@
     <button ion-button class="send-button button-scan-code" block (click)="scanQRCode()">
       {{'SEND.scan_qr' | translate}}
     </button>
-    <form [formGroup]="selectAddressForm" (ngSubmit)="validateAddress(selectAddressForm.value.inputAddress)">  
-      <div *ngIf="this.inputError" class="error-message">
-        {{this.inputError}}
-      </div>
-      <ion-item class="input" *ngIf="!selectedAddress">
-        <ion-input type="text" formControlName="inputAddress" [disabled]="selectedAddress" placeholder="Dirección">
-          {{inputAddress}}
-        </ion-input>
+    <form [formGroup]="selectAddressForm" (ngSubmit)="validateForm(selectAddressForm)">  
+      <ion-item class="thin-input" *ngFor="let i of inputs">
+        <ion-input type="{{i.type}}" formControlName="{{i.name}}" placeholder="{{i.placeholder| translate }}"></ion-input>
       </ion-item>
+      <div *ngIf="this.inputError" class="error-message">
+        {{inputError}}
+      </div>
       <ion-item no-lines *ngIf="selectedAddress!=undefined" class="address-container">
         <img class="address-img" src="{{selectedAddress.img}}" />
         <div class="address-alias">

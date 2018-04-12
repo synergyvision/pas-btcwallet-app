@@ -255,7 +255,6 @@ export class SharedService {
                 }
             })
             .catch((error) => {
-                console.log(error);
                 // Error either accessing the Firebase Service
                 return Observable.throw(error);
             });

@@ -6,8 +6,11 @@ import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner';
 import { AlertService } from '../../app/services/alert.service';
 import { RestService } from '../../app/services/rest.service';
 import { LoaderService } from '../../app/services/loader.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from '../../app/services/auth.service';
+import { SharedService } from '../../app/services/shared.service';
+import { AppData } from '../../app/app.data';
 
 @IonicPage()
 @Component({
@@ -20,18 +23,32 @@ export class SendPage {
   private selectAddressForm: FormGroup;
   private inputError: string;
   private inputAddress: string;
+  private token: boolean;
+  private inputs: any[];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
               private qrScanner: QRScanner, private formBuilder: FormBuilder, private alertService: AlertService,
-              private restService: RestService, private loaderService: LoaderService,
-              private translate: TranslateService) {
-    this.event.subscribe('selected:address', (addressData) => {
-      this.selectedAddress = this.duplicateAddress(addressData);
-      this.selectAddressForm.disable();
-      this.selectAddressForm.reset();
+              private restService: RestService, private loaderService: LoaderService, private authService: AuthService,
+              private translate: TranslateService, private sharedService: SharedService) {
+    this.inputs =  AppData.selectAddressForm;
+    // If the user has not activated the 2FA, we remove this input
+    if (this.sharedService.user.token !== null && this.sharedService.user.token.activated === true) {
+      this.inputs.pop();
+      console.log(AppData.selectAddressForm);
+    }
+    // We build the Form
+    this.selectAddressForm = this.formBuilder.group({});
+    this.inputs.forEach((control) => {
+      this.selectAddressForm.addControl(control.name, new FormControl(control.value));
+      this.selectAddressForm.controls[control.name].setValidators(control.validators);
     });
-    this.selectAddressForm = this.formBuilder.group({
-      inputAddress: ['', Validators.compose([Validators.maxLength(42), Validators.minLength(24), Validators.required])],
+
+    // If we are coming back from the Address Book Page, we have selected an Address
+    this.event.subscribe('selected:address', (addressData) => {
+      // We disable the form
+      this.selectedAddress = this.duplicateAddress(addressData);
+      this.selectAddressForm.controls.inputAddress.disable();
+      this.selectAddressForm.reset();
     });
   }
 
@@ -76,6 +93,22 @@ export class SendPage {
       });
   }
 
+  private validateForm(form: FormGroup) {
+    if (this.token) {
+      this.validateToken(form.value.token)
+      .then(() => {
+        this.validateAddress(form.value.inputAddress);
+      })
+      .catch((error) => {
+        this.inputError = this.translate.instant(error);
+      });
+    }
+  }
+
+  private validateToken(token: number) {
+    return this.authService.validate2FAU(token);
+  }
+
   private validateAddress(address: string) {
     if (this.selectedAddress === undefined) {
       this.validateInputedAddress(address);
@@ -83,6 +116,7 @@ export class SendPage {
       this.goToSendConfirm(this.selectedAddress);
     }
   }
+
   private duplicateAddress(object: Address) {
     return new Address(object.alias, object.email, object.img );
   }
@@ -98,7 +132,7 @@ export class SendPage {
   }
 
   private goToSendConfirm(address) {
-    this.navCtrl.push('SendConfirmPage', {address: address, wallet: this.navParams.data});
+    this.navCtrl.push('SendConfirmPage', {address, wallet: this.navParams.data});
   }
 
   private cameraError(error: string): string {

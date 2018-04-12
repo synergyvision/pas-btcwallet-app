@@ -20,18 +20,14 @@
     <ion-item class="account-info">
       {{'SECURITY_SETTINGS.sub_title' | translate }}
     </ion-item>
-    <button ion-button block outline *ngFor="let o of securityOptions" class="account-options" (click)="self[o.function]()">
-      {{o.title | translate }}
-      <ion-label>
-        <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
-      </ion-label>
-    </button>
-    <button ion-button block outline *ngIf="!user.token" class="account-options" (click)="activateTwoFactorAuth()">
-      {{'SECURITY_OPTIONS.activate_2auf' | translate}}
-      <ion-label>
-        <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
-      </ion-label>
-    </button>
+    <div *ngFor="let o of securityOptions">
+      <button ion-button block outline *ngIf="o.condition(user.token)" class="account-options" (click)="self[o.function]()">
+        {{o.title | translate }}
+        <ion-label>
+          <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
+        </ion-label>
+      </button>
+    </div>
     <span *ngIf="(!user.emailVerified)" class="error-message">
       {{'SECURITY_SETTINGS.email_verified_message' | translate }}
       <button ion-button clear color="positive" block (click)="sendVerificationEmail()">
@@ -41,5 +37,20 @@
     <div class="error-message" *ngIf="message">
       {{message}}
     </div>
+    <span  *ngIf="validateToken">
+      <div class="error-message instructions">
+        {{'SECURITY_SETTINGS.activate_2FA_instructions' | translate}}
+      </div>
+      <ion-item class="thin-input">
+          <ion-input type="number" [(ngModel)] = "token" placeholder="{{'FORM.token'| translate }}"
+          maxlength="6" minlength="6"></ion-input>
+      </ion-item>
+      <div class="error-message" *ngIf="error">
+          {{error}}
+        </div>
+      <button ion-button block class="send-button button-continue" [disabled] = "token === undefined" (click) ="verifyToken()">
+          {{'FORM.continue' | translate }}
+      </button>
+    </span>
   </ion-list>
 </ion-content>

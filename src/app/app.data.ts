@@ -1,6 +1,6 @@
 import { CryptoCoin } from './models/crypto';
 import { Activity } from './models/activity';
-import { Validators } from '@angular/forms';
+import { ValidatorFn, Validators } from '@angular/forms';
 
 // Lowest unit of Token used by default by BlockCypher
 
@@ -20,6 +20,16 @@ export class AppData {
         {
             placeholder: 'FORM.repeat_password', name: 'passwordRe', icon: 'wallet-password', type: 'password',
             validators: [Validators.required],
+        },
+    ];
+
+    public static selectAddressForm = [
+        {
+            placeholder: 'FORM.address', name: 'inputAddress', type: 'text',
+            validators: [Validators.maxLength(42), Validators.minLength(24), Validators.required] },
+        {
+            placeholder: 'FORM.token', name: 'token', type: 'number',
+            validators: [Validators.minLength(6), Validators.maxLength(6), Validators.required],
         },
     ];
 

@@ -1,3 +1,5 @@
+import { IToken } from "./models/user";
+
 // Allows to set up Global Static Values thought the App
 
 export class AppSettings {
@@ -18,7 +20,26 @@ export class AppSettings {
   ];
 
   public static securityOptions =  [
-    { title: 'SECURITY_OPTIONS.recover_password', function: 'restorePassword' },
+    { title: 'SECURITY_OPTIONS.recover_password', function: 'restorePassword',
+      condition: (att?: any): boolean => {
+        return true;
+      }},
+    { title: 'SECURITY_OPTIONS.activate_2auf', function: 'activateTwoFactorAuth',
+      condition: (token: any): boolean => {
+        if (token === null || token.activated === false) {
+          return true;
+        } else {
+          return false;
+        }
+      }},
+    { title: 'SECURITY_OPTIONS.deactivate_2auf', function: 'deactivateTwoFactorAuth',
+      condition: (token: any): boolean => {
+        if (token !== null && token.activated) {
+          return true;
+        } else {
+          return false;
+        }},
+      },
   ];
 
   public static walletOptions = [
@@ -27,4 +48,5 @@ export class AppSettings {
     { title: 'WALLET_OPTIONS.export_wallet', value: 'exportWallet'},
     { title: 'WALLET_OPTIONS.show_mnemonics', value: 'showMnemonics'},
   ];
+
 }

@@ -100,12 +100,10 @@ export class AuthService {
         return new Promise((resolve, reject) => {
             this.user.getIdToken(true)
             .then((token) => {
-                this.twoFactorAuthService.active2FAU(this.user.uid, token)
+                this.twoFactorAuthService.active2FAU(token)
                 .subscribe((res) => {
-                    console.log(res);
                     resolve(res);
                 }, (error) => {
-                    console.log(error);
                     reject(error);
                 });
             })
@@ -115,4 +113,55 @@ export class AuthService {
         });
     }
 
+    public validate2FAU(token: number) {
+        return new Promise((resolve, reject) => {
+            this.user.getIdToken(true)
+            .then((idToken) => {
+                this.twoFactorAuthService.validateToken(idToken, token)
+                .subscribe((res) => {
+                    resolve();
+                }, (error) => {
+                    reject(error);
+                });
+            })
+            .catch((error) => {
+                reject(error);
+            });
+        });
+    }
+
+    public verify2FAU(token: number) {
+        return new Promise((resolve, reject) => {
+            this.user.getIdToken(true)
+            .then((idToken) => {
+                this.twoFactorAuthService.verifySecret(idToken, token)
+                .subscribe((res) => {
+                    resolve();
+                }, (error) => {
+                    reject(error);
+                });
+            })
+            .catch((error) => {
+                reject(error);
+            });
+        });
+
+    }
+
+    public deactivate2FAU() {
+        return new Promise ((resolve, reject) => {
+            this.user.getIdToken(true)
+            .then((idToken) => {
+                this.twoFactorAuthService.deactivate2FA(idToken)
+                .subscribe((res) => {
+                    resolve(res);
+                }, (error) => {
+                    reject(error);
+                });
+            })
+            .catch((error) => {
+                reject(error);
+            });
+        });
+    }
 }

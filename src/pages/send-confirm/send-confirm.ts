@@ -11,6 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ITransactionSke } from '../../app/interfaces/ITransactionSke';
 import { IBalance } from '../../app/interfaces/IBalance';
 import { IBlockchain } from '../../app/interfaces/IBlockchain';
+import { IToken } from '../../app/models/user';
 
 @IonicPage()
 @Component({
@@ -41,7 +42,6 @@ export class SendConfirmPage {
     this.sendForm = this.formBuilder.group({
       amount: [10000, Validators.compose([Validators.required, Validators.min(this.fee)])],
       fee: [this.fee, null],
-      token: ['Token', null],
       metadata: ['Metadata', null],
       feeOption: ['FeeOption', null],
     });
@@ -112,7 +112,5 @@ export class SendConfirmPage {
         this.message = this.translate.instant(error);
       });
   }
-
-  //TD
 
 }
