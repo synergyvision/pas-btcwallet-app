@@ -36,6 +36,7 @@ export class FirebaseProvider {
     }
     this.angularFire.list('user/' + uid).set('userEmail', email);
     this.angularFire.list('user/' + uid).set('currency', 'USD');
+    this.angularFire.list('user/' + uid).set('token', {activated: false, enabled: false});
   }
 
   public getToken(uid: string) {

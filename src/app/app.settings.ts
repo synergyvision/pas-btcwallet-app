@@ -25,20 +25,20 @@ export class AppSettings {
         return true;
       }},
     { title: 'SECURITY_OPTIONS.activate_2auf', function: 'activateTwoFactorAuth',
-      condition: (token: any): boolean => {
-        if (token === null || token.activated === false) {
-          return true;
-        } else {
-          return false;
+      condition: (token?: any): boolean => {
+        if (token.enabled === false) {
+            return true;
         }
-      }},
+        return false;
+      },
+    },
     { title: 'SECURITY_OPTIONS.deactivate_2auf', function: 'deactivateTwoFactorAuth',
-      condition: (token: any): boolean => {
-        if (token !== null && token.activated) {
-          return true;
-        } else {
-          return false;
-        }},
+      condition: (token?: any): boolean => {
+        if (token.activated) {
+            return true;
+        }
+        return false;
+        },
       },
   ];
 

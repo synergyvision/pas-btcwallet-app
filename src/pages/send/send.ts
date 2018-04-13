@@ -32,9 +32,8 @@ export class SendPage {
               private translate: TranslateService, private sharedService: SharedService) {
     this.inputs =  AppData.selectAddressForm;
     // If the user has not activated the 2FA, we remove this input
-    if (this.sharedService.user.token !== null && this.sharedService.user.token.activated === true) {
+    if (this.sharedService.user.token.activated === false) {
       this.inputs.pop();
-      console.log(AppData.selectAddressForm);
     }
     // We build the Form
     this.selectAddressForm = this.formBuilder.group({});

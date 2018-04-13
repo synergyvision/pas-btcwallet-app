@@ -123,12 +123,10 @@ export class SharedService {
         .map((pending) => {
             return pending.filter((tx) => {
                     // (this.validPendingTx(tx));
-                    console.log(!tx.approved.includes(this.user.email));
                     if (tx.dismissed !== undefined) {
                         return (!tx.dismissed.includes(this.user.email) &&
                             (!tx.approved.includes(this.user.email)));
                     } else if (!tx.approved.includes(this.user.email)) {
-                        console.log(tx);
                         return tx;
                     }
                 // }

@@ -28,9 +28,7 @@ export class AccountSecurityPage {
               public events: Events, private sharedService: SharedService, private formBuilder: FormBuilder,
               public translate: TranslateService, private loaderService: LoaderService) {
     this.securityOptions = AppSettings.securityOptions;
-    this.user = this.sharedService.user;
-    this.validateToken = !this.user.token.activated;
-    console.log(this.user.token);
+    this.update();
     this.showEmailInput = false;
     this.changeEmailForm = formBuilder.group({
       email: ['', [Validators.email, Validators.required, Validators.maxLength(30)]],
@@ -41,6 +39,12 @@ export class AccountSecurityPage {
   }
 
   get self() { return this; }
+
+  private update() {
+    this.sharedService.getToken();
+    this.user = this.sharedService.user;
+    this.validateToken = !this.user.token.activated;
+  }
 
   private sendVerificationEmail() {
     this.authService.sendVerificationEmail()
@@ -71,9 +75,7 @@ export class AccountSecurityPage {
     this.error = undefined;
     this.authService.verify2FAU(this.token)
     .then((response) => {
-      this.sharedService.getToken();
-      this.user = this.sharedService.user;
-      this.validateToken = false;
+      this.update();
       this.loaderService.dismissLoader();
     })
     .catch((error) => {
@@ -85,8 +87,8 @@ export class AccountSecurityPage {
   private activateTwoFactorAuth() {
     this.authService.activate2FAU()
     .then((response) => {
-      console.log(response);
-      this.message = this.translate.instant('SECURITY_SETTINGS.activate_2FA', this.user.email)
+      this.message = this.translate.instant('SECURITY_SETTINGS.activate_2FA', {email: this.user.email});
+      this.update();
     })
     .catch((error) => {
       this.message = this.translate.instant(error);

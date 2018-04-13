@@ -9,6 +9,7 @@ export interface IToken {
   dataURL?: string;
   otpURL?: string;
   activated?: boolean;
+  enabled?: boolean;
 }
 export class User {
   public uid: string;
@@ -30,11 +31,18 @@ export class User {
     } else {
       this.photoURL = 'http://icons.iconarchive.com/icons/icons8/ios7/256/Users-User-Male-2-icon.png';
     }
-    this.token = token || undefined;
+    this.token = token || this.createToken();
   }
 
   public setPhone(phone: number) {
     this.phoneNumber = phone;
+  }
+
+  public createToken(): IToken {
+    const token: IToken = {};
+    token.enabled = false;
+    token.activated = false;
+    return token;
   }
 
   public setPhotoURL(photo: string) {
