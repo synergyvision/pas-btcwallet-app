@@ -61,11 +61,11 @@ export class FirebaseProvider {
 
   // Retrieve Data of Signed User
 
-  public getCurrency(uid: string) {
+  public getCurrency(uid: string): Observable<string> {
     return this.angularFire.object('user/' + uid + '/currency')
     .valueChanges()
     .map((currency) => {
-      return currency;
+      return currency as string;
     });
   }
 

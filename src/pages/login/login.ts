@@ -46,7 +46,6 @@ export class LoginPage {
         this.events.publish('user:loggedIn');
       }).catch((error) => {
         setTimeout(() => {
-          console.log(error);
           this.error = this.translate.instant('ERROR.FIREBASE.' + error.code);
       }, 500);
       });
@@ -55,5 +54,4 @@ export class LoginPage {
   private goToRegister() {
     this.navCtrl.push('RegisterPage');
   }
-
 }

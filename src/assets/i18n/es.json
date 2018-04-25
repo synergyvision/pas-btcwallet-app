@@ -3,8 +3,8 @@
     "menu": "Menú",
     "coin": "Moneda",
     "mnemonic": "Mnemonic",
-    "cryptocoins": "Cryptomonedas",
-    "cryptocoin": "Cryptomoneda",
+    "cryptocoins": "Criptomonedas",
+    "cryptocoin": "Criptomoneda",
     "passphrase": "Clave",
     "address": "Dirección",
 
@@ -23,7 +23,8 @@
         "title": "Registro",
         "sub_title": "Debe confirmar su cuenta",
         "resend_email_info": "¿No ha recibido ningún correo?",
-        "resend_email_success": "Se ha enviado un correo de verificación a "
+        "resend_email_success": "Se ha enviado un correo de verificación a ",
+        "email_sent": "Se ha reenviado un correo de verificación"
     },
 
     "HOME": {
@@ -38,15 +39,17 @@
     "ACCOUNT": {
         "title": "Cuenta",
         "sub_title": "Configuración",
-        "change_picture": "Cambiar Imagen de Pérfil"
+        "change_picture": "Cambiar Imagen de Perfil"
     },
 
     "SECURITY_SETTINGS": {
         "title": "Seguridad",
         "sub_title": "Configuración de seguridad",
         "email_verified_message": "Su cuenta no se encuentra verificada",
-        "activate_2FA": "Para activar el segundo factor de autentificación, siga las instrucciones enviadas a su correo {{email}}",
-        "activate_2FA_instructions": "Introduzca el código generado por la aplicación de autentificación para activar el segundo factor: "
+        "activate_2FA": "Para activar el segundo factor de autenticación, siga las instrucciones enviadas a su correo {{email}}",
+        "activate_2FA_instructions": "Introduzca el código generado por la aplicación de autenticación para activar el segundo factor: ",
+        "2FA_activated": "Se ha activado el segundo factor de autenticación con éxito",
+        "2FA_deactivated": "Se desactivo el segundo factor de autenticación"
     },
 
     "WALLET_SETTINGS": {
@@ -115,7 +118,6 @@
         "sub_title": "Creación de Billeteras",
         "select_crypto": "Seleccione una Moneda",
         "mnemonics_title": "Mnemonics de la Billetera",
-        "mnemonics_info": "Debe guardar esta información, ya que le permitira recuperar su billetera en caso de perder su contraseña.",
         "passphrase_info": "Esta clave de seguridad se encargara de suministrar mayor seguridad a su billetera debe guardar esta información, ya que es vital para poder recuperar sus datos en caso de perder su contraseña"
     },
 
@@ -141,7 +143,8 @@
         "sub_title": "Seleccionar Destinatario",
         "address_book": "Libreta de Contactos",
         "scan_qr": "Escanear Código QR",
-        "token": "Token"
+        "token": "Token",
+        "token_required": "Introduzca su código OTP"
     },
 
     "SEND_CONFIRM": {
@@ -149,9 +152,18 @@
         "sub_title": "Seleccionar Monto",
         "balance": "Disponible: ",
         "left": "Restante: ",
-        "min_fee": "Tarifa Minima: ",
         "selected_address": "Dirección Seleccionada",
-        "metadata": "Metadata"
+        "metadata": "Metadata",
+        "select_fee": "Preferencia",
+        "min_fee": "Comisión",
+        "fee_low": "Baja",
+        "fee_medium": "Media",
+        "fee_high": "Alta"
+    },
+
+    "SHOW_MNEMONICS": {
+        "title": "Mnemonics",
+        "info": "Debe guardar esta información, ya que le permitirá recuperar su billetera en caso de perder su contraseña."
     },
 
     "TRANSACTION_CONFIRMATION": {
@@ -174,7 +186,6 @@
         "from": "Origen: ",
         "hash": "Hash: ",
         "no_transactions": "No se han registrado transacciones"
-
     },
 
     "FORM": {
@@ -198,7 +209,10 @@
         "type": "Tipo",
         "cancel": "Cancelar",
         "token": "Token",
-        "address": "Dirección"
+        "address": "Dirección",
+        "fee_low": "Baja",
+        "fee_medium": "Media",
+        "fee_high": "High"
     },
 
     "ACCOUNT_OPTIONS": {
@@ -211,7 +225,8 @@
         "recover_password": "Restablecer Contraseña",
         "activate_2auf": "Activar Verificación 2FA",
         "deactivate_2auf": "Desactivar Verificación 2FA",
-        "email_sent": "Se envió un correo a "
+        "email_sent": "Se envió un correo a ",
+        "2FA_activated": "Se activo correctamente el 2FA"
     },
 
     "WALLET_OPTIONS": {
@@ -245,7 +260,8 @@
         },
         "2FA": {
             "invalid_otp" : "El código es inválido, lo más probable es que haya expirado. Intente nuevemente",
-            "invalid_id_token": "Su sesión ha caducado, intente nuevamente"
+            "invalid_id_token": "Su sesión ha caducado, intente nuevamente",
+            "user_is_verified": "El usuario ya se encuentra verificado"
         }
     },
 

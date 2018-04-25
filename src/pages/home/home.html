@@ -43,7 +43,7 @@
             <ion-icon [name]="b.wallet.crypto.coin" item-left></ion-icon>
           </b>{{b.wallet.crypto.units.name}}</span>
         <div class="wallet-balance-crypto">
-          {{b.balance / currency.exchange }} {{currency.name| uppercase}}
+          {{ (b.balance / b.wallet.crypto.difference) * b.exchange }} {{currency}}
         </div>
       </div>
       <div class="page-title">

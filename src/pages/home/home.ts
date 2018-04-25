@@ -14,6 +14,7 @@ import { SharedService } from '../../app/services/shared.service';
 import { TranslateService } from '@ngx-translate/core';
 import { IMSWalletRequest } from '../../app/models/multisignedWallet';
 import { IBalance } from '../../app/interfaces/IBalance';
+import { EACCES } from 'constants';
 
 // Component for the Home Page, displays user balance, and options
 
@@ -29,17 +30,15 @@ export class HomePage {
   private error: string;
   private balances: IBalance[];
   private canCreateNewWallet: boolean = true;
-  private currency: {};
+  private currency: string;
   private wallets;
 
   constructor(public navCtrl: NavController, private restService: RestService, private sharedService: SharedService,
               private loaderService: LoaderService, private zone: NgZone, private events: Events,
               private translate: TranslateService) {
     this.loaderService.showFullLoader('LOADER.wait');
-    this.currency = {
-      name: 'USD',
-      exchange: 8656,
-    };
+    this.currency = this.sharedService.currency;
+    console.log(this.currency);
     this.getBalance()
     .then(() => {
       this.loaderService.dismissLoader();
@@ -64,7 +63,7 @@ export class HomePage {
     }); */
   }
 
-  public createRequest() {
+/*   public createRequest() {
     const request: IMSWalletRequest = {};
     request.createdBy = 'a@a.com';
     request.crypto = 'tes';
@@ -75,7 +74,7 @@ export class HomePage {
        .subscribe((data) => {
          console.log(data);
        });
-  }
+  } */
 
   public newUser() {
     this.events.publish('user:newUser');
@@ -87,6 +86,11 @@ export class HomePage {
       this.sharedService.updateBalances()
       .subscribe((wallets) => {
         this.balances = wallets;
+        console.log(this.balances);
+        this.sharedService.getCurrencyExchange(this.balances)
+        .subscribe((data) => {
+          console.log(data);
+        });
         if (this.balances.length > 6) {
           this.canCreateNewWallet = false;
         } else {

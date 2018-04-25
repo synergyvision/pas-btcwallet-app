@@ -10,22 +10,46 @@ import { ITInput } from '../interfaces/ITInput';
 
 @Injectable()
 
+/*
+Service for handling the cryptographic functions, such as creating private keys, signing and deriving
+addresses and public keys
+*/
+
 export class KeyService {
 
+    // Creates the Keys for an HD Wallet
     public createKeys(crypto: string, passphrase?: string) {
         const keys: IKeys = {};
         keys.mnemonics = bip39.generateMnemonic();
+        /*
+        Mnemonics are 12 random words that can be converted to a Hex Seed
+        The seed is then hashed with the Passphrase to create the Extended Private Key
+        */
         keys.seed = bip39.mnemonicToSeedHex(keys.mnemonics, passphrase);
-        // We transform the mnemonics to a HEX Seed
         keys.passphrase = passphrase || '';
+        // the HDNode is an interface from the bitcoinjs lib that can sign and validate data
         const hdKeys = HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto));
         keys.xpub = hdKeys.neutered().toBase58();
         keys.xpriv = hdKeys.toBase58();
         return keys;
     }
 
+    // Creates the Keys for multiple signers of a MultiSigned Address
+    public createMultiSignedKeys(users: number, crypto: string): IKeys[] {
+        const keys: IKeys[] = [];
+        let key: IKeys = {};
+        while ( users > 0 ) {
+            key = this.createKeys(crypto);
+            key.xpriv = '';
+            key.xpub = HDNode.fromSeedHex(key.seed).keyPair.getPublicKeyBuffer().toString('hex');
+            keys.push(key);
+            users --;
+        }
+        return keys;
+    }
+
     public validateMnemonic(mnemonic: string) {
-        // For validations, the final string must pass this
+        // For other validations, the final string must pass this
         // phrase.trim().split(/\s+/g).length >= 12¿
         return bip39.validateMnemonic(mnemonic);
     }
@@ -43,10 +67,10 @@ export class KeyService {
     }
 
     public signWithDerivedPrivateKey(trx: ITransactionSke, keys: IKeys, crypto: string) {
+        // We need to derive the xpriv key to the latest path to have the private and public key needed
         const inputAddress = trx.tx.inputs;
         const signingKeys = this.derivePrivKey(keys, inputAddress, crypto);
         trx.pubkeys = [];
-
         // We Sign and add the Public Keys to the Transaction Skeleton
         trx.signatures = trx.tosign.map((tosign, n) => {
             trx.pubkeys.push(signingKeys[n].getPublicKeyBuffer().toString('hex'));
@@ -57,7 +81,7 @@ export class KeyService {
 
     public signWithPrivateKey(trx: ITransactionSke, keys: IKeys, crypto: string) {
         const signingKeys = this.getPrivateKey(keys, crypto);
-
+        // We Sign and add the Public Keys to the Transaction Skeleton
         trx.signatures = trx.tosign.map((tosign, n) => {
             return signingKeys.sign(Buffer.from(tosign, 'hex')).toDER().toString('hex');
         });
@@ -65,6 +89,7 @@ export class KeyService {
     }
 
     public generateAddress(keys: IKeys) {
+        // Generates the Ethereum and Testnet Ethereum address
         const wallet = ethereumjsWallet.fromExtendedPrivateKey(keys.xpriv);
         return wallet.getAddressString();
     }
@@ -84,15 +109,16 @@ export class KeyService {
     }
 
     public getPrivateKey(keys: IKeys, crypto: string): ECPair {
+        // Return the private keys of MultiSigned, Ethereum and Testnet Ethereum
         return HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto)).keyPair;
     }
 
     public getWIF(keys: IKeys, crypto: string): string {
+        // Returns the WIF of the wallet
         return HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto)).keyPair.toWIF();
     }
 
     public getNetwork(crypto: string): any {
-        console.log('here');
         if (crypto === 'btc') {
             return networks.bitcoin;
         } else if (crypto === 'ltc') {
@@ -102,23 +128,5 @@ export class KeyService {
         } else {
             return undefined;
         }
-    }
-
-    // MultiSigned Wallet Methods
-
-    public createMultiSignedKeys(users: number, crypto: string): IKeys[] {
-        const keys: IKeys[] = [];
-        let key: IKeys = {};
-        console.log('here');
-        console.log(users);
-        while ( users > 0 ) {
-            key = this.createKeys(crypto);
-            key.xpriv = '';
-            key.xpub = HDNode.fromSeedHex(key.seed).keyPair.getPublicKeyBuffer().toString('hex');
-            keys.push(key);
-            console.log(key);
-            users --;
-        }
-        return keys;
     }
 }

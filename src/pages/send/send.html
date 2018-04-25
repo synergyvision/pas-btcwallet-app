@@ -17,10 +17,15 @@
     <button ion-button class="send-button button-scan-code" block (click)="scanQRCode()">
       {{'SEND.scan_qr' | translate}}
     </button>
-    <form [formGroup]="selectAddressForm" (ngSubmit)="validateForm(selectAddressForm)">  
-      <ion-item class="thin-input" *ngFor="let i of inputs">
-        <ion-input type="{{i.type}}" formControlName="{{i.name}}" placeholder="{{i.placeholder| translate }}"></ion-input>
-      </ion-item>
+    <form [formGroup]="selectAddressForm" (ngSubmit)="validateForm(selectAddressForm)">
+      <div *ngFor="let i of inputs">
+        <div class = "message-token" *ngIf= "i.name === 'token'">
+          {{ 'SEND.token_required' | translate }}
+        </div>
+        <ion-item class="thin-input">
+          <ion-input type="{{i.type}}" formControlName="{{i.name}}" placeholder="{{i.placeholder| translate }}"></ion-input>
+        </ion-item>
+      </div>  
       <div *ngIf="this.inputError" class="error-message">
         {{inputError}}
       </div>

@@ -1,7 +1,7 @@
 import { CryptoCoin } from '../models/crypto';
 import { IHDWallet } from './IHDWallet';
 import { ITransaction } from './ITransaction';
-
+import { Observable } from 'rxjs';
 
 // Interface for Address Data received by the API
 // Info on https://www.blockcypher.com/api
@@ -27,5 +27,5 @@ export interface IAddress {
     txrefs?: ITransaction[];
     pubkeys?: string[];
     script_type: string;
-
+    exchange?: number;
 }

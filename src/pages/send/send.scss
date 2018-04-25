@@ -11,6 +11,11 @@
     width: $button-width-md;
 }
 
+.message-token {
+    color: $tertiary;
+    text-align: center;
+}
+
 .transparent-body {
     background: none transparent !important;
     background-color: none;

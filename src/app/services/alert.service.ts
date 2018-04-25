@@ -6,6 +6,11 @@ import { App, NavController } from 'ionic-angular/index';
 import { Alert } from 'ionic-angular/components/alert/alert';
 import { TranslateService } from '@ngx-translate/core';
 
+/*
+Service for handling the Application Alert Notifications
+This allows to show errors or messages to the user taking advantage of mobile interface elements
+ */
+
 @Injectable()
 export class AlertService {
 
@@ -14,6 +19,7 @@ export class AlertService {
 
   constructor(private alertCtrl: AlertController, private app: App, private translate: TranslateService) { }
 
+  // Standard Function for showing Errors
   public showError(errorCode) {
     return new Promise((resolve, reject) => {
       const alert = this.alertCtrl.create({
@@ -33,6 +39,7 @@ export class AlertService {
     });
   }
 
+  // Standard function for showing Messages
   public showAlert(msg?, title?) {
     return new Promise((resolve, reject) => {
       const alert = this.alertCtrl.create({
@@ -51,6 +58,7 @@ export class AlertService {
     });
   }
 
+  // Standard function for showing Full Screen Messages
   public showFullAlert(msg) {
     return new Promise((resolve, reject) => {
       const alert = this.alertCtrl.create({
@@ -69,6 +77,7 @@ export class AlertService {
     });
   }
 
+  // Standard function for showing Full Screen Errors
   public showFullError(msg?, title?, subtitle?) {
     return new Promise((resolve, reject) => {
       const alert = this.alertCtrl.create({

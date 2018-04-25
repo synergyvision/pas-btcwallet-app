@@ -4,11 +4,16 @@ import { Loading } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
+
+/*
+Service for showing loaders to the user
+*/
 export class LoaderService {
     public loadingSpinner: Loading;
 
     constructor(private loadingCtrl: LoadingController, private translate: TranslateService) {}
 
+    // Shows a loader with a message to the user
     public showLoader(msg: string) {
         this.loadingSpinner = this.loadingCtrl
         .create({
@@ -19,6 +24,7 @@ export class LoaderService {
         this.loadingSpinner.present();
     }
 
+    // Shows a full screen loader with a message to the user
     public showFullLoader(msg: string) {
         this.loadingSpinner = this.loadingCtrl
         .create({

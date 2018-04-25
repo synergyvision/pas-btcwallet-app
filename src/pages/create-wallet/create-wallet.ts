@@ -17,7 +17,6 @@ export class CreateWalletPage {
   private message: string;
   private crypto = AppData.cryptoCurrencies;
   private selectedCrypto;
-  private mnemonics: string;
   private passphrase;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private sharedService: SharedService,
@@ -45,16 +44,12 @@ export class CreateWalletPage {
   }
 
   public continue() {
-    if (this.mnemonics === undefined) {
-      this.loaderService.showFullLoader('LOADER.creating_data');
-      this.sharedService.createWallet(this.selectedCrypto, this.passphrase)
-        .then((success) => {
-          this.mnemonics = success.keys.mnemonics;
-          this.loaderService.dismissLoader();
-        });
-    } else {
-      this.navCtrl.setRoot('HomePage');
-    }
+    this.loaderService.showFullLoader('LOADER.creating_data');
+    this.sharedService.createWallet(this.selectedCrypto, this.passphrase)
+      .then((success) => {
+        this.loaderService.dismissLoader();
+        this.navCtrl.push('ShowMnemonicsPage', success.keys.mnemonics);
+      });
   }
 
 }

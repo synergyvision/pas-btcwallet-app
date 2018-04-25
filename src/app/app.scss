@@ -25,7 +25,7 @@ $font-size-transactions-address: 0.6em;
 // Colors
 $primary: map-get($colors, primary);
 $secondary: map-get($colors, secondary);
-$terciary: map-get($colors, terciary);
+$tertiary: map-get($colors, tertiary);
 $clear: map-get($colors, clear);
 $light: map-get($colors, light);
 $dark: map-get($colors, dark);
@@ -138,6 +138,8 @@ $padding-address: 1em;
   margin: auto;
   margin-top: $padding-sm;
   margin-bottom: $padding-sm;
+  position: absolute;
+  bottom:   0;
 
 }
 .ios, .md{
@@ -292,7 +294,7 @@ img.menu-img {
 }
 
 .account-header-background{
-    background-color: $terciary;
+    background-color: $tertiary;
 }
 
 img.account-img {

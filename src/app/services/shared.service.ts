@@ -1,5 +1,5 @@
+import { IKeys } from '../models/IKeys';
 import { KeyService } from './key.service';
-import { Injectable } from '@angular/core';
 import { Wallet } from '../models/wallet';
 import { FirebaseProvider } from '../../providers/firebase/firebase';
 import { RestService } from './rest.service';
@@ -7,9 +7,9 @@ import { Observable } from 'rxjs/Observable';
 import { EventService } from './events.services';
 import { FormGroup } from '@angular/forms';
 import { AuthService } from './auth.service';
-import { User, IToken } from '../models/user';
+import { IToken, User } from '../models/user';
 import { Events } from 'ionic-angular';
-import { IKeys } from '../models/IKeys';
+import { Injectable } from '@angular/core';
 import { ExchangeService } from './exchange.service';
 import { IMSWalletRequest, IPendingTxs, ISigner, MultiSignedWallet } from '../models/multisignedWallet';
 import { Address } from '../models/address';
@@ -24,19 +24,34 @@ import { IAddress } from '../interfaces/IAddress';
 const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
 @Injectable()
 
+/*
+This service handles the passing of data to other services
+Since it is a singleton, it also has global data to be accessed by the components and pages of the APP
+Does multiple REST calls to access information, since most of the data is on APIs
+*/
 export class SharedService {
-    public balances: IBalance[];
+    // Global Data to be used on the APP
+    // The data of the user
     public user: User;
+    // The user Wallet(s)
     public wallets: Wallet[];
+    // Specific data about the MultiSigned Wallets
     public multiSignedWallets: MultiSignedWallet[];
-    public currency;
-    public requestList;
-    public requestNumber: number;
+    // The balance(s) of the user wallet(s)
+    public balances: IBalance[];
+    // The user preferred Currency
+    public currency: string;
+    public exchange: {
+        currency: string,
+        exchange: number
+    }
+    // The user Pending Transactions (MultiSigned Wallet)
     public pendingTxs;
 
     constructor(public firebaseData: FirebaseProvider, public restService: RestService, public events: Events,
                 public eventService: EventService, public keyService: KeyService, public authService: AuthService,
                 public exchangeService: ExchangeService, public storageProvider: StorageProvider) {
+        // We create a listener on the auth state
         this.events.subscribe('user:loggedOut', () => {
             this.user = this.wallets = this.balances =
             this.multiSignedWallets = undefined;
@@ -62,6 +77,25 @@ export class SharedService {
             this.getCurrency();
             this.getToken();
         }
+    }
+
+    public getCurrency() {
+        this.firebaseData.getCurrency(this.user.uid)
+        .subscribe((currency) => {
+            this.currency = currency;
+        });
+    }
+
+    public getCurrencyExchange(balances: IBalance[]): Observable<IBalance[]> {
+        return this.exchangeService.getCryptoExchange(this.currency)
+        .map((exchange) => {
+            balances.forEach((balance) => {
+                balance.exchange = exchange.find((e) => {
+                    return e.crypto === balance.wallet.crypto.coin;
+                }).exchange;
+            });
+            return balances;
+        });
     }
 
     public getToken() {
@@ -167,13 +201,6 @@ export class SharedService {
 
     // WIP
 
-    public getCurrency() {
-        this.firebaseData.getCurrency(this.user.uid)
-            .subscribe((currency) => {
-                this.currency = currency;
-            });
-    }
-
     public getRequests(): Observable<IMSWalletRequest[]> {
         return this.firebaseData.getMultiSignedWalletRequest(this.user.uid)
         .map((requests) => {
@@ -184,7 +211,8 @@ export class SharedService {
     }
 
     public setBalances(balances) {
-        Observable.combineLatest(balances).subscribe((data: IBalance[]) => {
+        Observable.combineLatest(balances)
+        .subscribe((data: IBalance[]) => {
             this.balances = this.formatBalanceData(data);
         }, (error) => {
             console.log(error);
@@ -199,6 +227,7 @@ export class SharedService {
 
     // Transform the data that is going to be shown on the views
 
+    // WIP
     public formatBalanceData(balances: IBalance[]): IBalance[] {
         balances.forEach((balance) => {
             balance.balance = parseFloat(balance.balance.toFixed(2));
@@ -259,7 +288,7 @@ export class SharedService {
     }
 
     // Returns an IBalance object from a single Wallet
-    public updateBalance(wallet): Observable<IBalance> {
+    public updateBalance(wallet): Observable<any> {
         if (wallet.address !== '') {
             return this.restService.getAddressWalletBalance(wallet);
         } else {
@@ -367,7 +396,7 @@ export class SharedService {
 
     // Creates a Pending Transaction to be signed by the user(s)
 
-    public createPayment(address: string, amount: number, wallet: IHDWallet) {
+    public createPayment(address: string, amount: number, wallet: IHDWallet, fee: string) {
         let data: {};
         // MultiSigned Wallets
         if (wallet.multiSignedKey !== '' && wallet.multiSignedKey !== undefined) {
@@ -376,6 +405,7 @@ export class SharedService {
             mSWallet.signers.forEach((signer) => {
                 addresses.unshift(signer.pubKey);
             });
+            console.log(fee);
             data = JSON.stringify({
                 inputs: [{
                     addresses: addresses,
@@ -387,6 +417,7 @@ export class SharedService {
                     ],
                     value: Number(amount),
                 }],
+                preference: fee,
             });
         // Ethereum and Ethereum Testnet Wallets
         } else if ((wallet.address !== '' && wallet.address !== undefined) &&

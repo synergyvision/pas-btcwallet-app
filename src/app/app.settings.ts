@@ -1,4 +1,4 @@
-import { IToken } from "./models/user";
+import { IToken } from './models/user';
 
 // Allows to set up Global Static Values thought the App
 

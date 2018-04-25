@@ -55,6 +55,18 @@ export class AppData {
         },
     ];
 
+    public static feeOptions = [
+        {
+            name: 'FORM.fee_low', value: 'low',
+        },
+        {
+            name: 'FORM.fee_medium', value: 'medium',
+        },
+        {
+            name: 'FORM.fee_high', value: 'high',
+        },
+    ];
+
     public static cryptoCurrencies = [
         { name: 'Testnet', value: 'tes' },
         { name: 'Bitcoin', value: 'btc' },
@@ -139,7 +151,7 @@ export class AppData {
                 { name: 'Kwei', exchange: 1000000000 },
                 { name: 'wei', exchange: 1 },
             ],
-            1000000000000000000, 'Ether'),
+            1000000000000000000, 'ETH'),
         new CryptoCoin(
             'Ether Testnet',
             'tet',
@@ -150,14 +162,14 @@ export class AppData {
                 { name: 'Kwei', exchange: 1000000000 },
                 { name: 'wei', exchange: 1 },
             ],
-            1000000000000000000, 'Ether'),
+            1000000000000000000, 'ETH'),
         new CryptoCoin(
             'Dash',
             'das',
             [
                 { name: 'DASH', exchange: 100000000 },
             ],
-            100000000, 'Dash'),
+            100000000, 'DASH'),
     ];
 
     public static currenciesList = [

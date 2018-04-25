@@ -11,7 +11,7 @@
     {{'CONFIRM_EMAIL.sub_title' | translate}}
   </div>
   <div class="confirm-email-info">
-    {{message}}
+    {{'CONFIRM_EMAIL.resend_email_success' | translate}}
     <div class="confirm-email-email">
       {{email}}
     </div>
@@ -19,7 +19,10 @@
   <div class="confirm-email-info">
     {{'CONFIRM_EMAIL.resend_email_info' | translate}}
   </div>
-  <button ion-button outline block class="confirm-email-button" (click)="resendEmail" type="submit">
+  <div class="confirm-email-info" *ngIf="emailSent">
+    {{'CONFIRM_EMAIL.email_sent' | translate}}
+  </div>
+  <button ion-button outline block class="confirm-email-button" (click)="resendEmail()" type="submit">
       {{'FORM.resend_email_button' | translate}}
   </button>
   <ion-footer>

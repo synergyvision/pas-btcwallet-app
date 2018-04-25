@@ -43,7 +43,9 @@ export class AccountSecurityPage {
   private update() {
     this.sharedService.getToken();
     this.user = this.sharedService.user;
-    this.validateToken = !this.user.token.activated;
+    this.validateToken = (this.user.token.activated === false) && (this.user.token.enabled === true);
+    console.log(this.validateToken);
+    console.log(this.user.token);
   }
 
   private sendVerificationEmail() {
@@ -71,19 +73,22 @@ export class AccountSecurityPage {
   }
 
   private verifyToken() {
-    this.loaderService.showLoader('LOADER.wait');
     this.error = undefined;
+    this.loaderService.showLoader('LOADER.wait');
     this.authService.verify2FAU(this.token)
     .then((response) => {
-      this.update();
+      setTimeout(() => {
+        this.update();
+        this.message = this.translate.instant('SECURITY_OPTIONS.2FA_activated');
+      }, 500);
       this.loaderService.dismissLoader();
     })
     .catch((error) => {
-      console.log(error);
       this.loaderService.dismissLoader();
       this.error = this.translate.instant(error);
     });
   }
+
   private activateTwoFactorAuth() {
     this.authService.activate2FAU()
     .then((response) => {
@@ -91,6 +96,7 @@ export class AccountSecurityPage {
       this.update();
     })
     .catch((error) => {
+      console.log(error);
       this.message = this.translate.instant(error);
     });
   }
@@ -98,10 +104,10 @@ export class AccountSecurityPage {
   private deactivateTwoFactorAuth() {
     this.authService.deactivate2FAU()
     .then((response) => {
-      console.log(response);
+      this.message = this.translate.instant('SECURITY_SETTINGS.2FA_deactivated');
     })
     .catch((error) => {
-      console.log(error);
+      this.message = this.translate.instant(error);
     });
   }
 }

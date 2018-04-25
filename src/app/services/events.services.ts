@@ -21,6 +21,11 @@ const TESTING_URL = 'wss://socket.blockcypher.com/v1/';
 const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
 const TOKEN2 = '5b3df9346d0e4eac88bc17e6cfb636a6';
 
+/*
+Service for handling the web sockets that can be created using the Blockcypher API
+Currently is inactive due to the request limit established by the free BlockCypher plan
+*/
+
 @Injectable()
 
 export class EventService {

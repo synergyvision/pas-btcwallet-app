@@ -45,6 +45,7 @@ export class RegisterPage {
     this.loaderService.showLoader('LOADER.wait');
     this.authService.signup(registerForm).
       then((data) => {
+        this.authService.sendVerificationEmail();
         this.loaderService.dismissLoader();
         this.navCtrl.push('ConfirmEmailPage', registerForm.value.email);
       })

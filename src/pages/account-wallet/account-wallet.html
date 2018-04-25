@@ -65,17 +65,11 @@
 
     <!-- Export Wallet (WIF) and showMnemonics -->
 
-    <div *ngIf="(selectedWallet) && (selectedOption==='exportWallet' || selectedOption ==='showMnemonics')" class="wallet-info">
+    <div *ngIf="(selectedWallet) && (selectedOption==='exportWallet')" class="wallet-info">
       <ion-item class="wallet-info" text-wrap>
           {{'wallet' | translate }}
         <div class="wallet-info-detail">
           {{selectedWallet.name}}
-        </div>
-      </ion-item>
-      <ion-item *ngIf="(selectedOption==='showMnemonics')" class="wallet-info">
-        {{'mnemonic' | translate }}
-        <div class="wallet-info-detail" text-wrap>
-          - {{selectedWallet.keys.mnemonics}}
         </div>
       </ion-item>
       <ion-item *ngIf ="wif" class="wallet-info">

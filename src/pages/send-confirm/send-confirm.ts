@@ -12,6 +12,7 @@ import { ITransactionSke } from '../../app/interfaces/ITransactionSke';
 import { IBalance } from '../../app/interfaces/IBalance';
 import { IBlockchain } from '../../app/interfaces/IBlockchain';
 import { IToken } from '../../app/models/user';
+import { AppData } from '../../app/app.data';
 
 @IonicPage()
 @Component({
@@ -26,25 +27,26 @@ export class SendConfirmPage {
   private inputAddress = true;
   private message: string;
   private unit;
+  private min;
   private currency;
-  private fee;
   private block: IBlockchain;
-  private feeOptions: any[] = ['Low', 'Medium', 'High'];
+  private feeOptions = AppData.feeOptions;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private loaderService: LoaderService,
               private restService: RestService, private formBuilder: FormBuilder, private sharedService: SharedService,
               private alertService: AlertService, private translate: TranslateService) {
-    this.currency = {
-      name: 'USD',
-      exchange: 8656,
-    };
-    this.fee = 5000;
+    this.getData();
+  }
+
+  private getData() {
+    this.min = 100000;
+    this.currency = this.sharedService.currency;
     this.sendForm = this.formBuilder.group({
-      amount: [10000, Validators.compose([Validators.required, Validators.min(this.fee)])],
-      fee: [this.fee, null],
+      amount: [10000, Validators.compose([Validators.required, Validators.min(this.min)])],
       metadata: ['Metadata', null],
       feeOption: ['FeeOption', null],
     });
+    this.sendForm.get('feeOption').setValue(this.feeOptions[1]);
     this.address = this.navParams.get('address');
     this.balance = this.navParams.get('wallet');
     if (this.address.alias) {
@@ -56,7 +58,7 @@ export class SendConfirmPage {
     // First we get an address from the recipient of the money
     this.loaderService.showFullLoader('LOADER.sending_payment');
     if (this.balance) {
-      // If it is a QR Code or manually inputted address
+      // If it is a QR Code or manually inputed address
       if (this.inputAddress) {
         this.createTransactionInput(form);
       } else {
@@ -67,7 +69,7 @@ export class SendConfirmPage {
   }
 
   private createTransactionInput(form: FormGroup) {
-    this.sharedService.createPayment(this.address, form.value.amount, this.balance.wallet)
+    this.sharedService.createPayment(this.address, form.value.amount, this.balance.wallet, form.value.feeOption)
     .subscribe((transaction) => {
       this.signPayment(transaction, form);
     }, (error) => {
@@ -80,7 +82,7 @@ export class SendConfirmPage {
       this.balance.wallet.multiSignedKey)
       .subscribe((receiverAddress) => {
         this.sharedService.createPayment(receiverAddress, form.value.amount,
-          this.balance.wallet)
+          this.balance.wallet, form.value.feeOption)
           .subscribe((response) => {
             this.signPayment(response, form);
           });

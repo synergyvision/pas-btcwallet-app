@@ -11,24 +11,27 @@
   <ion-list no-lines>
     <form [formGroup]="sendForm" (ngSubmit)="sendPayment(sendForm)" *ngIf="balance">
       <ion-item class="thin-input">
-        <ion-input type="number" formControlName="amount" placeholder="amount.value" [min]="fee" [max]="balance.balance - fee"></ion-input>
+        <ion-input type="number" formControlName="amount" placeholder="amount.value" [min]="min" [max]="balance.balance - min"></ion-input>
       </ion-item>
       <div class="send-confirm-info">
-        <span class="send-confirm-subtitle">{{'SEND_CONFIRM.balance' | translate }} </span>{{balance.balance / balance.wallet.crypto.units.exchange}} {{balance.wallet.crypto.units.name}} <br>     
-        <span class="send-confirm-subtitle">{{currency.name}}: </span> {{sendForm.value.amount / currency.exchange}} <br>
-        <span class="send-confirm-subtitle">{{'SEND_CONFIRM.left' | translate }} </span> {{(balance.balance / balance.wallet.crypto.units.exchange)- 
+        <span class="send-confirm-subtitle">{{'SEND_CONFIRM.balance' | translate }} </span>
+
+        {{balance.balance / balance.wallet.crypto.units.exchange}} {{balance.wallet.crypto.units.name}} <br>  
+
+        <span class="send-confirm-subtitle">{{currenc}}: </span> 
+        {{ (sendForm.value.amount * balance.wallet.crypto.difference) / balance.exchange}} <br>
+
+        <span class="send-confirm-subtitle">{{'SEND_CONFIRM.left' | translate }} </span> 
+        {{(balance.balance / balance.wallet.crypto.units.exchange)- 
         (sendForm.value.amount / balance.wallet.crypto.units.exchange)}} {{balance.wallet.crypto.units.name}}<br> 
 
         <div class="send-confirm-subtitle">{{'SEND_CONFIRM.min_fee' | translate }}</div>
       </div>
       <ion-item class="thin-input">
-          <ion-select class="select-option" (ionChange)="changeFee()" formControlName="feeOption" placeholder="fee">
-            <ion-option *ngFor="let o of feeOptions" [value]="o">{{o}}
+          <ion-select class="select-option" placeholder="{{ 'SEND_CONFIRM.select_fee' | translate }}">
+            <ion-option *ngFor="let o of feeOptions" [value]="o.value">{{o.name | translate}}
             </ion-option>
           </ion-select>
-      </ion-item>
-      <ion-item class="thin-input">
-        <ion-input type="number" formControlName="fee" placeholder="fee" [min]="fee" [max]="balance.balance"></ion-input>
       </ion-item>
       <div class="send-confirm-info">
         {{'SEND_CONFIRM.selected_address' | translate }}

@@ -83,7 +83,8 @@ export class AccountWalletPage {
   private showMnemonics() {
     this.sharedService.getWalletMnemonics(this.selectedWallet)
     .subscribe((mnemonics) => {
-      this.selectedWallet.keys.mnemonics = mnemonics;
+      this.selectedWallet = undefined;
+      this.navCtrl.push('ShowMnemonicsPage', mnemonics);
     });
   }
 

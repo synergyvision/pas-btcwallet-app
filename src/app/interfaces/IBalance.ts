@@ -1,4 +1,5 @@
 import { IHDWallet } from './IHDWallet';
+import { Observable } from 'rxjs/Observable';
 
 // Interface for the HD Wallet Balance Object
 // https://www.blockcypher.com/dev/bitcoin/?javascript#address
@@ -12,4 +13,5 @@ export interface IBalance {
     unconfirmed_n_tx?: number;
     hd_wallet?: IHDWallet;
     wallet?: IHDWallet;
+    exchange?: number;
 }

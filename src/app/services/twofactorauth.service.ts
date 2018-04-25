@@ -44,7 +44,6 @@ export class TwoFactorAuthService {
         };
         return this.http.post(URL + 'setup/verify', JSON.stringify(data))
         .map((res) => {
-            console.log(res);
             return res;
         });
     }

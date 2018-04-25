@@ -18,19 +18,19 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ConfirmEmailPage {
 
-  private message: string;
+  private emailSent: boolean;
   private email: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController,
-              public translate: TranslateService) {
+              public translate: TranslateService, private authService: AuthService) {
     this.email = this.navParams.data;
     this.navCtrl.swipeBackEnabled = false;
     this.viewCtrl.showBackButton(false);
-    this.message = this.translate.instant('CONFIRM_EMAIL.resend_email_success');
   }
 
   private resendEmail() {
-    // Reenviamos el correo de verificacion
+    this.authService.sendVerificationEmail();
+    this.emailSent = true;
   }
 
   private goBack() {

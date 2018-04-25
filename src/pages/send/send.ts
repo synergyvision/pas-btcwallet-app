@@ -1,12 +1,12 @@
+import { RestService } from '../../app/services/rest.service';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Events } from 'ionic-angular/util/events';
 import { Address } from '../../app/models/address';
 import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner';
 import { AlertService } from '../../app/services/alert.service';
-import { RestService } from '../../app/services/rest.service';
+import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { LoaderService } from '../../app/services/loader.service';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../app/services/auth.service';
 import { SharedService } from '../../app/services/shared.service';
@@ -93,19 +93,21 @@ export class SendPage {
   }
 
   private validateForm(form: FormGroup) {
-    if (this.token) {
-      this.validateToken(form.value.token)
-      .then(() => {
-        this.validateAddress(form.value.inputAddress);
-      })
-      .catch((error) => {
-        this.inputError = this.translate.instant(error);
-      });
-    }
+    this.validateToken(form.value.token)
+    .then(() => {
+      this.validateAddress(form.value.inputAddress);
+    })
+    .catch((error) => {
+      this.inputError = this.translate.instant(error);
+      this.selectAddressForm.value.token = undefined;
+    });
   }
 
-  private validateToken(token: number) {
-    return this.authService.validate2FAU(token);
+  private validateToken(token?: number): Promise<any> {
+    if (token !== undefined) {
+      return this.authService.validate2FAU(token);
+    }
+    return Promise.resolve();
   }
 
   private validateAddress(address: string) {
@@ -136,8 +138,9 @@ export class SendPage {
 
   private cameraError(error: string): string {
     // Manages the errors from https://github.com/bitpay/cordova-plugin-qrscanner
-    console.log(error);
-    if (error.includes('CAMERA_UNAVAILABLE')) {
+    if (error === undefined) {
+      return 'ERROR.CAMERA.unknown_error';
+    } else if (error.includes('CAMERA_UNAVAILABLE')) {
         return 'ERROR.CAMERA.unavailable';
     } else if (error.includes('DENIED') || (error.includes('RESTRICTED'))) {
         return 'ERROR.CAMERA.permission';
