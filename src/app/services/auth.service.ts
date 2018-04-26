@@ -29,6 +29,7 @@ export class AuthService {
             .subscribe((user) => {
                 // Every time the authState Changes, we update accordingly
                 if (user) {
+                    console.log(user);
                     this.user = user;
                 } else {
                     this.logout();
@@ -53,6 +54,13 @@ export class AuthService {
                 .catch((error) => {
                     reject(error);
                 });
+        });
+    }
+
+    public updateProfile(user: User) {
+        this.user.updateProfile({
+            displayName: this.user.displayName,
+            photoURL : this.user.photoURL,
         });
     }
 

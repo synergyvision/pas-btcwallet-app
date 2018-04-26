@@ -13,6 +13,7 @@ import { IBalance } from '../../app/interfaces/IBalance';
 import { IBlockchain } from '../../app/interfaces/IBlockchain';
 import { IToken } from '../../app/models/user';
 import { AppData } from '../../app/app.data';
+import { DecimalPipe } from '@angular/common';
 
 @IonicPage()
 @Component({
@@ -82,7 +83,7 @@ export class SendConfirmPage {
       this.balance.wallet.multiSignedKey)
       .subscribe((receiverAddress) => {
         this.sharedService.createPayment(receiverAddress, form.value.amount,
-          this.balance.wallet, form.value.feeOption)
+          this.balance.wallet, form.value.feeOption.value)
           .subscribe((response) => {
             this.signPayment(response, form);
           });

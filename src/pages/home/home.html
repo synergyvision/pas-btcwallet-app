@@ -43,7 +43,7 @@
             <ion-icon [name]="b.wallet.crypto.coin" item-left></ion-icon>
           </b>{{b.wallet.crypto.units.name}}</span>
         <div class="wallet-balance-crypto">
-          {{ (b.balance / b.wallet.crypto.difference) * b.exchange }} {{currency}}
+          {{ ((b.balance / b.wallet.crypto.difference) * b.exchange) | number }} {{currency}}
         </div>
       </div>
       <div class="page-title">
@@ -54,9 +54,9 @@
       </div>
       <div class="home-info">
         <p> {{'HOME.transactions' | translate }}: {{b.n_tx}}</p>
-        <p> {{'HOME.total_received' | translate }}: {{b.total_received / b.wallet.crypto.units.exchange }} {{ b.wallet.crypto.units.name }}</p>
-        <p> {{'HOME.total_sent' | translate }}: {{b.total_sent / b.wallet.crypto.units.exchange }} {{ b.wallet.crypto.units.name }}</p>
-        <p> {{'HOME.unconfirmed_balance' | translate }}: {{ b.unconfirmed_balance / b.wallet.crypto.units.exchange }} {{b.wallet.crypto.units.name}}
+        <p> {{'HOME.total_received' | translate }}: {{b.total_received / b.wallet.crypto.units.exchange | number }} {{ b.wallet.crypto.units.name }}</p>
+        <p> {{'HOME.total_sent' | translate }}: {{b.total_sent / b.wallet.crypto.units.exchange | number }} {{ b.wallet.crypto.units.name }}</p>
+        <p> {{'HOME.unconfirmed_balance' | translate }}: {{ b.unconfirmed_balance / b.wallet.crypto.units.exchange | number }} {{b.wallet.crypto.units.name}}
         </p>
         <p>{{'HOME.unconfirmed_n_tx' | translate }}: {{b.unconfirmed_n_tx}}</p>
       </div>

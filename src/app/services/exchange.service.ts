@@ -32,7 +32,6 @@ export class ExchangeService {
     public getCryptoExchange(currency: string): Observable<any[]> {
         return this.http.get(MARKET_URL + currency )
         .map((response) => {
-            console.log(response);
             const cryptoList = Object.keys(response);
             const exchangeList = Object.values(response);
             return cryptoList.map((value) => {

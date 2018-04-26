@@ -16,14 +16,14 @@
       <div class="send-confirm-info">
         <span class="send-confirm-subtitle">{{'SEND_CONFIRM.balance' | translate }} </span>
 
-        {{balance.balance / balance.wallet.crypto.units.exchange}} {{balance.wallet.crypto.units.name}} <br>  
+        {{balance.balance / balance.wallet.crypto.units.exchange | number}} {{balance.wallet.crypto.units.name}} <br>  
 
-        <span class="send-confirm-subtitle">{{currenc}}: </span> 
-        {{ (sendForm.value.amount * balance.wallet.crypto.difference) / balance.exchange}} <br>
+        <span class="send-confirm-subtitle">{{currency}}: </span> 
+        {{ (sendForm.value.amount / balance.wallet.crypto.difference) * balance.exchange | number}} <br>
 
         <span class="send-confirm-subtitle">{{'SEND_CONFIRM.left' | translate }} </span> 
         {{(balance.balance / balance.wallet.crypto.units.exchange)- 
-        (sendForm.value.amount / balance.wallet.crypto.units.exchange)}} {{balance.wallet.crypto.units.name}}<br> 
+        (sendForm.value.amount / balance.wallet.crypto.units.exchange) | number }} {{balance.wallet.crypto.units.name}}<br> 
 
         <div class="send-confirm-subtitle">{{'SEND_CONFIRM.min_fee' | translate }}</div>
       </div>

@@ -1,4 +1,3 @@
-
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { User } from '../../app/models/user';
 import { RestService } from '../../app/services/rest.service';
@@ -15,6 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { IMSWalletRequest } from '../../app/models/multisignedWallet';
 import { IBalance } from '../../app/interfaces/IBalance';
 import { EACCES } from 'constants';
+import { DecimalPipe } from '@angular/common';
 
 // Component for the Home Page, displays user balance, and options
 
@@ -37,8 +37,9 @@ export class HomePage {
               private loaderService: LoaderService, private zone: NgZone, private events: Events,
               private translate: TranslateService) {
     this.loaderService.showFullLoader('LOADER.wait');
-    this.currency = this.sharedService.currency;
-    console.log(this.currency);
+    this.sharedService.currency.subscribe((data) => {
+      this.currency = data;
+    });
     this.getBalance()
     .then(() => {
       this.loaderService.dismissLoader();
@@ -85,18 +86,12 @@ export class HomePage {
     return new Promise((resolve, reject) => {
       this.sharedService.updateBalances()
       .subscribe((wallets) => {
-        this.balances = wallets;
-        console.log(this.balances);
-        this.sharedService.getCurrencyExchange(this.balances)
+        this.sharedService.getCurrencyExchange(wallets)
         .subscribe((data) => {
-          console.log(data);
+          this.balances = data;
+          this.canCreateNewWallet = !(this.balances.length > 6);
+          resolve();
         });
-        if (this.balances.length > 6) {
-          this.canCreateNewWallet = false;
-        } else {
-          this.canCreateNewWallet = true;
-        }
-        resolve();
       }, (error) => {
         console.log(error);
         reject(error);
@@ -142,9 +137,7 @@ export class HomePage {
   }
 
   private goToWalletPage(b) {
-    console.log(b);
     if (b.wallet && (b.wallet.multiSignedKey !== '' && b.wallet.multiSignedKey !== undefined)) {
-      console.log('here');
       this.navCtrl.push('WalletPage', b.wallet);
     } else if (b.multiSignedKey !== '' && b.multiSignedKey !== undefined) {
      this.navCtrl.push('WalletPage', b);

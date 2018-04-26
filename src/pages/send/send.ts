@@ -33,7 +33,9 @@ export class SendPage {
     this.inputs =  AppData.selectAddressForm;
     // If the user has not activated the 2FA, we remove this input
     if (this.sharedService.user.token.activated === false) {
-      this.inputs.pop();
+      this.inputs =  AppData.selectAddressForm.filter((i) => {
+        return i.name !== 'token';
+      });
     }
     // We build the Form
     this.selectAddressForm = this.formBuilder.group({});

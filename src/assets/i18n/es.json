@@ -229,6 +229,10 @@
         "2FA_activated": "Se activo correctamente el 2FA"
     },
 
+    "WALLET": {
+        "title": "Billetera"
+    },
+
     "WALLET_OPTIONS": {
         "change_currency":"Cambiar Moneda Local",
         "change_crypto_unit":"Cambiar Unidades de Moneda",

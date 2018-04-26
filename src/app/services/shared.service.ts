@@ -22,6 +22,7 @@ import { ITransactionSke } from '../interfaces/ITransactionSke';
 import { IAddress } from '../interfaces/IAddress';
 
 const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
+
 @Injectable()
 
 /*
@@ -40,11 +41,11 @@ export class SharedService {
     // The balance(s) of the user wallet(s)
     public balances: IBalance[];
     // The user preferred Currency
-    public currency: string;
+    public currency: Observable<string>;
     public exchange: {
         currency: string,
-        exchange: number
-    }
+        exchange: number,
+    };
     // The user Pending Transactions (MultiSigned Wallet)
     public pendingTxs;
 
@@ -80,21 +81,21 @@ export class SharedService {
     }
 
     public getCurrency() {
-        this.firebaseData.getCurrency(this.user.uid)
-        .subscribe((currency) => {
-            this.currency = currency;
-        });
+        this.currency = this.firebaseData.getCurrency(this.user.uid);
     }
 
     public getCurrencyExchange(balances: IBalance[]): Observable<IBalance[]> {
-        return this.exchangeService.getCryptoExchange(this.currency)
-        .map((exchange) => {
-            balances.forEach((balance) => {
-                balance.exchange = exchange.find((e) => {
-                    return e.crypto === balance.wallet.crypto.coin;
-                }).exchange;
+        return this.currency.flatMap((c) => {
+            return this.exchangeService.getCryptoExchange(c)
+            .map((exchange) => {
+                balances.forEach((balance) => {
+                    balance.exchange = exchange.find((e) => {
+                        return e.crypto === balance.wallet.crypto.coin;
+                    }).exchange;
+                });
+                this.balances = balances;
+                return balances;
             });
-            return balances;
         });
     }
 
@@ -115,10 +116,7 @@ export class SharedService {
         }
         return photoURL.then((url) => {
             this.user.setPhotoURL(url);
-            this.authService.user.updateProfile({
-            displayName: this.user.displayName,
-            photoURL : this.user.photoURL,
-            });
+            this.authService.updateProfile(this.user);
             this.firebaseData.updateProfilePicture(this.user.uid, url);
         })
         .catch((error) => {
@@ -187,7 +185,6 @@ export class SharedService {
     }
 
     public getWalletSigners(signers: ISigner[]): Observable<Address[]> {
-        console.log(signers);
         const email: string[] = signers.map((signer) => {
             return signer.email;
         });
@@ -213,7 +210,7 @@ export class SharedService {
     public setBalances(balances) {
         Observable.combineLatest(balances)
         .subscribe((data: IBalance[]) => {
-            this.balances = this.formatBalanceData(data);
+            this.balances = data;
         }, (error) => {
             console.log(error);
         });
@@ -223,16 +220,6 @@ export class SharedService {
         return this.multiSignedWallets.find((w) => {
             return (w.key === key);
         });
-    }
-
-    // Transform the data that is going to be shown on the views
-
-    // WIP
-    public formatBalanceData(balances: IBalance[]): IBalance[] {
-        balances.forEach((balance) => {
-            balance.balance = parseFloat(balance.balance.toFixed(2));
-        });
-        return balances;
     }
 
      // User preferences

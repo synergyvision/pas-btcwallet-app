@@ -9,6 +9,7 @@ import { SharedService } from '../../app/services/shared.service';
 import { TranslateService } from '@ngx-translate/core';
 import { IAddress } from '../../app/interfaces/IAddress';
 import { ITransaction } from '../../app/interfaces/ITransaction';
+import { DecimalPipe } from '@angular/common';
 
 @IonicPage()
 @Component({

@@ -30,7 +30,7 @@ export class WalletPage {
     this.mSWallet = this.sharedService.getMultiSignedWallet(this.wallet.multiSignedKey);
     this.pendingTx = this.sharedService.getWalletPendingTx(this.mSWallet.key);
     this.pendingTx.subscribe((data) => {
-      if (data) {
+      if (data.length > 0) {
         console.log(data);
         this.showPendingTx = true;
       }
