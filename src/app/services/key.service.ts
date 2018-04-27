@@ -7,6 +7,7 @@ import { ECPair, HDNode, TransactionBuilder, networks } from 'bitcoinjs-lib';
 import { ISigner } from '../models/multisignedWallet';
 import { ITransactionSke } from '../interfaces/ITransactionSke';
 import { ITInput } from '../interfaces/ITInput';
+import { ENGINE_METHOD_PKEY_ASN1_METHS } from 'constants';
 
 @Injectable()
 
@@ -51,6 +52,7 @@ export class KeyService {
     public validateMnemonic(mnemonic: string) {
         // For other validations, the final string must pass this
         // phrase.trim().split(/\s+/g).length >= 12¿
+        console.log(bip39.validateMnemonic(mnemonic));
         return bip39.validateMnemonic(mnemonic);
     }
 
@@ -116,6 +118,25 @@ export class KeyService {
     public getWIF(keys: IKeys, crypto: string): string {
         // Returns the WIF of the wallet
         return HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto)).keyPair.toWIF();
+    }
+
+    // WIP
+    public importWalletWif(wif, crypto) {
+        const keyPair = ECPair.fromWIF(wif, this.getNetwork(crypto));
+        console.log(keyPair);
+        keyPair.getPublicKeyBuffer();
+    }
+
+    public importWalletMnemonics(mnemonics: string, crypto: string, passphrase?: string): IKeys {
+        if (this.validateMnemonic(mnemonics)) {
+            const keys: IKeys = {};
+            keys.mnemonics = mnemonics;
+            keys.passphrase = passphrase || '';
+            keys.seed = bip39.mnemonicToSeedHex(mnemonics, passphrase);
+            const hdKeys = HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto));
+            keys.xpub = hdKeys.neutered().toBase58();
+            keys.xpriv = hdKeys.toBase58();
+        }
     }
 
     public getNetwork(crypto: string): any {

@@ -41,7 +41,7 @@ export class SharedService {
     // The balance(s) of the user wallet(s)
     public balances: IBalance[];
     // The user preferred Currency
-    public currency: Observable<string>;
+    public currency: string;
     public exchange: {
         currency: string,
         exchange: number,
@@ -81,22 +81,27 @@ export class SharedService {
     }
 
     public getCurrency() {
-        this.currency = this.firebaseData.getCurrency(this.user.uid);
+        this.firebaseData.getCurrency(this.user.uid)
+        .subscribe((currency) => {
+            this.currency = currency;
+        });
     }
 
-    public getCurrencyExchange(balances: IBalance[]): Observable<IBalance[]> {
-        return this.currency.flatMap((c) => {
-            return this.exchangeService.getCryptoExchange(c)
-            .map((exchange) => {
-                balances.forEach((balance) => {
-                    balance.exchange = exchange.find((e) => {
-                        return e.crypto === balance.wallet.crypto.coin;
-                    }).exchange;
-                });
-                this.balances = balances;
-                return balances;
+    public getCurrencyExchange(balances: IBalance[]): Promise<IBalance[]> {
+        return new Promise((resolve, reject) => {
+            return this.exchangeService.getCryptoExchange(this.currency)
+                .subscribe((exchange) => {
+                    balances.forEach((balance) => {
+                        balance.exchange = exchange.find((e) => {
+                            return e.crypto === balance.wallet.crypto.coin;
+                        }).exchange;
+                    });
+                    this.balances = balances;
+                    resolve(balances);
+                }, ((error) => {
+                    reject(error);
+                }));
             });
-        });
     }
 
     public getToken() {
@@ -207,15 +212,6 @@ export class SharedService {
         });
     }
 
-    public setBalances(balances) {
-        Observable.combineLatest(balances)
-        .subscribe((data: IBalance[]) => {
-            this.balances = data;
-        }, (error) => {
-            console.log(error);
-        });
-    }
-
     public getMultiSignedWallet(key: string) {
         return this.multiSignedWallets.find((w) => {
             return (w.key === key);
@@ -261,7 +257,6 @@ export class SharedService {
                     wallets.forEach((wallet) => {
                         balances.push(this.updateBalance(wallet));
                     });
-                    this.setBalances(balances);
                     return Observable.combineLatest(balances);
                 } else {
                     // The user is new, and has not created a wallet yet
@@ -358,6 +353,19 @@ export class SharedService {
         });
     }
 
+    //WIP 
+
+    public importWalletMnemonics(mnemonics: string, crypto: string, passphrase?: string) {
+        console.log(mnemonics);
+        this.keyService.importWalletMnemonics(mnemonics, crypto, passphrase);
+    }
+
+    public importWalletWIF(wip: string, crypto: string) {
+        console.log(wip);
+        this.keyService.importWalletWif(wip, crypto);
+    }
+
+    //FINWIP
     // Functions for creating and sending Payments
 
     // Returns another app user wallet information *** NO MULTI WALLET IMPLEMENTATION
@@ -470,7 +478,7 @@ export class SharedService {
     WIP
     Which Means it is untested and unfinished
  */
-    // MultiSigned Wallets Functions 
+    // MultiSigned Wallets Functions
 
     // We create the MultiSigned Walled Request for the other users on the App
 

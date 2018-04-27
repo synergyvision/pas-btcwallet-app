@@ -37,9 +37,6 @@ export class HomePage {
               private loaderService: LoaderService, private zone: NgZone, private events: Events,
               private translate: TranslateService) {
     this.loaderService.showFullLoader('LOADER.wait');
-    this.sharedService.currency.subscribe((data) => {
-      this.currency = data;
-    });
     this.getBalance()
     .then(() => {
       this.loaderService.dismissLoader();
@@ -54,6 +51,9 @@ export class HomePage {
     this.events.subscribe('home:refresh', () => {
       this.slides.slideTo(1);
     });
+    this.sharedService
+    .importWalletMnemonics('vendor carry arm public decade seven negative desert face blush drip guard',
+    'hola', 'tet');
     // this.createRequest();
     /* this.restService.getMetadata('4042d167a9ee21eca150e8f08fe7f2a4eb5bfee101222161c1f2a1fe159c8028',
     'bcy')
@@ -86,16 +86,21 @@ export class HomePage {
     return new Promise((resolve, reject) => {
       this.sharedService.updateBalances()
       .subscribe((wallets) => {
-        this.sharedService.getCurrencyExchange(wallets)
-        .subscribe((data) => {
-          this.balances = data;
+          this.balances = wallets;
           this.canCreateNewWallet = !(this.balances.length > 6);
+          this.getExchange();
+          this.currency = this.sharedService.currency;
           resolve();
-        });
       }, (error) => {
-        console.log(error);
         reject(error);
       });
+    });
+  }
+
+  public getExchange() {
+    this.sharedService.getCurrencyExchange(this.balances)
+    .then((data) => {
+      this.balances = data;
     });
   }
 

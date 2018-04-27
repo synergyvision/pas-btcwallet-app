@@ -28,7 +28,20 @@
         <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
       </ion-label>
     </button>
-
+<!-- 
+    <div class ="change-option" *ngIf="showInput">
+      <form [formGroup]="recoverWalletForm" (ngSubmit)="recoverWallet(recoverWalletForm)">
+        <ion-item class="input" *ngFor="let i of recoverWalletInputs">
+            <ion-label>
+            {{i.placeholder | translate}}
+            </ion-label>
+            <ion-input type="{{i.type}}" formControlName="{{i.name}}" required></ion-input>
+        </ion-item>
+        <button ion-button type="submit" color="primary" block [disabled]="!recoverWalletForm.valid">
+            {{'FORM.continue' | translate}}
+       </button>
+      </form>
+    </div> -->
 
     <!--    Show Wallet Select -->
 

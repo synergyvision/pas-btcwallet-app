@@ -8,6 +8,7 @@ import { Wallet } from '../../app/models/wallet';
 import { CryptoCoin } from '../../app/models/crypto';
 import { SharedService } from '../../app/services/shared.service';
 import { TranslateService } from '@ngx-translate/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @IonicPage()
 @Component({
@@ -28,10 +29,12 @@ export class AccountWalletPage {
   private selectedCurrency: string;
   private message: string;
   private wif: string;
+  private showInput: boolean = false;
   private showWalletSelect: boolean = false;
+  private recoverWalletForm: FormGroup;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private sharedService: SharedService,
-              private translate: TranslateService) {
+              private translate: TranslateService, private formBuilder: FormBuilder) {
     this.wallets = this.sharedService.wallets;
     this.user = this.sharedService.user;
     this.cryptoUnit = this.cryptoUnitsList.pop();
@@ -77,6 +80,7 @@ export class AccountWalletPage {
     this.sharedService.getWalletWIF(this.selectedWallet)
     .subscribe((wif) => {
       this.wif = wif;
+      console.log(wif);
     });
   }
 
@@ -86,6 +90,14 @@ export class AccountWalletPage {
       this.selectedWallet = undefined;
       this.navCtrl.push('ShowMnemonicsPage', mnemonics);
     });
+  }
+
+  private importWallet() {
+    this.showInput = true;
+  }
+
+  private recoverWallet(form: FormGroup) {
+
   }
 
   private onWalletChange() {

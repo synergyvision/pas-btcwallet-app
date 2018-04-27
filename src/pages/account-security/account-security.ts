@@ -44,8 +44,6 @@ export class AccountSecurityPage {
     this.sharedService.getToken();
     this.user = this.sharedService.user;
     this.validateToken = (this.user.token.activated === false) && (this.user.token.enabled === true);
-    console.log(this.validateToken);
-    console.log(this.user.token);
   }
 
   private sendVerificationEmail() {

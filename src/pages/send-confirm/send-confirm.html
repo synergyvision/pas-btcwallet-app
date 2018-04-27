@@ -45,7 +45,7 @@
           {{address.email}}
         </div>
       </ion-item>
-      <ion-item class="thin-input">
+      <ion-item class="thin-input" *ngIf="showMetadata" >
           <ion-input type="text" formControlName="metadata" placeholder="{{'SEND_CONFIRM.metadata' | translate }}"></ion-input>
       </ion-item>
       <ion-item *ngIf="inputAddress" class="address-container">

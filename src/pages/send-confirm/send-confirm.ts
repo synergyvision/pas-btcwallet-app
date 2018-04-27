@@ -32,6 +32,7 @@ export class SendConfirmPage {
   private currency;
   private block: IBlockchain;
   private feeOptions = AppData.feeOptions;
+  private showMetadata: boolean = true;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private loaderService: LoaderService,
               private restService: RestService, private formBuilder: FormBuilder, private sharedService: SharedService,
@@ -42,17 +43,18 @@ export class SendConfirmPage {
   private getData() {
     this.min = 100000;
     this.currency = this.sharedService.currency;
-    this.sendForm = this.formBuilder.group({
-      amount: [10000, Validators.compose([Validators.required, Validators.min(this.min)])],
-      metadata: ['Metadata', null],
-      feeOption: ['FeeOption', null],
-    });
-    this.sendForm.get('feeOption').setValue(this.feeOptions[1]);
     this.address = this.navParams.get('address');
     this.balance = this.navParams.get('wallet');
+    this.sendForm = this.formBuilder.group({
+      amount: [10000, Validators.compose([Validators.required, Validators.min(this.min)])],
+      feeOption: ['FeeOption', null],
+      metadata: ['Metadata', null],
+    });
+    this.sendForm.get('feeOption').setValue(this.feeOptions[1]);
     if (this.address.alias) {
       this.inputAddress = false;
     }
+    this.showMetadata = (this.balance.wallet.crypto.name !== 'eth' && this.balance.wallet.crypto.name === 'bet');
   }
 
   private sendPayment(form: FormGroup) {
