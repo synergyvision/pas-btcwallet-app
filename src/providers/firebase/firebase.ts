@@ -72,7 +72,7 @@ export class FirebaseProvider {
   // Update Data of Signed User
 
   public updateCurrency(uid: string, currency: string) {
-    this.angularFire.list('user/' + uid).set('currency', currency);
+    return this.angularFire.list('user/' + uid).set('currency', currency);
   }
 
   public updateEmail(email: string, uid: string ) {

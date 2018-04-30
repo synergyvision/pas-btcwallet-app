@@ -42,9 +42,13 @@ export class AccountWalletPage {
 
   get self() { return this; }
   private changeCurrency() {
-    // this.sharedService.changeCurrency(this.selectedCurrency);
+    this.sharedService.updateCurrency(this.selectedCurrency);
     this.clearData();
     this.message = this.translate.instant('ACCOUNT_OPTIONS.success');
+  }
+
+  private ionViewWillEnter() {
+    this.clearData();
   }
 
   private selectOption(value) {
@@ -72,23 +76,30 @@ export class AccountWalletPage {
   private clearData() {
     this.selectedOption = this.selectedCrypto =
     this.selectedWallet = this.selectedCurrency =
-    this.wif = this.message = undefined;
-    this.showWalletSelect = false;
+    this.wif = this.message = this.selectedWallet = undefined;
+    this.showWalletSelect = this.showInput = false;
   }
 
   private exportWallet() {
-    this.sharedService.getWalletWIF(this.selectedWallet)
-    .subscribe((wif) => {
-      this.wif = wif;
-      console.log(wif);
-    });
+    if (this.selectedWallet.crypto.value === 'tet' || this.selectedWallet.crypto.value === 'eth') {
+      this.sharedService.getWalletWIF(this.selectedWallet)
+      .subscribe((wif) => {
+        this.wif = wif;
+      });
+    } else {
+      this.showMnemonics();
+    }
   }
 
   private showMnemonics() {
     this.sharedService.getWalletMnemonics(this.selectedWallet)
     .subscribe((mnemonics) => {
       this.selectedWallet = undefined;
-      this.navCtrl.push('ShowMnemonicsPage', mnemonics);
+      if (mnemonics !== undefined) {
+        this.navCtrl.push('ShowMnemonicsPage', mnemonics);
+      } else {
+        this.message = this.translate.instant('ERROR.no_mnemonics');
+      }
     });
   }
 
@@ -97,7 +108,6 @@ export class AccountWalletPage {
   }
 
   private recoverWallet(form: FormGroup) {
-
   }
 
   private onWalletChange() {

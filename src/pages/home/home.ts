@@ -51,9 +51,12 @@ export class HomePage {
     this.events.subscribe('home:refresh', () => {
       this.slides.slideTo(1);
     });
-    this.sharedService
-    .importWalletMnemonics('vendor carry arm public decade seven negative desert face blush drip guard',
-    'hola', 'tet');
+    this.sharedService.importWalletWIF('L1Fq38y6guhwSde83uHdTE8eNXntfNjmEnVmEJ6fQzh7x1L8LkdJ', 'tet');
+/*     .then((response) => {
+      console.log(response);
+    }).catch((error) => {
+      console.log(error);
+    }); */
     // this.createRequest();
     /* this.restService.getMetadata('4042d167a9ee21eca150e8f08fe7f2a4eb5bfee101222161c1f2a1fe159c8028',
     'bcy')

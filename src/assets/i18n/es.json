@@ -251,6 +251,7 @@
         "duplicated_user": "Este usuario ya se encuentra en su libreta",
         "invalid_address": "Esta dirección no es válida",
         "no_internet": "No se encuentra conectado, intente más tarde",
+        "no_mnemonics": "Esta billetera no posee clave de recuperación",
         "FIREBASE": {
             "auth/wrong-password": "La contraseña es inválida",
             "auth/user-not-found": "El usuario no se encuentra registrado",

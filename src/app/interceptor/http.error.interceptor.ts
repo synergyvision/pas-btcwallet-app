@@ -54,17 +54,17 @@ export class HttpErrorInterceptor implements HttpInterceptor {
       if (error.status === 0) {
           return 'ERROR.connection_message';
       }
+      // Duplicated Wallet
+      if (error.status === 409) {
+        if (error.error.error === 'Error: wallet exists') {
+          return 'DUPLICATED_NAME';
+        }
+        return 'ERROR.unknown';
+      }
       // Too many Requests
       if (error.status === 429) {
           return 'ERROR.connection_message';
-
-      } else {
-          return 'ERROR.unknown';
       }
-      /* if (error.status === 409) {
-          if (error.statusText.error === 'Error: wallet exists') {
-              this.message = 'WALLET_DUPLICATE';
-          }
-      } */
+      return 'ERROR.unknown';
   }
 }

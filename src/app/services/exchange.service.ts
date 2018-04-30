@@ -28,7 +28,7 @@ export class ExchangeService {
         return this.getExchange(pair);
     }
 
-    // WIP
+    //WIP
     public getCryptoExchange(currency: string): Observable<any[]> {
         return this.http.get(MARKET_URL + currency )
         .map((response) => {
@@ -47,6 +47,7 @@ export class ExchangeService {
         this.http.get.
     }
  */
+//FINWIP
     private getExchange(pair: string): Observable<IExchange> {
         return this.http.get(URL + '/marketinfo/' + pair)
         .map((res) => {

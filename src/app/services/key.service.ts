@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IKeys } from '../models/IKeys';
 import * as bip39 from 'bip39';
+import * as wiflib from 'wif';
 import * as hdKey from 'ethereumjs-wallet/hdkey';
 import * as ethereumjsWallet from 'ethereumjs-wallet';
 import { ECPair, HDNode, TransactionBuilder, networks } from 'bitcoinjs-lib';
@@ -52,7 +53,6 @@ export class KeyService {
     public validateMnemonic(mnemonic: string) {
         // For other validations, the final string must pass this
         // phrase.trim().split(/\s+/g).length >= 12¿
-        console.log(bip39.validateMnemonic(mnemonic));
         return bip39.validateMnemonic(mnemonic);
     }
 
@@ -115,17 +115,29 @@ export class KeyService {
         return HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto)).keyPair;
     }
 
+    // For Addresses
+
     public getWIF(keys: IKeys, crypto: string): string {
         // Returns the WIF of the wallet
-        return HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto)).keyPair.toWIF();
+        const key = HDNode.fromBase58(keys.xpriv, this.getNetwork(crypto));
+        console.log(key.toBase58());
+        return wiflib.encode(128, Buffer.from(key.toBase58()), true);
     }
 
-    // WIP
-    public importWalletWif(wif, crypto) {
-        const keyPair = ECPair.fromWIF(wif, this.getNetwork(crypto));
-        console.log(keyPair);
-        keyPair.getPublicKeyBuffer();
+    // For Addresses
+    public importWalletWif(wif, crypto): IKeys {
+        const decodedWif = wiflib.decode(wif, 128);
+        const prueba = HDNode.fromBase58('xprv9s21ZrQH143K2qLyCtprKDWGMQTWrLgyKKotGZ4xSV4SBL8mND4D1EXd92GRQ2gi7VBMQZQx9NnXzAQpbSm3mUtZ31h9nwBrVr4eTXdD1XC', this.getNetwork(crypto));
+        console.log(prueba.keyPair.toWIF() === wif);
+        console.log(decodedWif.privateKey);
+        const key = HDNode.fromSeedBuffer(decodedWif.privateKey, this.getNetwork(crypto));
+        const keys: IKeys = {};
+        keys.xpriv = key.toBase58();
+        console.log(keys.xpriv);
+        keys.xpub = key.neutered().toBase58();
+        return keys;
     }
+    // For HDWallets
 
     public importWalletMnemonics(mnemonics: string, crypto: string, passphrase?: string): IKeys {
         if (this.validateMnemonic(mnemonics)) {
@@ -136,8 +148,13 @@ export class KeyService {
             const hdKeys = HDNode.fromSeedHex(keys.seed, this.getNetwork(crypto));
             keys.xpub = hdKeys.neutered().toBase58();
             keys.xpriv = hdKeys.toBase58();
+            console.log(keys);
+            return keys;
+        } else {
+            return undefined;
         }
     }
+    //FINWIP
 
     public getNetwork(crypto: string): any {
         if (crypto === 'btc') {

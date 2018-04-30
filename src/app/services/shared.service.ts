@@ -111,6 +111,13 @@ export class SharedService {
         });
     }
 
+    public walletEventCreation(wallets: Wallet[]) {
+        wallets.forEach((wallet) => {
+            this.eventService.createTXConfirmationEvent(wallet.name);
+        });
+    }
+
+
     // WIP
     public changePicture(select: boolean): Promise<any> {
         let photoURL: Promise<any>;
@@ -128,6 +135,8 @@ export class SharedService {
             console.log(error);
         });
     }
+
+    //FINWIP
 
     public setWallets(wallets: Wallet[]) {
         this.wallets = wallets;
@@ -201,8 +210,6 @@ export class SharedService {
         });
     }
 
-    // WIP
-
     public getRequests(): Observable<IMSWalletRequest[]> {
         return this.firebaseData.getMultiSignedWalletRequest(this.user.uid)
         .map((requests) => {
@@ -220,8 +227,13 @@ export class SharedService {
 
      // User preferences
 
-     public updateWalletCryptoUnit(wallet: Wallet): Promise<any> {
+    public updateWalletCryptoUnit(wallet: Wallet): Promise<any> {
         return this.firebaseData.updateWalletCrypto(wallet, this.user.uid);
+    }
+
+    public updateCurrency(currency: string): Promise<any> {
+        return this.firebaseData.updateCurrency(this.user.uid, currency);
+
     }
 
     public getWalletWIF(wallet: Wallet): Observable<string> {
@@ -236,12 +248,6 @@ export class SharedService {
             .map((keys: IKeys) => {
                 return keys.mnemonics;
             });
-    }
-
-    public walletEventCreation(wallets: Wallet[]) {
-        wallets.forEach((wallet) => {
-            this.eventService.createTXConfirmationEvent(wallet.name);
-        });
     }
 
     // Home Functions, they are required when the user logs in
@@ -318,20 +324,19 @@ export class SharedService {
     // Wallet Creation
 
     // Creates a new wallet for a logged User
-    public createWallet(crypto, passphrase): Promise<Wallet> {
+
+    public saveWallet(keys: IKeys, crypto: string): Promise<Wallet> {
         return new Promise((resolve, reject) => {
-            // We create the crypto information according to the currency selected
-            const keys = this.keyService.createKeys(crypto, passphrase);
-            const data = {
-                name: crypto + this.user.uid.substring(0, 21),
-                extended_public_key: keys.xpub,
-            };
             // The unit of the coin is by default the smallest one
             const currency = AppData.cryptoUnitList.filter((c) => {
                 return c.value.includes(crypto);
             }).pop();
             currency.units = currency.units.pop();
-            // We send the info to the BlockCypher API
+            const data = {
+                name: crypto + this.createRandomUUID(this.user.uid),
+                extended_public_key: keys.xpub,
+            };
+           // We send the info to the BlockCypher API
             if ((crypto !== 'tet') && (crypto !== 'eth')) {
                 this.restService.createWalletHD(data, crypto)
                     .subscribe((hdWallet) => {
@@ -339,11 +344,11 @@ export class SharedService {
                         const newWallet = new Wallet(hdWallet.name, keys, currency);
                         this.firebaseData.addWallet(newWallet, this.user.uid);
                         resolve(newWallet);
-                    },
-                        (error) => {
-                            reject(error);
-                        });
+                    }, (error) => {
+                        reject(error);
+                });
             } else {
+                console.log('hgere');
                 const address = this.keyService.generateAddress(keys);
                 const newWallet = new Wallet(data.name, keys, currency);
                 newWallet.address = address;
@@ -352,19 +357,25 @@ export class SharedService {
             }
         });
     }
+    public createWallet(crypto, passphrase): Promise<Wallet> {
+        const keys = this.keyService.createKeys(crypto, passphrase);
+        console.log(crypto);
+        return this.saveWallet(keys, crypto);
+    }
 
-    //WIP 
+    // WIP
 
     public importWalletMnemonics(mnemonics: string, crypto: string, passphrase?: string) {
-        console.log(mnemonics);
-        this.keyService.importWalletMnemonics(mnemonics, crypto, passphrase);
+        const keys = this.keyService.importWalletMnemonics(mnemonics, crypto, passphrase);
+        console.log(keys);
+        return this.saveWallet(keys, crypto);
     }
 
-    public importWalletWIF(wip: string, crypto: string) {
-        console.log(wip);
-        this.keyService.importWalletWif(wip, crypto);
+    public importWalletWIF(wif: string, crypto: string) {
+        const keys = this.keyService.importWalletWif(wif, crypto);
+        console.log(keys);
+        // return this.saveWallet(keys, crypto);
     }
-
     //FINWIP
     // Functions for creating and sending Payments
 
@@ -474,10 +485,6 @@ export class SharedService {
             });
     }
 
-/*  All of this is a
-    WIP
-    Which Means it is untested and unfinished
- */
     // MultiSigned Wallets Functions
 
     // We create the MultiSigned Walled Request for the other users on the App
@@ -568,7 +575,6 @@ export class SharedService {
         });
     }
 
-    // WIP
 
     public createPendingTrx(transaction: ITransactionSke, wallet: Wallet) {
         console.log('We create the Pending TRX');
@@ -646,5 +652,9 @@ export class SharedService {
         }
         pendingTrx.dismissed.push(this.user.email);
         this.firebaseData.updatePendingTrx(pendingTrx);
+    }
+
+    private createRandomUUID(seed: string): string {
+        return (  Math.random().toString(36).substring(2) + seed).substring(0, 21);
     }
 }
