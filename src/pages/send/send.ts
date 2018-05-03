@@ -47,9 +47,10 @@ export class SendPage {
     // If we are coming back from the Address Book Page, we have selected an Address
     this.event.subscribe('selected:address', (addressData) => {
       // We disable the form
-      this.selectedAddress = this.duplicateAddress(addressData);
-      this.selectAddressForm.controls.inputAddress.disable();
       this.selectAddressForm.reset();
+      this.selectAddressForm.controls.inputAddress.disable();
+      this.selectedAddress = this.duplicateAddress(addressData);
+
     });
   }
 

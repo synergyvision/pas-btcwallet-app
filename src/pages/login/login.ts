@@ -45,6 +45,7 @@ export class LoginPage {
       .then((success) => {
         this.events.publish('user:loggedIn');
       }).catch((error) => {
+        console.log(error);
         setTimeout(() => {
           this.error = this.translate.instant('ERROR.FIREBASE.' + error.code);
       }, 500);

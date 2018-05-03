@@ -6,7 +6,7 @@ import { ITransactionSke } from '../interfaces/ITransactionSke';
 // Object to be Stored on the Firebase RealTime DB
 export interface IPendingTxs {
     createdBy?: string;
-    createdDate?: Date;
+    createdDate?: string;
     amount?: number;
     to?: string;
     fee?: number;

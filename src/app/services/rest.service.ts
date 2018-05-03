@@ -136,7 +136,7 @@ export class RestService {
     console.log(data);
     return this.http.post(this.getPath(crypto) + '/txs/new?token=' + TOKEN, data)
       .map((res) => {
-        console.log('We get the Transaction to be Signed');
+        // We get the Transaction to be Signed
         return res as ITransactionSke;
       });
   }
@@ -154,7 +154,7 @@ export class RestService {
   // Puts Metada on a TX
 
   public putMetadata(trx: string, crypto: string, data: any ): Observable<any> {
-    return this.http.put(this.getPath(crypto) + '/txs/' + trx + '/meta?token=' + TOKEN, data)
+    return this.http.put(this.getPath(crypto) + '/txs/' + trx + '/meta?token=' + TOKEN + '&private=true', data)
     .map((res) => {
       return res;
     });
@@ -163,6 +163,7 @@ export class RestService {
   public getMetadata(trx: string, crypto: string) {
     return this.http.get(this.getPath(crypto) + '/txs/' + trx + '/meta?token=' + TOKEN + '&private=true')
     .map((res) => {
+      console.log(res);
       return res;
     });
   }

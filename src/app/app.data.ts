@@ -77,6 +77,14 @@ export class AppData {
         { name: 'Ethereum Testnet', value: 'tet' },
     ];
 
+    public static hdCryptoCurrencies = [
+        { name: 'Testnet', value: 'tes' },
+        { name: 'Bitcoin', value: 'btc' },
+        { name: 'Dogecoin', value: 'dog' },
+        { name: 'Litecoin', value: 'ltc' },
+        { name: 'BlockCypher Testnet', value: 'bcy' },
+    ];
+
     public static multiCryptoCurrencies = [
         { name: 'Testnet', value: 'tes' },
         { name: 'Bitcoin', value: 'btc' },
@@ -93,6 +101,12 @@ export class AppData {
         { name: 'DOGE_URL', path: 'doge/main', crypto: 'dog' },
         { name: 'LITECOIN_URL', path: 'ltc/main', crypto: 'ltc' },
         { name: 'ETHER_TESTNET_URL', path: 'beth/test', crypto: 'tet' },
+    ];
+
+    public static metadataOptions = [
+       { name: 'METADATA.payment', value: 'Payment' },
+       { name: 'METADATA.gift', value: 'Gift' },
+       { name: 'METADATA.transfer', value: 'Transference' },
     ];
 
     public static cryptoUnitList = [

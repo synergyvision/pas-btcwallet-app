@@ -99,6 +99,6 @@ export class TransactionsPage {
 
     private goToTxDetails(tx: ITransaction[]) {
       console.log(tx);
-      this.navCtrl.push('TransactionConfirmationPage', tx);
+      this.navCtrl.push('TransactionConfirmationPage', {transaction: tx, wallet: this.selectedWallet });
     }
   }

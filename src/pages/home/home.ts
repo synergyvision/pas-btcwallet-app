@@ -51,20 +51,7 @@ export class HomePage {
     this.events.subscribe('home:refresh', () => {
       this.slides.slideTo(1);
     });
-    this.sharedService.importWalletWIF('L1Fq38y6guhwSde83uHdTE8eNXntfNjmEnVmEJ6fQzh7x1L8LkdJ', 'tet');
-/*     .then((response) => {
-      console.log(response);
-    }).catch((error) => {
-      console.log(error);
-    }); */
     // this.createRequest();
-    /* this.restService.getMetadata('4042d167a9ee21eca150e8f08fe7f2a4eb5bfee101222161c1f2a1fe159c8028',
-    'bcy')
-    .subscribe((data) => {
-      console.log(data);
-    }, (error) => {
-      console.log(error);
-    }); */
   }
 
 /*   public createRequest() {

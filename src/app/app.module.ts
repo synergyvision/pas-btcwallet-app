@@ -32,6 +32,7 @@ import { StorageProvider } from '../providers/firebase/storage';
 import { Camera } from '@ionic-native/camera';
 import { HttpErrorInterceptor } from './interceptor/http.error.interceptor';
 import { TwoFactorAuthService } from './services/twofactorauth.service';
+import { ActivityService } from './services/activity.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -87,6 +88,7 @@ const firebaseConfig = {
     SplashScreen,
     SharedService,
     RestService,
+    ActivityService,
     TwoFactorAuthService,
     {
       provide: HTTP_INTERCEPTORS,

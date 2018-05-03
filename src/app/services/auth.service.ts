@@ -61,6 +61,8 @@ export class AuthService {
         this.user.updateProfile({
             displayName: this.user.displayName,
             photoURL : this.user.photoURL,
+        }).catch((error) => {
+            console.log(error);
         });
     }
 
@@ -106,6 +108,7 @@ export class AuthService {
     // Gets the user object from the Auth Service for use on the App
     public getLoggedUser(): User {
         this.user = firebase.auth().currentUser;
+        console.log(this.user.photoURL);
         return new User(this.user.uid, this.user.email, this.user.emailVerified,
                         this.user.phoneNumber, this.user.photoURL);
     }

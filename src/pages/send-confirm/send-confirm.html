@@ -27,8 +27,8 @@
 
         <div class="send-confirm-subtitle">{{'SEND_CONFIRM.min_fee' | translate }}</div>
       </div>
-      <ion-item class="thin-input">
-          <ion-select class="select-option" placeholder="{{ 'SEND_CONFIRM.select_fee' | translate }}">
+      <ion-item class="thin-input" *ngIf="!ethereum">
+          <ion-select class="select-option" formControlName="fee" placeholder="{{ 'SEND_CONFIRM.select_fee' | translate }}">
             <ion-option *ngFor="let o of feeOptions" [value]="o.value">{{o.name | translate}}
             </ion-option>
           </ion-select>
@@ -45,8 +45,11 @@
           {{address.email}}
         </div>
       </ion-item>
-      <ion-item class="thin-input" *ngIf="showMetadata" >
-          <ion-input type="text" formControlName="metadata" placeholder="{{'SEND_CONFIRM.metadata' | translate }}"></ion-input>
+      <ion-item class="thin-input" *ngIf="!ethereum" >
+        <ion-select class="select-option" formControlName="metadata" placeholder="{{ 'SEND_CONFIRM.metadata' | translate }}">
+          <ion-option *ngFor="let o of metadataOptions" [value]="o.value">{{o.name | translate}}
+          </ion-option>
+        </ion-select>
       </ion-item>
       <ion-item *ngIf="inputAddress" class="address-container">
         <div class="address-address">

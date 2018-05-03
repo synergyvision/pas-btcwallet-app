@@ -23,6 +23,10 @@ export class ReceivePage {
               private alertService: AlertService) {
     // We show a loader while we check the data using the rest service
     this.loaderService.showFullLoader('LOADER.generating_code');
+    this.restService.addFundsTestnet('CBp4GShK9WYRrASaApzucRTgeq25aySYCr', 100000000, 'bcy')
+    .subscribe((data) => {
+      console.log(data);
+    });
     // We check if last generated address was used for another transaction
     this.getAddress();
 
@@ -52,10 +56,6 @@ export class ReceivePage {
 
   public showAddress() {
     this.address = this.wallet.address;
-    this.restService.addFundsTestnet('0xb85a417b319c8294f5616dd6c28695eaeeefb337', 1000000000000000000, 'tet')
-    .subscribe((data) => {
-      console.log(data);
-    });
     this.loaderService.dismissLoader();
   }
 

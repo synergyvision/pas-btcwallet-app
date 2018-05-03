@@ -4,15 +4,16 @@
 export class Activity {
     public key?: string;
     public date: string;
-    public activity?: any;
+    public name?: string;
+    public description?: any;
 
-    constructor(date: string, activity?: any, key?: string) {
-      this.key = key;
+    constructor(date: string, name: any, description?, key?: string) {
       this.date = date;
-      this.activity = activity;
+      this.name = name;
+      this.description = description || '';
     }
 
     public setActivity(activity) {
-      this.activity = activity;
+      this.name = activity;
     }
 }

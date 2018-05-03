@@ -22,7 +22,7 @@
         <div class = "message-token" *ngIf= "i.name === 'token'">
           {{ 'SEND.token_required' | translate }}
         </div>
-        <ion-item class="thin-input">
+        <ion-item class="thin-input" *ngIf="!selectAddressForm.controls[i.name].disabled">
           <ion-input type="{{i.type}}" formControlName="{{i.name}}" placeholder="{{i.placeholder| translate }}"></ion-input>
         </ion-item>
       </div>  

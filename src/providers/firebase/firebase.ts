@@ -50,13 +50,8 @@ export class FirebaseProvider {
   public createProfilePicture(email: string, uid: string) {
     this.storageProvider.createProfileImage(email)
       .then((url) => {
-        console.log(url);
         this.angularFire.list('user/' + uid).set('img', url);
       });
-  }
-
-  public updateProfilePicture(uid: string, pictureURL: string) {
-    this.angularFire.list('user/' + uid).set('img', pictureURL);
   }
 
   // Retrieve Data of Signed User

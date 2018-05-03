@@ -57,7 +57,8 @@
         "sub_title": "Configuración de Billeteras",
         "email_verified_message": "Su cuenta no se encuentra verificada",
         "select_crypto_unit": "Seleccione Unidad",
-        "select_wallet": "Seleccione Billetera"
+        "select_wallet": "Seleccione Billetera",
+        "wallet_imported": "Billetera importada con éxito"
     },
 
     "ACTIVITY": {
@@ -69,7 +70,11 @@
         "pending_tx_body": "El usuario {{ user }} desea que apruebe una transferencia",
         "destination": "Destino: ",
         "amount": "Monto: ",
-        "activity_title": "Actividad Reciente"
+        "activity_title": "Actividad Reciente",
+        "password_changed": "Cambio de contraseña",
+        "logged_in": "Inicio de Sesión",
+        "payment_sent": "Pago realizado ",
+        "payment_message": "por {{value}} {{currency}} "
     },
 
     "ADDRESS": {
@@ -153,7 +158,7 @@
         "balance": "Disponible: ",
         "left": "Restante: ",
         "selected_address": "Dirección Seleccionada",
-        "metadata": "Metadata",
+        "metadata": "Concepto",
         "select_fee": "Preferencia",
         "min_fee": "Comisión",
         "fee_low": "Baja",
@@ -173,8 +178,10 @@
         "receiver": "Recipientes: ",
         "outputs": "Salidas: ",
         "amount": "Monto: ",
+        "total": "Total transferido: ",
         "fee": "Tarifa: ",
-        "received_time": "Recibido: "
+        "received_time": "Recibido: ",
+        "metadata": "Concepto"
     },
 
     "TRANSACTIONS": {
@@ -212,7 +219,8 @@
         "address": "Dirección",
         "fee_low": "Baja",
         "fee_medium": "Media",
-        "fee_high": "High"
+        "fee_high": "High",
+        "passphrase": "Contraseña"
     },
 
     "ACCOUNT_OPTIONS": {
@@ -237,7 +245,7 @@
         "change_currency":"Cambiar Moneda Local",
         "change_crypto_unit":"Cambiar Unidades de Moneda",
         "export_wallet":"Exportar Billetera",
-        "show_mnemonics": "Mostrar Clave de Recuperacion"
+        "import_wallet": "Importar Billetera"
     },
     
     "ERROR": {
@@ -288,5 +296,11 @@
         "creating_data": "Generando Datos",
         "generating_code": "Generando Código",
         "sending_payment": "Realizando Pago"
-    }
+    },
+
+    "METADATA": {
+        "payment": "Pago",
+        "gift": "Regalo",
+        "transfer": "Transferencia"
+    } 
 }

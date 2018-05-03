@@ -59,20 +59,38 @@ export class StorageProvider {
         .then((image) => {
             return this.uploadImage(image, email);
         }, (error) => {
+           console.log(error);
            return error;
         });
     }
 
     public uploadImage(image, email: string): Promise<string> {
         image = 'data:image/jpeg;base64,' + image;
-        return this.storage.child('Photos/' + email + '/profile.jpg')
-            .putString(image, 'data_url')
-            .then((savedPicture) => {
-                const pictureURL = savedPicture.downloadURL;
-                console.log(savedPicture);
-                return pictureURL;
-        }).catch((error) => {
-            return (error);
+        const uploadTask = this.storage.child('Photos/' + email + '/profile.jpg').putString(image, 'data_url');
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
+        (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log('Upload is paused');
+                break;
+              case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log('Upload is running');
+                break;
+            }
+        },
+        (error) => {
+            console.log('82');
+            console.log(error);
+            return error;
+        },
+        (success) => {
+            const pictureURL = uploadTask.snapshot.downloadURL;
+            console.log('88');
+            console.log(pictureURL);
+            return pictureURL;
         });
+        return uploadTask;
     }
 }

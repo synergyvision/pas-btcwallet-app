@@ -28,20 +28,28 @@
         <ion-icon class="icon-arrow" name="wallet-arrow"></ion-icon>
       </ion-label>
     </button>
-<!-- 
+
+    <!-- Import Wallet Form -->
     <div class ="change-option" *ngIf="showInput">
-      <form [formGroup]="recoverWalletForm" (ngSubmit)="recoverWallet(recoverWalletForm)">
-        <ion-item class="input" *ngFor="let i of recoverWalletInputs">
-            <ion-label>
-            {{i.placeholder | translate}}
-            </ion-label>
-            <ion-input type="{{i.type}}" formControlName="{{i.name}}" required></ion-input>
+      <form [formGroup]="recoverWalletForm" (ngSubmit)="importWallet(recoverWalletForm)">
+          {{'WALLET_SETTINGS.mnemonics_input' | translate}}
+        <ion-item class="input">
+            <ion-textarea type="text" pattern="[a-zA-Z \s]+" formControlName="mnemonics" required></ion-textarea>
+        </ion-item>
+        <ion-item class="input">
+            <ion-textarea type="text" formControlName="passphrase" placeholder="{{'FORM.passphrase' | translate }}"></ion-textarea>
+        </ion-item>
+        <ion-item class="crypto input">
+            <ion-label>{{'cryptocoins' | translate }}</ion-label>
+            <ion-select class="select-crypto" formControlName="crypto">
+              <ion-option *ngFor="let c of hdCryptoList" value="{{c.value}}">{{c.name}}</ion-option>
+            </ion-select>
         </ion-item>
         <button ion-button type="submit" color="primary" block [disabled]="!recoverWalletForm.valid">
             {{'FORM.continue' | translate}}
        </button>
       </form>
-    </div> -->
+    </div>
 
     <!--    Show Wallet Select -->
 
@@ -49,6 +57,17 @@
       <ion-item class="thin-input">
         <ion-select (ionChange)="onWalletChange()" class="select-option" [(ngModel)]="selectedWallet" placeholder="{{'WALLET_SETTINGS.select_wallet' | translate }}">
           <ion-option *ngFor="let w of wallets" [value]="w">{{w.name}}
+          </ion-option>
+        </ion-select>
+      </ion-item>
+    </div>
+
+    <!--    Show HD Wallet Select -->
+
+    <div class="change-option" *ngIf="showHDWalletSelect">
+      <ion-item class="thin-input">
+        <ion-select (ionChange)="onWalletChange()" class="select-option" [(ngModel)]="selectedWallet" placeholder="{{'WALLET_SETTINGS.select_wallet' | translate }}">
+          <ion-option *ngFor="let w of hdWallets" [value]="w">{{w.name}}
           </ion-option>
         </ion-select>
       </ion-item>
@@ -75,23 +94,5 @@
         </ion-select>
       </ion-item>
     </div>
-
-    <!-- Export Wallet (WIF) and showMnemonics -->
-
-    <div *ngIf="(selectedWallet) && (selectedOption==='exportWallet')" class="wallet-info">
-      <ion-item class="wallet-info" text-wrap>
-          {{'wallet' | translate }}
-        <div class="wallet-info-detail">
-          {{selectedWallet.name}}
-        </div>
-      </ion-item>
-      <ion-item *ngIf ="wif" class="wallet-info selectable">
-        WIF:
-        <div class="wallet-info-detail" text-wrap>
-          {{wif}}
-        </div>
-      </ion-item>
-    </div>
-
   </ion-list>
 </ion-content>

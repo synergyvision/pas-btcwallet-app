@@ -20,6 +20,7 @@ import { IBalance } from '../interfaces/IBalance';
 import { IHDWallet } from '../interfaces/IHDWallet';
 import { ITransactionSke } from '../interfaces/ITransactionSke';
 import { IAddress } from '../interfaces/IAddress';
+import { ActivityService } from './activity.service';
 
 const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
 
@@ -51,7 +52,8 @@ export class SharedService {
 
     constructor(public firebaseData: FirebaseProvider, public restService: RestService, public events: Events,
                 public eventService: EventService, public keyService: KeyService, public authService: AuthService,
-                public exchangeService: ExchangeService, public storageProvider: StorageProvider) {
+                public exchangeService: ExchangeService, public storageProvider: StorageProvider, 
+                public activityService: ActivityService) {
         // We create a listener on the auth state
         this.events.subscribe('user:loggedOut', () => {
             this.user = this.wallets = this.balances =
@@ -126,10 +128,9 @@ export class SharedService {
         } else {
            photoURL = this.storageProvider.takeProfileImage(this.user.email);
         }
+
         return photoURL.then((url) => {
-            this.user.setPhotoURL(url);
             this.authService.updateProfile(this.user);
-            this.firebaseData.updateProfilePicture(this.user.uid, url);
         })
         .catch((error) => {
             console.log(error);
@@ -168,16 +169,24 @@ export class SharedService {
         return this.firebaseData.getPendingTrx(this.user.uid)
         .map((pending) => {
             return pending.filter((tx) => {
-                    // (this.validPendingTx(tx));
+                // We verify that the Tx has not expired
+                if (this.validPendingTx(tx)) {
                     if (tx.dismissed !== undefined) {
                         return (!tx.dismissed.includes(this.user.email) &&
                             (!tx.approved.includes(this.user.email)));
                     } else if (!tx.approved.includes(this.user.email)) {
                         return tx;
                     }
-                // }
+                // The Request has expired, and we delete it from the Firebase Database
+                } else {
+                    this.firebaseData.deletePendingTrx(tx.key);
+                }
             });
         });
+    }
+
+    public getActivityList() {
+        return this.firebaseData.getActivitiesList(this.user.uid);
     }
 
     public getWalletPendingTx(wallet: string): Observable<IPendingTxs[]> {
@@ -185,12 +194,8 @@ export class SharedService {
     }
 
     public validPendingTx(tx: IPendingTxs): boolean {
-        console.log(tx);
-        console.log(tx.createdDate.getTime());
-        const time = new Date().getTime() - tx.createdDate.getTime();
-        console.log(time);
-        // return (time < 604800000);
-        return true;
+        const time = new Date().getTime() - new Date(tx.createdDate).getTime();
+        return (time < 604800000);
     }
 
     public updateUser() {
@@ -234,13 +239,6 @@ export class SharedService {
     public updateCurrency(currency: string): Promise<any> {
         return this.firebaseData.updateCurrency(this.user.uid, currency);
 
-    }
-
-    public getWalletWIF(wallet: Wallet): Observable<string> {
-        return this.firebaseData.getWalletsKeys(this.user.uid, wallet.key)
-            .map((keys: IKeys) => {
-                return this.keyService.getWIF(keys, wallet.crypto.value);
-            });
     }
 
     public getWalletMnemonics(wallet: Wallet): Observable<string> {
@@ -367,16 +365,9 @@ export class SharedService {
 
     public importWalletMnemonics(mnemonics: string, crypto: string, passphrase?: string) {
         const keys = this.keyService.importWalletMnemonics(mnemonics, crypto, passphrase);
-        console.log(keys);
         return this.saveWallet(keys, crypto);
     }
 
-    public importWalletWIF(wif: string, crypto: string) {
-        const keys = this.keyService.importWalletWif(wif, crypto);
-        console.log(keys);
-        // return this.saveWallet(keys, crypto);
-    }
-    //FINWIP
     // Functions for creating and sending Payments
 
     // Returns another app user wallet information *** NO MULTI WALLET IMPLEMENTATION
@@ -384,14 +375,15 @@ export class SharedService {
         return this.firebaseData.getWalletByEmail(email, coin, multiSignedKey)
             .first()
             .flatMap((wallet) => {
-                console.log(wallet);
-                if (wallet.address) {
-                    return Observable.of(wallet.address);
-                }
-                if (wallet.name) {
-                    return this.restService.deriveAddress(wallet.name, coin);
+                if (wallet !== undefined) {
+                    if (wallet.address) {
+                        return Observable.of(wallet.address);
+                    }
+                    if (wallet.name) {
+                        return this.restService.deriveAddress(wallet.name, coin);
+                    }
                 } else {
-                    return Observable.throw('NO_WALLET_FOR_SELECTED_CRYPTO');
+                    return Observable.throw('ERROR.no_wallet_for_crypto_message');
                 }
             })
             .catch((error) => {
@@ -455,6 +447,7 @@ export class SharedService {
                     ],
                     value: Number(amount),
                 }],
+                preference: fee,
             });
         }
         console.log(data);
@@ -468,7 +461,6 @@ export class SharedService {
         });
         if (wallet.multiSignedKey !== '') {
             return this.createPendingTrx(transaction, signingWallet);
-            // return this.signPaymentMultiSigned(transaction, signingWallet);
         } else {
             return this.signNormalPayment(transaction, signingWallet);
         }
@@ -578,13 +570,12 @@ export class SharedService {
 
     public createPendingTrx(transaction: ITransactionSke, wallet: Wallet) {
         console.log('We create the Pending TRX');
-        console.log(transaction.tx.inputs);
         const msWallet = this.getMultiSignedWallet(wallet.multiSignedKey);
         const pendingTrx: IPendingTxs = {};
         pendingTrx.tx = transaction;
         pendingTrx.to = transaction.tx.outputs.pop().addresses.pop();
         pendingTrx.createdBy = this.user.email;
-        pendingTrx.createdDate = new Date();
+        pendingTrx.createdDate = new Date().toDateString();
         pendingTrx.wallet = wallet.multiSignedKey;
         pendingTrx.amount = transaction.tx.total;
         pendingTrx.approved = [];

@@ -16,23 +16,27 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ActivityPage {
 
-  private activityList: Activity[];
+  private activityList: Observable<Activity[]>;
   private requestList: Observable<IMSWalletRequest[]>;
   private pendingTxList: Observable<IPendingTxs[]>;
+  private error: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private sharedService: SharedService,
               private loaderService: LoaderService, private translate: TranslateService) {
-    this.activityList = AppData.activityList;
+    this.activityList = this.sharedService.getActivityList();
+    this.activityList.subscribe((data) => {
+      console.log(data);
+    }); // AppData.activityList;
     this.requestList = this.sharedService.getRequests();
     this.pendingTxList = this.sharedService.pendingTxs;
   }
 
-  private removeActivity(activity) {
+/*   private removeActivity(activity) {
     let index = this.activityList.indexOf(activity);
     if (index > -1) {
       this.activityList.splice(index, 1);
     }
-  }
+  } */
 
   private acceptRequest(request: IMSWalletRequest) {
     this.loaderService.showFullLoader('LOADER.wait');
@@ -53,7 +57,7 @@ export class ActivityPage {
       this.navCtrl.push('TransactionConfirmationPage', transaction.tx);
     }, (error) => {
       console.log(error);
-      this.translate.instant(error);
+      this.error = this.translate.instant(error);
     });
 
   }

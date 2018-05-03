@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ITransaction } from '../../app/interfaces/ITransaction';
-
+import { RestService } from '../../app/services/rest.service';
+import { TranslateService } from '@ngx-translate/core';
+import { AppData } from '../../app/app.data';
+import { Wallet } from '../../app/models/wallet';
 
 @IonicPage()
 @Component({
@@ -11,11 +14,31 @@ import { ITransaction } from '../../app/interfaces/ITransaction';
 export class TransactionConfirmationPage {
 
   private transaction: ITransaction;
+  private wallet: Wallet;
+  private metadata: string;
+  private metadataList = AppData.metadataOptions;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.transaction = navParams.data;
+  constructor(public navCtrl: NavController, public navParams: NavParams, private restService: RestService,
+              private translate: TranslateService) {
+    this.transaction = navParams.get('transaction');
+    this.wallet = navParams.get('wallet');
     console.log(navParams.data);
     console.log(this.transaction);
+    this.getMetadata();
+  }
+
+  private getMetadata() {
+    this.restService.getMetadata(this.transaction.hash, this.wallet.crypto.value)
+    .subscribe((metadata) => {
+      if (metadata.hasOwnProperty('data')) {
+        const name = this.metadataList.filter((value) => {
+          return value.value === metadata['data'];
+        }).pop().name;
+        this.metadata = this.translate.instant(name);
+      }
+      }, (error) => {
+        console.log(error);
+    });
   }
 
   private goBack() {

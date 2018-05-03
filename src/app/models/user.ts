@@ -20,7 +20,7 @@ export class User {
   public displayName?: string;
   public token?: IToken;
 
-  constructor(uid, email, emailVerified,  phone?, photoURL?, name?, token?) {
+  constructor(uid, email, emailVerified, phone?, photoURL?, name?, token?) {
     this.uid = uid,
     this.email = email;
     this.emailVerified = emailVerified;

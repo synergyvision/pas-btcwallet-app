@@ -46,7 +46,6 @@ export class AppSettings {
     { title: 'WALLET_OPTIONS.change_currency', value: 'changeCurrency' },
     { title: 'WALLET_OPTIONS.change_crypto_unit', value: 'changeCryptoUnit'},
     { title: 'WALLET_OPTIONS.export_wallet', value: 'exportWallet'},
-    { title: 'WALLET_OPTIONS.show_mnemonics', value: 'showMnemonics'},
     { title: 'WALLET_OPTIONS.import_wallet', value: 'importWallet'},
   ];
 
