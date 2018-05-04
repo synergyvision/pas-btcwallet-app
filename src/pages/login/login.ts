@@ -20,6 +20,8 @@ export class LoginPage {
   private loginForm: FormGroup;
   private error: string;
   private inputs;
+  private showRecoverPassword: boolean = false;
+  private email: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private loaderService: LoaderService,
               private authService: AuthService, private formBuilder: FormBuilder, private events: Events,
@@ -50,6 +52,27 @@ export class LoginPage {
           this.error = this.translate.instant('ERROR.FIREBASE.' + error.code);
       }, 500);
       });
+  }
+
+  private showRecovery() {
+    this.showRecoverPassword = true;
+  }
+
+  private recoverPassword() {
+    this.loaderService.showLoader('LOADER.wait');
+    this.authService.recoverPassword(this.email)
+    .then((response) => {
+      console.log(response);
+      this.error = this.translate.instant('LOGIN.password_reset');
+    })
+    .catch((error) => {
+      this.error = this.translate.instant(error);
+    });
+    this.loaderService.dismissLoader();
+    setTimeout(() => {
+      this.showRecoverPassword = false;
+  }, 500);
+    // this.authService.restorePassword(this.email);
   }
 
   private goToRegister() {

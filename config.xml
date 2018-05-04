@@ -40,7 +40,6 @@
     <plugin name="cordova-plugin-qrscanner" spec="^2.5.0" />
     <plugin name="cordova-plugin-camera" spec="^4.0.2" />
     <engine name="browser" spec="5.0.3" />
-    <engine name="android" spec="~7.0.0" />
     <platform name="android">
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
@@ -61,4 +60,5 @@
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     </platform>
+    <engine name="android" spec="~7.0.0" />
 </widget>

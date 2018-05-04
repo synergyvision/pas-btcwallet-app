@@ -59,17 +59,24 @@
           </button>
     </ion-card>
   </ion-list>
+
   <ion-list no-lines>
-    <ion-item class="thin-input date">
+    <ion-item class="thin-input date" *ngIf="activity">
         {{'ACTIVITY.activity_title' | translate }}
+    </ion-item>
+    <ion-item class="thin-input date" *ngIf="!activity">
+      No activity
     </ion-item>
     <ion-item-sliding *ngFor="let a of activityList | async" text-wrap>
       <ion-item class="thin-input">
         <div class="activity-date">{{a.date | date:'MMM dd, y hh:mm a'}}</div>
         {{a.name | translate}}
+        <span *ngIf="a.name === 'ACTIVITY.payment_sent'">
+         {{'ACTIVITY.payment_message' | translate }} {{ a.description.value / a.description.exchange | number }} {{ a.description.name}}
+        </span>
       </ion-item>
       <ion-item-options>
-        <button ion-button color="danger" (click)="removeActivity(a)" icon-start>
+        <button ion-button color="danger" (click)="removeActivity(a.key)" icon-start>
           <ion-icon name="trash"></ion-icon> {{'FORM.delete' | translate }} </button>
       </ion-item-options>
     </ion-item-sliding>

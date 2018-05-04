@@ -22,9 +22,10 @@ export class TransactionConfirmationPage {
               private translate: TranslateService) {
     this.transaction = navParams.get('transaction');
     this.wallet = navParams.get('wallet');
-    console.log(navParams.data);
-    console.log(this.transaction);
-    this.getMetadata();
+    if ((this.wallet.crypto.value !== 'eth') && (this.wallet.crypto.value !== 'tet')) {
+      this.getMetadata();
+    }
+
   }
 
   private getMetadata() {

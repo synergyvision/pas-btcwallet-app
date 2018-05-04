@@ -1,13 +1,13 @@
 
+import { Wallet } from '../../app/models/wallet';
 import { Injectable, keyframes } from '@angular/core';
-import { AngularFireModule } from 'angularfire2';
 import { AngularFireList, AngularFireObject } from 'angularfire2/database/interfaces';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs/Observable';
-import { User, IToken } from '../../app/models/user';
-import { Wallet } from '../../app/models/wallet';
+import { IToken, User } from '../../app/models/user';
+import { AngularFireModule } from 'angularfire2';
 import { Address } from '../../app/models/address';
 import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
 import { IKeys } from '../../app/models/IKeys';
@@ -16,6 +16,13 @@ import { CryptoCoin } from '../../app/models/crypto';
 import { Activity } from '../../app/models/activity';
 import { StorageProvider } from './storage';
 
+/*
+Class for managing CRUD Operations to the Database
+Currently, uses Firebase Realtime Database, which is a NoSQL DB.
+Complements the Firebase Auth Service, which handles user session.
+Auth Stores some information about the user, the rest is managed here
+More info can be found on https://firebase.google.com/docs/database/
+*/
 
 @Injectable()
 export class FirebaseProvider {
@@ -26,26 +33,31 @@ export class FirebaseProvider {
 
   }
 
-  // Add User to the DB
+  /*
+  Basic CRUD Operations for user data
+  Users are stored under the user / uid path on the database
+  */
+
+  // Adds a new user to the database
 
   public addUser(email: string, uid: string, pictureURL?: string) {
+    // Depending on the provider used, the user might have a profile picture already
     if (pictureURL === undefined) {
       this.createProfilePicture(email, uid);
     } else {
       this.angularFire.list('user/' + uid).set('img', pictureURL);
     }
+    // We save by default, the email, the currency of the user, and we create a Token Object for 2FA
     this.angularFire.list('user/' + uid).set('userEmail', email);
     this.angularFire.list('user/' + uid).set('currency', 'USD');
     this.angularFire.list('user/' + uid).set('token', {activated: false, enabled: false});
   }
 
-  public getToken(uid: string) {
-    return this.angularFire.object('user/' + uid + '/token')
-    .valueChanges()
-    .map((token) => {
-      return token as IToken;
-    });
-  }
+/*
+  Creates a profile picture if the provider is email and password.
+  More information about this provider
+  https://firebase.google.com/docs/auth/web/password-auth
+*/
 
   public createProfilePicture(email: string, uid: string) {
     this.storageProvider.createProfileImage(email)
@@ -54,8 +66,18 @@ export class FirebaseProvider {
       });
   }
 
-  // Retrieve Data of Signed User
+  // Functions for retrieving data of the signed User
 
+  // Gets the user IToken object
+  public getToken(uid: string) {
+    return this.angularFire.object('user/' + uid + '/token')
+    .valueChanges()
+    .map((token) => {
+      return token as IToken;
+    });
+  }
+
+  // Gets the user default currency
   public getCurrency(uid: string): Observable<string> {
     return this.angularFire.object('user/' + uid + '/currency')
     .valueChanges()
@@ -64,7 +86,7 @@ export class FirebaseProvider {
     });
   }
 
-  // Update Data of Signed User
+  // Functions for updating data of the signed User
 
   public updateCurrency(uid: string, currency: string) {
     return this.angularFire.list('user/' + uid).set('currency', currency);
@@ -74,12 +96,18 @@ export class FirebaseProvider {
     this.angularFire.list('user/' + uid).set('userEmail', email);
   }
 
-  // Wallet CRUD Operations
+  /*
+  Wallet CRUD Operations
+  Wallets are stored under the user / uid / wallet path on the database
+  */
+
+  // Saves a new Wallet Object
 
   public addWallet(wallet: Wallet, uid: string) {
     this.angularFire.list('user/' + uid + '/wallet/').push(wallet);
   }
 
+  // Retrieves all Wallets
   public getWallets(uid: string): Observable<any> {
     return this.angularFire.list('user/' + uid + '/wallet/')
       .snapshotChanges()
@@ -94,9 +122,7 @@ export class FirebaseProvider {
       });
   }
 
-  public setWallet(wallet: Wallet, uid: string, key: string) {
-    this.angularFire.list('user/' + uid + '/wallet/').push(wallet);
-  }
+  // Updates the user preferences on the crypto data used by a Wallet
 
   public updateWalletCrypto(wallet: Wallet, uid: string) {
     return this.angularFire.list('user/' + uid + '/wallet/' + wallet.key)
@@ -113,7 +139,10 @@ export class FirebaseProvider {
     });
   }
 
-  // Address Book CRUD Operations
+  /*
+  Address Book CRUD Operations
+  Address are stored under the user / uid / addressBook path on the database
+  */
 
   // Retrieves all contacts registered on the Logged User Address Book
 
@@ -128,21 +157,25 @@ export class FirebaseProvider {
     });
   }
 
+  // Adds another app user to the Address Book
+
   public addAddressToAddressBook(uid: string, address: Address) {
-    console.log(address);
-    console.log(uid);
     this.angularFire.list('user/' + uid + '/addressBook/').push(address);
   }
+
+  // Removes an address from the Address Book
 
   public removeAddressFromAddressBook(uid: string, address: string) {
     this.angularFire.list('user/' + uid + '/addressBook/').remove(address);
   }
 
+  // Edits an address stored on the Address Book
+
   public editAddressFromAddressBook(uid: string, key: string, address: Address) {
     this.angularFire.list('user/' + uid + '/addressBook/').update(key, address);
   }
 
-  // Verifies that the contact is already on the AddressBook
+  // Verifies that an address is already on the AddressBook
 
   public getAddressFromAddressBook(uid: string, email: string): Observable<any> {
     return this.angularFire.list('user/' + uid + '/addressBook/' , (ref) =>
@@ -159,6 +192,9 @@ export class FirebaseProvider {
   // Gets an especific Wallet from another user by using the email
 
   public getWalletByEmail(email: string, coin: string, multisigned?: string): Observable<any> {
+    if (multisigned === '') {
+      multisigned = null;
+    }
     return this.angularFire.list('/user', (ref) =>
       ref.orderByChild('userEmail').equalTo(email))
       .valueChanges()
@@ -196,8 +232,12 @@ export class FirebaseProvider {
       });
   }
 
+  // Activity CRUD Operations
+
   public addActivity(uid: string, activity: Activity) {
-    this.angularFire.list('user/' + uid + '/activities/').push(activity);
+    this.angularFire.list('user/' + uid + '/activities/').push(activity).then((e) => {
+      console.log(e);
+    });
   }
 
   public getActivitiesList(uid: string) {
@@ -210,14 +250,18 @@ export class FirebaseProvider {
     });
   }
 
-  // MultiSigned Wallets
+  public removeActivity(uid: string, activity: string) {
+    this.angularFire.list('user/' + uid + '/activities/').remove(activity);
+  }
+
+  // MultiSigned Wallets CRUD Operations
 
   public addMultiSignedWallet(multiWallet: MultiSignedWallet, walletOwner: any[]) {
     const key = this.angularFire.list('multiSignedWallet/').push(multiWallet).key;
     const wallet = multiWallet.toWallet(key);
     walletOwner.forEach((owner) => {
       wallet.keys = owner.pubKey;
-      this.setWallet(wallet, owner.uid, key);
+      this.addWallet(wallet, owner.uid);
     });
   }
 

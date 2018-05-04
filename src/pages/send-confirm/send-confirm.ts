@@ -39,7 +39,7 @@ export class SendConfirmPage {
   constructor(public navCtrl: NavController, public navParams: NavParams, private loaderService: LoaderService,
               private restService: RestService, private formBuilder: FormBuilder, private sharedService: SharedService,
               private alertService: AlertService, private translate: TranslateService, private events: Events) {
-    this.getData();
+    this.getData();;
   }
 
   private getData() {
@@ -97,7 +97,6 @@ export class SendConfirmPage {
             this.signPayment(response, form);
           });
         }, (error) => {
-          console.log(error);
           this.loaderService.dismissLoader();
           this.alertService.showError(error)
           .then(() => {
@@ -111,30 +110,28 @@ export class SendConfirmPage {
 
   private signPayment(transaction: ITransactionSke, form: FormGroup) {
     this.sharedService.sendPayment(transaction, this.balance.wallet)
-      .subscribe((response) => {
+      .subscribe((response: ITransactionSke) => {
         this.loaderService.dismissLoader();
         if (form.value.metadata !== '' && form.get('metadata').dirty) {
           this.addMetadata(form.value.metadata, response.tx.hash);
         }
-        this.createEvent(response, form.value.amount);
+        this.createEvent(response.tx.received, form.value.amount);
         this.navCtrl.push('TransactionConfirmationPage',
         { transaction: response.tx, wallet: this.balance.wallet });
       }, (error) => {
-        console.log(error);
         this.loaderService.dismissLoader();
         this.message = this.translate.instant(error);
       });
   }
 
-  private createEvent(tx: ITransactionSke, amount: number) {
+  private createEvent(tx, amount: number) {
     if (this.balance.wallet.multiSignedKey === '') {
-      this.events.publish('user:paymentSent', amount, this.balance.wallet.crypto, tx.tx.received);
+      this.events.publish('user:paymentSent', amount, this.balance.wallet.crypto, tx);
     }
   }
 
   private addMetadata(metadata: string, transaction: string) {
     const data = { data: metadata };
-
     this.restService.putMetadata(transaction, this.balance.wallet.crypto.value, JSON.stringify(data))
     .subscribe((res) => {
       // Metadata added succesfully

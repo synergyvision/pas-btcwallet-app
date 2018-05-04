@@ -18,6 +18,12 @@ export class ShowMnemonicsPage {
   }
 
   private goBack() {
-    this.navCtrl.pop();
+    if (this.navCtrl.getPrevious().name === 'CreateWalletPage') {
+      this.navCtrl.setRoot('HomePage').then(() => {
+        this.navCtrl.popToRoot();
+      });
+    } else  {
+      this.navCtrl.pop();
+    }
   }
 }

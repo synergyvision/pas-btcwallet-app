@@ -29,7 +29,6 @@ export class AuthService {
             .subscribe((user) => {
                 // Every time the authState Changes, we update accordingly
                 if (user) {
-                    console.log(user);
                     this.user = user;
                 } else {
                     this.logout();
@@ -105,10 +104,30 @@ export class AuthService {
         return firebase.auth().sendPasswordResetEmail(this.user.email);
     }
 
+    public recoverPassword(email: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.firebaseData.getUserByEmail(email)
+            .subscribe((user) => {
+                if (user.length > 0) {
+                    firebase.auth().sendPasswordResetEmail(this.user.email)
+                    .then((response) => {
+                        resolve(response);
+                    })
+                    .catch((emailError) => {
+                        reject(emailError);
+                    });
+                } else {
+                    reject('ERROR.FIREBASE.auth/user-not-found');
+                }
+            }, (error) => {
+                    reject(error);
+            });
+        });
+    }
+
     // Gets the user object from the Auth Service for use on the App
     public getLoggedUser(): User {
         this.user = firebase.auth().currentUser;
-        console.log(this.user.photoURL);
         return new User(this.user.uid, this.user.email, this.user.emailVerified,
                         this.user.phoneNumber, this.user.photoURL);
     }

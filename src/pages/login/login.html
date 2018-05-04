@@ -3,7 +3,7 @@
     <img src="assets/imgs/logo.svg">
   </div>
   <span *ngIf="error" class="error-message">{{error}}</span>
-  <ion-list no-lines>
+  <ion-list no-lines *ngIf="!showRecoverPassword">
     <form [formGroup]="loginForm" (ngSubmit)="loginEmail(loginForm)">
       <ion-item *ngFor="let i of inputs" class="input">
         <ion-label>
@@ -12,7 +12,7 @@
         <ion-input type="{{i.type}}" formControlName="{{i.name}}" placeholder="{{i.placeholder | translate}}">
         </ion-input>
       </ion-item>
-      <button ion-button block class="login-recover-button">
+      <button ion-button block class="login-recover-button" (click)="showRecovery()">
         {{'LOGIN.recover_password' | translate}}
       </button>
       <button ion-button block [disabled]="!loginForm.valid" type="submit" class="login-button">
@@ -26,5 +26,19 @@
       <ion-icon name="logo-googleplus"></ion-icon>
       Google
     </button>
+  </ion-list>
+  <ion-list no-lines *ngIf="showRecoverPassword">
+    <ion-item class="input">
+        <ion-label>
+          <ion-icon [name]="wallet-email"></ion-icon>
+        </ion-label>
+        <ion-input type="text" [(ngModel)]="email"  #ctrl="ngModel" placeholder="{{ 'FORM.email' | translate}}" required minlength="6" pattern="[^@\s]+@[^@\s]+\.[^@\s]+">
+        </ion-input>
+
+    </ion-item>
+    {{ctrl.valid}}
+    <button ion-button block [disabled]="!ctrl.valid" class="login-button" (click)="recoverPassword()">
+        {{'LOGIN.recover_password' | translate }}
+      </button>
   </ion-list>
 </ion-content>

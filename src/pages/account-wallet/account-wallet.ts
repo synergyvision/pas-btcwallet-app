@@ -75,12 +75,15 @@ export class AccountWalletPage {
   private selectOption(value) {
     this.clearData();
     this.selectedOption = value;
-    if (this.selectedOption.match(/^(changeCryptoUnit|showMnemonics)$/)) {
+    if (this.selectedOption.match(/^(changeCryptoUnit)$/)) {
+      console.log('here');
       this.showWalletSelect = true;
     }
     if (this.selectedOption.match(/^(exportWallet)$/)) {
       this.showHDWalletSelect = true;
-    } else {
+      console.log('here');
+    }
+    if (this.selectedOption.match(/^(importWallet)$/)) {
       this.showInput = true;
     }
   }

@@ -185,10 +185,6 @@ export class SharedService {
         });
     }
 
-    public getActivityList() {
-        return this.firebaseData.getActivitiesList(this.user.uid);
-    }
-
     public getWalletPendingTx(wallet: string): Observable<IPendingTxs[]> {
         return this.firebaseData.getWalletPendingTrx(wallet);
     }
@@ -396,6 +392,7 @@ export class SharedService {
 
     public createPayment(address: string, amount: number, wallet: IHDWallet, fee: string) {
         let data: {};
+        console.log(wallet);
         // MultiSigned Wallets
         if (wallet.multiSignedKey !== '' && wallet.multiSignedKey !== undefined) {
             const mSWallet = this.getMultiSignedWallet(wallet.multiSignedKey);

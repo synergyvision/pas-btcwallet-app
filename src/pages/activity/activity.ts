@@ -20,23 +20,22 @@ export class ActivityPage {
   private requestList: Observable<IMSWalletRequest[]>;
   private pendingTxList: Observable<IPendingTxs[]>;
   private error: string;
+  private activity: boolean = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private sharedService: SharedService,
-              private loaderService: LoaderService, private translate: TranslateService) {
-    this.activityList = this.sharedService.getActivityList();
-    this.activityList.subscribe((data) => {
-      console.log(data);
-    }); // AppData.activityList;
+              private loaderService: LoaderService, private translate: TranslateService,
+              private dataProvider: FirebaseProvider) {
+    this.activityList = this.dataProvider.getActivitiesList(this.sharedService.user.uid);
+    this.activityList.subscribe((response) => {
+      this.activity = response.length > 0;
+    });
     this.requestList = this.sharedService.getRequests();
     this.pendingTxList = this.sharedService.pendingTxs;
   }
 
-/*   private removeActivity(activity) {
-    let index = this.activityList.indexOf(activity);
-    if (index > -1) {
-      this.activityList.splice(index, 1);
-    }
-  } */
+  private removeActivity(activity) {
+    this.dataProvider.removeActivity(this.sharedService.user.uid, activity);
+  }
 
   private acceptRequest(request: IMSWalletRequest) {
     this.loaderService.showFullLoader('LOADER.wait');

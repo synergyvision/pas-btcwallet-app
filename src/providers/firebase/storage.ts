@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Block } from 'bitcoinjs-lib';
+import { Events } from 'ionic-angular';
 
 @Injectable()
 export class StorageProvider {
 
     public storage;
-    constructor(private camera: Camera) {
+    constructor(private camera: Camera, private events: Events) {
         this.storage = firebase.storage().ref();
     }
 
@@ -81,14 +82,13 @@ export class StorageProvider {
             }
         },
         (error) => {
-            console.log('82');
             console.log(error);
             return error;
         },
         (success) => {
             const pictureURL = uploadTask.snapshot.downloadURL;
-            console.log('88');
             console.log(pictureURL);
+            this.events.publish('user:imageChanged');
             return pictureURL;
         });
         return uploadTask;

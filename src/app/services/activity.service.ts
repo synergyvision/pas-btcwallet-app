@@ -9,16 +9,17 @@ import { CryptoCoin } from '../models/crypto';
 
 @Injectable()
 
-/* 
+/*
 Service for handling Activitys to be stored on the realtime database
 */
 export class ActivityService {
     private uid: string;
 
     constructor(private dataProvider: FirebaseProvider, private events: Events, private authService: AuthService) {
-        this.loginActivity();
+        // this.loginActivity();
         this.changedPassword();
         this.paymentSent();
+        this.imageChanged();
     }
 
     private changedPassword() {
@@ -31,8 +32,13 @@ export class ActivityService {
 
     private paymentSent() {
         this.events.subscribe('user:paymentSent', (amount: number, crypto: CryptoCoin, date: string) => {
-            const paymentSend = new Activity(date, 'ACTIVITY.paymentSent',
-            { value: amount, currency: crypto  });
+            this.uid = this.authService.user.uid;
+            const paymentSend = new Activity(date, 'ACTIVITY.payment_sent',
+                { value: amount,
+                exchange: crypto.units.exchange,
+                name: crypto.units.name,
+                },
+            );
             this.addActivity(paymentSend);
         });
     }
@@ -43,6 +49,15 @@ export class ActivityService {
             const loginActivity = new Activity(date, 'ACTIVITY.logged_in');
             this.addActivity(loginActivity);
         });
+    }
+
+    private imageChanged() {
+        this.events.subscribe('user:imageChanged', () => {
+            this.uid = this.authService.user.uid;
+            const date = new Date().toDateString();
+            const imageChangedActivity = new Activity(date, 'ACTIVITY.image_changed');
+            this.addActivity(imageChangedActivity);
+        })
     }
 
     private addActivity(activity: Activity) {

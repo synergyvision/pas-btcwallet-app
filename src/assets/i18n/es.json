@@ -12,7 +12,8 @@
         "recover_password" : "Recuperar Contraseña",
         "log_in": "Iniciar Sesión",
         "register": "Registrarse",
-        "google": "Google"
+        "google": "Google",
+        "password_reset": "Se ha enviado un correo de recuperación de contraseña"
     },
 
     "REGISTER": {
@@ -58,7 +59,8 @@
         "email_verified_message": "Su cuenta no se encuentra verificada",
         "select_crypto_unit": "Seleccione Unidad",
         "select_wallet": "Seleccione Billetera",
-        "wallet_imported": "Billetera importada con éxito"
+        "wallet_imported": "Billetera importada con éxito",
+        "mnemonics_input": "Escriba la frase de recuperación. Usualmente son doce palabras."
     },
 
     "ACTIVITY": {
@@ -74,7 +76,7 @@
         "password_changed": "Cambio de contraseña",
         "logged_in": "Inicio de Sesión",
         "payment_sent": "Pago realizado ",
-        "payment_message": "por {{value}} {{currency}} "
+        "payment_message": "por "
     },
 
     "ADDRESS": {
@@ -263,7 +265,8 @@
         "FIREBASE": {
             "auth/wrong-password": "La contraseña es inválida",
             "auth/user-not-found": "El usuario no se encuentra registrado",
-            "auth/email-already-in-use": "Este correo esta siendo utilzado por otro usuario"
+            "auth/email-already-in-use": "Este correo esta siendo utilzado por otro usuario",
+            "undefined": "Se ha detectado un error, intente más tarde"
         },
         "CAMERA": {
             "unavailable": "La camara no se encuentra disponible en este momento",

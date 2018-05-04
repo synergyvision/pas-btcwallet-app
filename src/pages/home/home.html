@@ -37,7 +37,7 @@
   <ion-slides pager="true" class="balances-slides" *ngIf="balances">
     <ion-slide class="wallet-slide" *ngFor="let b of balances">
       <div class="display-img wallet-balance" (click)="goToWalletPage(b)">
-        {{ b.balance / b.wallet.crypto.units.exchange }}
+        {{ b.balance / b.wallet.crypto.units.exchange | number }}
         <span class="wallet-balance-unit">
           <b class="crypto">
             <ion-icon [name]="b.wallet.crypto.coin" item-left></ion-icon>

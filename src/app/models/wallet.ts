@@ -1,6 +1,5 @@
 import { IKeys } from './IKeys';
 import { CryptoCoin } from './crypto';
-import { KeysPipe } from 'ngx-pipes';
 
 // Object to be Stored on the Firebase RealTime DB
 

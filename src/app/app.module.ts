@@ -6,7 +6,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { MyApp } from './app.component';
 import { HttpModule } from '@angular/http';
 import { QRScanner } from '@ionic-native/qr-scanner';
-import { NgPipesModule } from 'ngx-pipes';
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 
 // i18n Imports
@@ -65,7 +64,6 @@ const firebaseConfig = {
     IonicModule.forRoot(MyApp),
     HttpModule,
     HttpClientModule,
-    NgPipesModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
