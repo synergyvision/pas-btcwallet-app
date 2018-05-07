@@ -129,13 +129,7 @@ export class SharedService {
         } else {
            photoURL = this.storageProvider.takeProfileImage(this.user.email);
         }
-
-        return photoURL.then((url) => {
-            this.authService.updateProfile(this.user);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+        return photoURL;
     }
 
     //FINWIP

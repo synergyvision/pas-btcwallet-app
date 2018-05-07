@@ -37,6 +37,10 @@ export class AuthService {
         this.events.subscribe('user:loggedOut', () => {
             this.logout();
         });
+
+        this.events.subscribe('user:newUser', () => {
+            this.setProfilePicture();
+        });
     }
 
     // Login / Sign Up Functions
@@ -51,19 +55,16 @@ export class AuthService {
                     resolve(response);
                 })
                 .catch((error) => {
+                    console.log(error);
+                    reject(error);
+                })
+                .catch((error) => {
+                    console.log(error);
                     reject(error);
                 });
         });
     }
 
-    public updateProfile(user: User) {
-        this.user.updateProfile({
-            displayName: this.user.displayName,
-            photoURL : this.user.photoURL,
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
 
     // Logins an already registered user using Firebase Auth Email and Password Provider
     public login(email: string, password: string) {
@@ -130,6 +131,17 @@ export class AuthService {
         this.user = firebase.auth().currentUser;
         return new User(this.user.uid, this.user.email, this.user.emailVerified,
                         this.user.phoneNumber, this.user.photoURL);
+    }
+
+    public setProfilePicture() {
+        this.firebaseData.getProfilePicture(this.user.uid)
+            .subscribe((photo) => {
+                this.firebaseAuth.auth.currentUser
+                .updateProfile({
+                    displayName: this.user.displayName,
+                    photoURL: photo,
+            });
+        });
     }
 
     // 2FAU Functions

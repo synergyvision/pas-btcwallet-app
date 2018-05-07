@@ -85,7 +85,12 @@ export class AccountPage {
     this.alertService.showAlert('ALERT.changing_picture');
     this.sharedService.changePicture(option)
     .then((response) => {
-      console.log(response);
+      this.events.publish('user:changedData');
+      this.alertService.showAlert('ALERT.picture_changed')
+      .then()
+      .catch((error) => {
+        console.log(error);
+      });
     })
     .catch((error) => {
       console.log(error);

@@ -15,10 +15,11 @@ export class AppData {
         },
         {
             placeholder: 'FORM.password', name: 'password', icon: 'wallet-password', type: 'password',
-            validators: [Validators.required, Validators.minLength(8)],
+            validators: [Validators.required, Validators.minLength(8),
+            Validators.pattern(/^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/)],
         },
         {
-            placeholder: 'FORM.repeat_password', name: 'passwordRe', icon: 'wallet-password', type: 'password',
+            placeholder: 'FORM.repeat_password', name: 'confirmPassword', icon: 'wallet-password', type: 'password',
             validators: [Validators.required],
         },
     ];

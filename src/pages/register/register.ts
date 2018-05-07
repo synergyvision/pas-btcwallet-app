@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { FormGroup } from '@angular/forms/src/model';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormGroup, AbstractControl } from '@angular/forms/src/model';
+import { FormBuilder, FormControl, Validators, ValidationErrors } from '@angular/forms';
 import { AuthService } from '../../app/services/auth.service';
 import { AlertService } from '../../app/services/alert.service';
 import { LoaderService } from '../../app/services/loader.service';
@@ -31,14 +31,13 @@ export class RegisterPage {
     this.inputs = AppData.registerForm;
     this.registerForm = formBuilder.group({});
     this.inputs.forEach((control) => {
-      this.registerForm.addControl(control.name, new FormControl(control.value));
-      this.registerForm.controls[control.name].setValidators(control.validators);
+      this.registerForm.addControl(control.name,
+      new FormControl(null, control.validators));
+      if (control.name === 'confirmPassword') {
+        this.registerForm.controls[control.name]
+        .setValidators(this.checkMatching.bind(this));
+      }
     });
-    // Uncomment for checking if password is the same
-
-      // , (formGroup: FormGroup) => {
-      //  return this.checkMatching(formGroup.controls.password, formGroup.controls.passwordRe);
-      // },
   }
 
   private registerUser(registerForm: FormGroup) {
@@ -55,8 +54,9 @@ export class RegisterPage {
       });
   }
 
-  private checkMatching(pass, passRe) {
-    return pass === passRe ? null : { notSame: true };
+  private checkMatching(control: AbstractControl): ValidationErrors | null {
+    return this.registerForm.get('password').value === control
+    .value ? null : {mismatch: true};
   }
 
   private goToLogin() {

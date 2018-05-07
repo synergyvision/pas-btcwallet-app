@@ -41,16 +41,22 @@ export class FirebaseProvider {
   // Adds a new user to the database
 
   public addUser(email: string, uid: string, pictureURL?: string) {
-    // Depending on the provider used, the user might have a profile picture already
-    if (pictureURL === undefined) {
-      this.createProfilePicture(email, uid);
-    } else {
-      this.angularFire.list('user/' + uid).set('img', pictureURL);
-    }
     // We save by default, the email, the currency of the user, and we create a Token Object for 2FA
     this.angularFire.list('user/' + uid).set('userEmail', email);
     this.angularFire.list('user/' + uid).set('currency', 'USD');
     this.angularFire.list('user/' + uid).set('token', {activated: false, enabled: false});
+        // Depending on the provider used, the user might have a profile picture already
+    if (pictureURL === undefined) {
+      return this.createProfilePicture(email, uid)
+      .then((url) => {
+        return url;
+      });
+    } else {
+      return this.angularFire.list('user/' + uid).set('img', pictureURL)
+      .then(() => {
+        return pictureURL;
+      });
+    }
   }
 
 /*
@@ -60,10 +66,19 @@ export class FirebaseProvider {
 */
 
   public createProfilePicture(email: string, uid: string) {
-    this.storageProvider.createProfileImage(email)
+    return this.storageProvider.createProfileImage(email)
       .then((url) => {
         this.angularFire.list('user/' + uid).set('img', url);
+        return url;
       });
+  }
+
+  public getProfilePicture(uid: string) {
+    return this.angularFire.object('user/' + uid + 'img')
+    .valueChanges()
+    .map((url: string) => {
+      return url;
+    });
   }
 
   // Functions for retrieving data of the signed User
