@@ -35,10 +35,14 @@ export class LoginPage {
   }
 
   private loginGoogle() {
-    this.authService.loginGoogle().then((success) => {
+    this.loaderService.showLoader('LOADER.wait');
+    this.authService.loginGoogle()
+    .then((success) => {
       this.events.publish('user:loggedIn');
+      this.loaderService.dismissLoader();
     }).catch((error) => {
       this.error = this.translate.instant('ERROR.unknown');
+      this.loaderService.dismissLoader();
     });
   }
 
@@ -62,7 +66,6 @@ export class LoginPage {
     this.loaderService.showLoader('LOADER.wait');
     this.authService.recoverPassword(this.email)
     .then((response) => {
-      console.log(response);
       this.error = this.translate.instant('LOGIN.password_reset');
     })
     .catch((error) => {
@@ -72,7 +75,6 @@ export class LoginPage {
     setTimeout(() => {
       this.showRecoverPassword = false;
   }, 500);
-    // this.authService.restorePassword(this.email);
   }
 
   private goToRegister() {

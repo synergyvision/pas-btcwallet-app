@@ -4,9 +4,10 @@ import { AppData } from '../app.data';
 import { IExchange } from '../interfaces/IExchange';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AppConstants } from '../../config/appConstants';
 
-const URL = 'https://cors.shapeshift.io';
-const MARKET_URL = 'https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC,ETH,DOGE,DASH,LTC&tsyms=';
+const URL = AppConstants.EXCHANGE_API_URL;
+const MARKET_URL = AppConstants.MARKET_API_URL;
 
 @Injectable()
 

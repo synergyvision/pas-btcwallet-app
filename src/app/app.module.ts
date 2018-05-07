@@ -32,19 +32,21 @@ import { Camera } from '@ionic-native/camera';
 import { HttpErrorInterceptor } from './interceptor/http.error.interceptor';
 import { TwoFactorAuthService } from './services/twofactorauth.service';
 import { ActivityService } from './services/activity.service';
+import { AppConstants } from '../config/appConstants';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-const firebaseConfig = {
+const firebaseConfig = AppConstants.firebaseConfig;
+/* {
   apiKey: 'AIzaSyBTBCJbNBmUBmKaMUK-JMFTKgY1W8H-r6w',
   authDomain: 'visionbitwallet.firebaseapp.com',
   databaseURL: 'https://visionbitwallet.firebaseio.com',
   projectId: 'visionbitwallet',
   storageBucket: 'visionbitwallet.appspot.com',
   messagingSenderId: '1069944614319',
-};
+}; */
 
 @NgModule({
   bootstrap: [IonicApp],

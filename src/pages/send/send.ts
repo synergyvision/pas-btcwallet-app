@@ -25,6 +25,7 @@ export class SendPage {
   private inputAddress: string;
   private token: boolean;
   private inputs: any[];
+  private cameraIsOpen: boolean = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
               private qrScanner: QRScanner, private formBuilder: FormBuilder, private alertService: AlertService,
@@ -58,6 +59,19 @@ export class SendPage {
     this.navCtrl.push('AddressBookPage');
   }
 
+  public backButtonAction() {
+    /* checks if modal is open */
+    console.log(this.qrScanner);
+    if (this.cameraIsOpen) {
+        /* closes modal */
+        this.qrScanner.hide();
+        window.document.querySelector('ion-app').classList.remove('transparent-body');
+        this.cameraIsOpen = false;
+    } else {
+        this.navCtrl.pop();
+    }
+  }
+
   public scanQRCode() {
     this.qrScanner.prepare()
       .then((status: QRScannerStatus) => {
@@ -69,7 +83,9 @@ export class SendPage {
             this.qrScanner.hide();
             window.document.querySelector('ion-app').classList.remove('transparent-body');
             scanSub.unsubscribe();
+            this.cameraIsOpen = false;
           });
+          this.cameraIsOpen = true;
           this.qrScanner.show();
           window.document.querySelector('ion-app').classList.add('transparent-body');
           // wait for user to scan something, then the observable callback will be called
@@ -152,6 +168,8 @@ export class SendPage {
     } else {
         return 'ERROR.CAMERA.unknown_error';
     }
-}
+  }
+
+
 
 }

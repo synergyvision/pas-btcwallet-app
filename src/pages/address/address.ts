@@ -5,6 +5,7 @@ import { Address } from '../../app/models/address';
 import { SharedService } from '../../app/services/shared.service';
 import { AppData } from '../../app/app.data';
 import { TranslateService } from '@ngx-translate/core';
+import { LoaderService } from '../../app/services/loader.service';
 
 @IonicPage()
 @Component({
@@ -24,7 +25,7 @@ export class AddressPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
               public formBuilder: FormBuilder, private sharedService: SharedService,
-              private translate: TranslateService) {
+              private translate: TranslateService, private loaderService: LoaderService) {
     // Form Builder
     this.inputs = AppData.addressInputs;
     this.addressForm = formBuilder.group({});
@@ -36,6 +37,7 @@ export class AddressPage {
 
   // Save changes to the address
   private onSubmit(form) {
+    this.loaderService.showSpinner();
     this.sharedService.addressExist(form.value.email)
     .subscribe((response) => {
       if (response) {
@@ -44,6 +46,7 @@ export class AddressPage {
         this.validateAddress(newAddress);
       } else {
         this.error = this.translate.instant('ERROR.user_does_not_exist');
+        this.loaderService.dismissLoader();
       }
     }, ((error) => {
       this.translate.instant(error);
@@ -54,14 +57,17 @@ export class AddressPage {
     this.sharedService.isAddressSaved(address.email)
       .subscribe((response) => {
         if (response.length === 0) {
+          this.loaderService.dismissLoader();
           this.sharedService.addAddress(address);
           this.navCtrl.pop();
         } else {
           // User already exists on the addressBook
           this.error = this.translate.instant('ERROR.duplicated_user');
+          this.loaderService.dismissLoader();
         }
       }, (error) => {
         this.error = this.translate.instant(error);
+        this.loaderService.dismissLoader();
       });
   }
 }

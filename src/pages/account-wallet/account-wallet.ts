@@ -91,26 +91,38 @@ export class AccountWalletPage {
   // Function for changing the cryptocurrency unit
 
   private changeCryptoUnit() {
+    this.loaderService.showLoader('LOADER.wait');
     this.selectedWallet.crypto.units = this.selectedCrypto;
     this.sharedService.updateWalletCryptoUnit(this.selectedWallet)
     .then((success) => {
       this.clearData();
       this.message = this.translate.instant('ACCOUNT_OPTIONS.success');
+      this.loaderService.dismissLoader();
     })
     .catch((error) => {
       this.message = this.translate.instant('ERROR.unknown');
+      this.loaderService.dismissLoader();
     });
   }
 
   private changeCurrency() {
-    this.sharedService.updateCurrency(this.selectedCurrency);
-    this.clearData();
-    this.message = this.translate.instant('ACCOUNT_OPTIONS.success');
+    this.loaderService.showLoader('LOADER.wait');
+    this.sharedService.updateCurrency(this.selectedCurrency)
+    .then(() => {
+      this.clearData();
+      this.message = this.translate.instant('ACCOUNT_OPTIONS.success');
+      this.loaderService.dismissLoader();
+    })
+    .catch((error) => {
+      this.message = this.translate.instant('ERROR.unknown');
+      this.loaderService.dismissLoader();
+    });
   }
 
   // Function that shows the Mnemonics of an HD Wallet
 
   private exportWallet() {
+    this.loaderService.showLoader('LOADER.retrieving_data');
     this.sharedService.getWalletMnemonics(this.selectedWallet)
     .subscribe((mnemonics) => {
       this.selectedWallet = undefined;
@@ -119,6 +131,11 @@ export class AccountWalletPage {
       } else {
         this.message = this.translate.instant('ERROR.no_mnemonics');
       }
+      this.loaderService.dismissLoader();
+    }, (error) => {
+      this.message = this.translate.instant('ERROR.unknown');
+      this.loaderService.dismissLoader();
+
     });
   }
 

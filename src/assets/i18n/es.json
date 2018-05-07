@@ -76,7 +76,8 @@
         "password_changed": "Cambio de contraseña",
         "logged_in": "Inicio de Sesión",
         "payment_sent": "Pago realizado ",
-        "payment_message": "por "
+        "payment_message": "por ",
+        "image_changed": "Cambio de imagen de usuario "
     },
 
     "ADDRESS": {
@@ -235,7 +236,7 @@
         "recover_password": "Restablecer Contraseña",
         "activate_2auf": "Activar Verificación 2FA",
         "deactivate_2auf": "Desactivar Verificación 2FA",
-        "email_sent": "Se envió un correo a ",
+        "email_sent": "Se envió un correo a {{email}}",
         "2FA_activated": "Se activo correctamente el 2FA"
     },
 
@@ -285,7 +286,8 @@
         "error": "Error",
         "success": "Éxito",
         "request_created": "Solicitud Creada",
-        "try_later": "Intente mas tarde"
+        "try_later": "Intente mas tarde",
+        "changingc_picture": "Subiendo imagen"
     },
 
     "ACTION_SHEET": {
@@ -298,7 +300,8 @@
         "wait": "Espere",
         "creating_data": "Generando Datos",
         "generating_code": "Generando Código",
-        "sending_payment": "Realizando Pago"
+        "sending_payment": "Realizando Pago",
+        "retrieving_data": "Recuperando Datos"
     },
 
     "METADATA": {

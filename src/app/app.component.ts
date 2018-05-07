@@ -46,10 +46,10 @@ export class MyApp {
     platform.registerBackButtonAction(() => {
       const activeView: ViewController = this.nav.getActive();
       if (activeView != null) {
-        if (this.nav.canGoBack()) {
-          this.nav.pop();
-        } else if (typeof activeView.instance.backButtonAction === 'function') {
+        if (typeof activeView.instance.backButtonAction === 'function') {
           activeView.instance.backButtonAction();
+        } else if (this.nav.canGoBack()) {
+          this.nav.pop();
         } else {
           this.nav.parent.select(0); // goes to the first tab
         }

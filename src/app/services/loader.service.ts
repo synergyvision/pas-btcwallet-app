@@ -24,6 +24,13 @@ export class LoaderService {
         this.loadingSpinner.present();
     }
 
+    public showSpinner() {
+        this.loadingSpinner = this.loadingCtrl
+        .create({
+        });
+        this.loadingSpinner.present();
+    }
+
     // Shows a full screen loader with a message to the user
     public showFullLoader(msg: string) {
         this.loadingSpinner = this.loadingCtrl

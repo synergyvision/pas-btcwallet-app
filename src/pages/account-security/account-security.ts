@@ -47,24 +47,31 @@ export class AccountSecurityPage {
   }
 
   private sendVerificationEmail() {
+    this.loaderService.showSpinner();
     this.authService.sendVerificationEmail()
       .then(() => {
-        this.message = this.translate.instant('SECURITY_OPTIONS.email_sent') + this.user.email;
+        this.message = this.translate.instant('SECURITY_OPTIONS.email_sent', { email: this.user.email});
+        this.loaderService.dismissLoader();
       })
       .catch((error) => {
         this.message = this.translate.instant('ERROR.unknown');
+        this.loaderService.dismissLoader();
       });
   }
 
   private restorePassword() {
+    this.loaderService.showLoader('LOADER.wait');
     this.authService.restorePassword()
     .then(() => {
-      this.message = this.translate.instant('SECURITY_OPTIONS.email_sent', {user: this.user.email});
+      this.message = this.translate.instant('SECURITY_OPTIONS.email_sent', { email: this.user.email});
+      this.loaderService.dismissLoader();
     })
     .catch((error) => {
       this.message = this.translate.instant('ERROR.unknown');
+      this.loaderService.dismissLoader();
     });
   }
+
   private ionViewDidLeave() {
     this.message = undefined;
     this.error = undefined;
@@ -88,24 +95,30 @@ export class AccountSecurityPage {
   }
 
   private activateTwoFactorAuth() {
+    this.loaderService.showLoader('LOADER.wait');
     this.authService.activate2FAU()
     .then((response) => {
       this.message = this.translate.instant('SECURITY_SETTINGS.activate_2FA', {email: this.user.email});
+      this.loaderService.dismissLoader();
       this.update();
     })
     .catch((error) => {
       console.log(error);
       this.message = this.translate.instant(error);
+      this.loaderService.dismissLoader();
     });
   }
 
   private deactivateTwoFactorAuth() {
+    this.loaderService.showSpinner();
     this.authService.deactivate2FAU()
     .then((response) => {
       this.message = this.translate.instant('SECURITY_SETTINGS.2FA_deactivated');
+      this.loaderService.dismissLoader();
     })
     .catch((error) => {
       this.message = this.translate.instant(error);
+      this.loaderService.dismissLoader();
     });
   }
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ActionSheet } from 'ionic-angular';
 import { User } from '../../app/models/user';
 import { Wallet } from '../../app/models/wallet';
 import { Observable } from 'rxjs/Observable';
@@ -9,6 +9,7 @@ import { Events } from 'ionic-angular/util/events';
 import { SharedService } from '../../app/services/shared.service';
 import { ActionSheetController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
+import { AlertService } from '../../app/services/alert.service';
 
 @IonicPage()
 @Component({
@@ -20,10 +21,11 @@ export class AccountPage {
   public user: User;
   public wallets: Observable<any>;
   public options;
+  public actionSheet: ActionSheet;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private events: Events,
               private sharedService: SharedService, public actionSheetCtrl: ActionSheetController,
-              public translate: TranslateService) {
+              public translate: TranslateService, public alertService: AlertService) {
     this.user = this.sharedService.user;
     this.options = AppSettings.accountOptions;
     this.events.subscribe('user:changedData', () => {
@@ -42,19 +44,19 @@ export class AccountPage {
   }
 
   public changePicture() {
-    const actionSheet = this.actionSheetCtrl.create({
+    this.actionSheet = this.actionSheetCtrl.create({
       title: this.translate.instant('ACTION_SHEET.select'),
       buttons: [
           {
             text: this.translate.instant('ACTION_SHEET.take_photo'),
             handler: () => {
-              this.sharedService.changePicture(false);
+              this.changePictureHandler(false);
             },
           },
           {
             text: this.translate.instant('ACTION_SHEET.choose_photo'),
             handler: () => {
-              this.sharedService.changePicture(true);
+              this.changePictureHandler(true);
             },
           },
           {
@@ -66,6 +68,27 @@ export class AccountPage {
           },
         ],
       });
-    actionSheet.present();
+    this.actionSheet.present();
+  }
+
+  public backButtonAction() {
+    // checks if Action Sheet is open
+    console.log(this.actionSheet);
+    if (this.actionSheet.isOverlay) {
+        this.actionSheet.dismiss();
+    } else {
+        this.navCtrl.pop();
     }
+  }
+
+  public changePictureHandler(option: boolean) {
+    this.alertService.showAlert('ALERT.changing_picture');
+    this.sharedService.changePicture(option)
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
 }

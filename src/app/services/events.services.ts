@@ -12,14 +12,14 @@ import { KeyService } from './key.service';
 import { AppData } from '../app.data';
 import { Events } from 'ionic-angular';
 import { IEvent } from '../interfaces/IEvent';
+import { AppConstants } from '../../config/appConstants';
 
 // REST Service for getting data from APIs and the Database
 
 // API Base URL for the Testnet
-const URL = 'https://api.blockcypher.com/v1/';
-const TESTING_URL = 'wss://socket.blockcypher.com/v1/';
-const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
-const TOKEN2 = '5b3df9346d0e4eac88bc17e6cfb636a6';
+const URL = AppConstants.CRYPTO_API_URL;
+const TESTING_URL = AppConstants.CRYPTO_API_SOCKET;
+const TOKEN = AppConstants.CRYPTO_API_TOKEN;
 
 /*
 Service for handling the web sockets that can be created using the Blockcypher API

@@ -21,13 +21,13 @@ import { ITransactionSke } from '../interfaces/ITransactionSke';
 import { IBlockchain } from '../interfaces/IBlockchain';
 import { IBlock } from '../interfaces/IBlock';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AppConstants } from '../../config/appConstants';
 
 // REST Service for getting data from BlockCypher API
 
 // API Base URL for the Testnet
-const URL = 'https://api.blockcypher.com/v1/';
-const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
-const TOKEN2 = '5b3df9346d0e4eac88bc17e6cfb636a6';
+const URL = AppConstants.CRYPTO_API_URL;
+const TOKEN = AppConstants.CRYPTO_API_TOKEN;
 
 @Injectable()
 

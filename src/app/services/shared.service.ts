@@ -21,8 +21,9 @@ import { IHDWallet } from '../interfaces/IHDWallet';
 import { ITransactionSke } from '../interfaces/ITransactionSke';
 import { IAddress } from '../interfaces/IAddress';
 import { ActivityService } from './activity.service';
+import { AppConstants } from '../../config/appConstants';
 
-const TOKEN = '6947d4107df14da5899cb2f87a9bb254';
+const TOKEN = AppConstants.CRYPTO_API_TOKEN;
 
 @Injectable()
 

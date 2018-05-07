@@ -56,6 +56,7 @@ export class CreateMultiwalletPage {
     (error) => {
       console.log(error);
       this.error = this.translate.instant(error);
+      this.loaderService.dismissLoader();
     });
   }
 }
