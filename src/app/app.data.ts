@@ -10,16 +10,16 @@ export class AppData {
 
     public static registerForm = [
         {
-            placeholder: 'FORM.email', name: 'email', icon: 'wallet-email', type: 'email',
+            placeholder: 'FORM.email', name: 'email', icon: 'form-email', type: 'email',
             validators: [Validators.email, Validators.required, Validators.maxLength(30)],
         },
         {
-            placeholder: 'FORM.password', name: 'password', icon: 'wallet-password', type: 'password',
+            placeholder: 'FORM.password', name: 'password', icon: 'form-password', type: 'password',
             validators: [Validators.required, Validators.minLength(8),
             Validators.pattern(/^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/)],
         },
         {
-            placeholder: 'FORM.repeat_password', name: 'confirmPassword', icon: 'wallet-password', type: 'password',
+            placeholder: 'FORM.repeat_password', name: 'confirmPassword', icon: 'form-password', type: 'password',
             validators: [Validators.required],
         },
     ];
@@ -36,11 +36,11 @@ export class AppData {
 
     public static loginForm = [
         {
-            placeholder: 'FORM.email', name: 'email', icon: 'wallet-email', type: 'email',
+            placeholder: 'FORM.email', name: 'email', icon: 'form-email', type: 'email',
             validators: [Validators.email, Validators.required, Validators.maxLength(30)],
         },
         {
-            placeholder: 'FORM.password', name: 'password', icon: 'wallet-password', type: 'password',
+            placeholder: 'FORM.password', name: 'password', icon: 'form-password', type: 'password',
             validators: [Validators.required, Validators.minLength(8)],
         },
     ];
@@ -50,6 +50,13 @@ export class AppData {
             placeholder: 'FORM.email', name: 'email', value: '', type: 'email',
             validators: [Validators.email, Validators.maxLength(30), Validators.required],
         },
+        {
+            placeholder: 'FORM.alias', name: 'alias', value: '', type: 'text',
+            validators: [Validators.required, Validators.maxLength(30)],
+        },
+    ];
+
+    public static editAddressInputs = [
         {
             placeholder: 'FORM.alias', name: 'alias', value: '', type: 'text',
             validators: [Validators.required, Validators.maxLength(30)],

@@ -12,14 +12,7 @@ page-transactions{
     margin-top: 10px;
     border-style: none;
   }
-  
-  img.transactions-img {
-    max-width: $transactions-img-width;
-    max-height: $transactions-img-height;
-    align-content: left;
-    float: left;
-  }
-  
+    
   .transactions-address {
     font-size: $font-size-transactions-address;
     color: $secondary;

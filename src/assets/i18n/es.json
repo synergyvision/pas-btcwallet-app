@@ -73,6 +73,7 @@
         "destination": "Destino: ",
         "amount": "Monto: ",
         "activity_title": "Actividad Reciente",
+        "no_activity_title": "No hay Actividad Reciente",
         "password_changed": "Cambio de contraseña",
         "logged_in": "Inicio de Sesión",
         "payment_sent": "Pago realizado ",
@@ -177,13 +178,13 @@
     "TRANSACTION_CONFIRMATION": {
         "title": "Transacción",
         "sub_title": "Datos de la Transacción",
-        "hash": "Hash: ",
-        "receiver": "Recipientes: ",
-        "outputs": "Salidas: ",
-        "amount": "Monto: ",
-        "total": "Total transferido: ",
-        "fee": "Tarifa: ",
-        "received_time": "Recibido: ",
+        "hash": "Hash",
+        "input": "Salida",
+        "output": "Recipiente",
+        "amount": "Monto",
+        "total": "Total transferido",
+        "fee": "Tarifa",
+        "received_time": "Recibido",
         "metadata": "Concepto"
     },
 
@@ -268,6 +269,7 @@
             "auth/wrong-password": "La contraseña es inválida",
             "auth/user-not-found": "El usuario no se encuentra registrado",
             "auth/email-already-in-use": "Este correo esta siendo utilzado por otro usuario",
+            "auth/network-request-failed": "No se pudo establecer conexión con el servidor. Intente más tarde",
             "undefined": "Se ha detectado un error, intente más tarde"
         },
         "CAMERA": {

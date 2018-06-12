@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { RestService } from '../../app/services/rest.service';
-import { Transaction } from '../../app/models/transaction';
 import { Observable } from 'rxjs';
 import { LoaderService } from '../../app/services/loader.service';
 import { Wallet } from '../../app/models/wallet';

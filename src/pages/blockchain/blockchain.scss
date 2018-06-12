@@ -1,13 +1,54 @@
-.blockchain-info, .block-info {
-    .item {
+page-blockchain {
+    ion-list{
         font-size: $font-size-info-text;
+        padding: 0px;
     }
-    .header {
-        font-weight: bold;
-        font-size: 1.2em;                
+    
+    ion-label.label-md {
+        margin: 0px;
+        margin-bottom: $padding-sm;
     }
-}
 
-.block-info, .blockchain-info {
-    padding-top: $padding-md;
+    ion-list.blockchain-info  {
+        margin-bottom: 0px;
+    }
+
+    .blockchain-info ion-item {
+        border-bottom: 1px $primary solid;
+    }
+    
+    .block-info ion-item {
+        background-color: transparent;
+        border-bottom: 1px solid $grey;
+    }
+    
+    .block-info {
+        background-color: $light;
+        margin-left: $padding-sm;
+        margin-right: $padding-sm;
+        border-radius: 0.8em;
+    }
+
+    .blockchain-icon{
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 0px;
+        font-size: 0.9em;
+    }
+    .blockchain-text {
+        font-size: 0.7em;
+        text-align: center;
+    }
+
+    .blockchain-title{
+        color: $secondary;
+        text-align: left;
+        font-size: 1.1em;
+    }
+
+    .blockchain-button {
+        background-color: transparent;
+        font-size: 1.2em;
+    }
+    
 }

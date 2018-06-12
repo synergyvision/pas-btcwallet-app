@@ -25,8 +25,10 @@ export class TransactionConfirmationPage {
     if ((this.wallet.crypto.value !== 'eth') && (this.wallet.crypto.value !== 'tet')) {
       this.getMetadata();
     }
-
+    this.transaction.inputs.length = this.transaction.outputs.length = 1;
   }
+
+  
 
   private getMetadata() {
     this.restService.getMetadata(this.transaction.hash, this.wallet.crypto.value)
@@ -47,3 +49,4 @@ export class TransactionConfirmationPage {
   }
 
 }
+

@@ -1,21 +1,50 @@
 page-transaction-confirmation{
 
     .transaction-title{
-        margin-top: $padding-sm;
         color: $secondary;
-        font-weight: bold;
         text-align: left;
+        font-size: 1.1em;
     }
 
-    .transaction-list{
-        color: $dark;
-        text-align: left;
-        margin-top: 0;
-    }
-    
     .transaction-confirmation {
         padding-bottom: 0px!important;
         margin-bottom: 0px;
-        border-top: 3px solid $secondary;
+        border-radius: 1.2em;
+        background-color: $light;
+    }
+
+    .transaction-confirmation ion-item{
+        background-color: transparent;
+        border-bottom: 1px solid $grey;
+    }
+
+    .transaction-icon{
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 0px;
+        font-size: 1em;
+    }
+
+    .transaction-received {
+        text-align: center;
+        margin-bottom: 0px;
+    }
+    .transaction-received-icon {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        font-size: 2.5em;
+        margin-left: auto;
+        margin-right:auto;
+        margin-top: $padding-sm/2;
+    }
+
+    .transaction-text {
+        font-size: 0.8em;
+        text-align: center;
+    }
+
+    .label-md {
+        margin-top: 0px;
     }
 }

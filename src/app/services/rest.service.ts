@@ -1,5 +1,4 @@
 import { AlertService } from './alert.service';
-import { Transaction } from '../models/transaction';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Rx';
 import { LoaderService } from './loader.service';
@@ -40,7 +39,7 @@ export class RestService {
   }
 
   // Create an HD Wallet
-  public createWalletHD(data, crypto: string): Observable<IHDWallet> {
+  public createWallet(data, crypto: string): Observable<IHDWallet> {
     return this.http.post(this.getPath(crypto) + '/wallets/hd?token=' + TOKEN, JSON.stringify(data))
       .map((res) => {
         return res as IHDWallet;
@@ -58,7 +57,7 @@ export class RestService {
   }
 
   // Gets a Wallet Balance
-  public getBalanceFromWallet(wallet: Wallet): Observable<IBalance> {
+  public getWalletBalance(wallet: Wallet): Observable<IBalance> {
     return this.http.get(this.getPath(wallet.crypto.value) + '/addrs/' + wallet.name + '/balance?token=' + TOKEN)
       .map((res) => {
         const balance = res as IBalance;

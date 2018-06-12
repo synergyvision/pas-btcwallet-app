@@ -4,12 +4,54 @@ page-home {
     font-size: 1em;
     height: auto;
   }
+
   .home-info {
-    font-size: $font-size-info-text;
+    background-color: $light;
+    margin: $padding-md;
+    border-radius: $home-info-radius;
+    width: $home-info-width;
+    height: auto;
+    display: inline-block;
+    background-image: url(../assets/icons/home-wallet-icon.svg);
+    background-repeat: no-repeat;
+    background-size: 55%;
+    background-position: center;
+  }
+
+  .home-info p {
+    text-align: left;
+    padding: $padding-sm;
+    border-bottom: $dark;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    color: $secondary;
+    padding-right: $padding-sm;
+    padding-left: $padding-sm;
+    margin-top: $padding-sm;
+    margin-bottom: 0px;
+  }
+
+  .home-info p:last-child {
+    border: none;
+    margin-bottom: $padding-sm / 2;
+  }
+
+  .home-info-value {
+    text-align: right;
+    float: right;
     color: $dark;
-    text-align: center;
-    margin-top: $padding-lg;
-    margin-bottom: $padding-lg;
+  }
+
+  .img-no-internet {
+    width: 8em;
+    height: 8em;
+    display: inline-block;
+    background-color: $light;
+    -webkit-mask: url(../assets/icons/no-internet-icon.svg) no-repeat 50% 50%;
+    mask: url(../assets/icons/no-internet-icon.svg) no-repeat 50% 50%;
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    margin-top: $padding-sm;
   }
   
   .home-button {
@@ -42,6 +84,15 @@ page-home {
     display: block;
   }
 
+  .no-internet {
+    background-color: $primary;
+  }
+
+  .img-no-internet {
+    padding-top: $padding-sm;
+    font-size: 2em;
+  }
+
   .home-refresher{
     font-size: 3em;
     background: $primary;
@@ -58,5 +109,10 @@ page-home {
 
   .swiper-pagination-bullet {
     background: $secondary;
+  }
+
+  .wallet-balance-unit {
+    color: $primary;
+    font-weight: bold;
   }
 }

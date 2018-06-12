@@ -36,9 +36,11 @@
         </ion-input>
 
     </ion-item>
-    {{ctrl.valid}}
     <button ion-button block [disabled]="!ctrl.valid" class="login-button" (click)="recoverPassword()">
         {{'LOGIN.recover_password' | translate }}
-      </button>
+    </button>
+    <button ion-button block class="login-button" (click)="goBack()">
+      {{'FORM.go_back' | translate }}
+  </button>
   </ion-list>
 </ion-content>

@@ -6,9 +6,9 @@
 
 <ion-content>
   <span class="error-message" *ngIf="error!==undefined">
-        {{error}}
+    {{error}}
   </span>
-  <ion-list no-lines>
+  <ion-list>
     <ion-item class="crypto input">
       <ion-label>{{'cryptocoins' | translate }}</ion-label>
       <ion-select class="select-crypto" [(ngModel)]="selectedCrypto" (ionChange)="onBlockchainChange()">
@@ -22,7 +22,7 @@
       <ion-input type="text" [(ngModel)]="searchValue" minlength="64" maxlength="64" placeholder="{{'BLOCKCHAIN.search' | translate }}">
       </ion-input>
     </ion-item>
-    <div *ngIf="selectedCrypto && blockchain" class="blockchain-info">
+    <div *ngIf="selectedCrypto && blockchain" class="blockchain-info selectable">
       <ion-item class="header">
         {{'BLOCKCHAIN.default_block' | translate }}
       </ion-item>
@@ -38,41 +38,78 @@
         <ion-icon *ngIf="showBlock" name="arrow-dropdown" item-end></ion-icon>
       </button>
     </div>
-    <div *ngIf="(showBlock)" class="block-info" [@enterAnimation]>
-      <ion-item class="header">
-        {{'BLOCKCHAIN.block_title' | translate }}
+    <ion-list *ngIf="(showBlock)" class="block-info selectable" [@enterAnimation]>
+      <ion-item>
+        <div class="blockchain-title">
+          <ion-icon name="blockchain-hash" item-left class="blockchain-icon"></ion-icon>
+          {{'BLOCKCHAIN.block_hash' | translate }}
+        </div>
+        <span class="blockchain-text"> {{block.hash}} </span>
       </ion-item>
       <ion-item text-wrap>
-        {{'BLOCKCHAIN.block_hash' | translate }}{{block.hash}}
+        <div class="blockchain-title">
+          <ion-icon name="blockchain-nonce" item-left class="blockchain-icon"></ion-icon>
+          {{'BLOCKCHAIN.block_nonce' | translate }}
+        </div>
+        <span class="blockchain-text"> {{block.nonce}} </span>
       </ion-item>
-      <ion-item>
-        {{'BLOCKCHAIN.block_nonce' | translate }} {{block.nonce}}
+      <ion-item text-wrap>
+        <div class="blockchain-title">
+          <ion-icon name="blockchain-height" item-left class="blockchain-icon"></ion-icon>
+          {{'BLOCKCHAIN.block_height' | translate }}
+        </div>
+        <span class="blockchain-text"> {{block.height}} </span>
       </ion-item>
-      <ion-item>
-        {{'BLOCKCHAIN.block_height' | translate }} {{block.height}}
+      <ion-item text-wrap>
+        <div class="blockchain-title">
+          <ion-icon name="blockchain-size" item-left class="blockchain-icon"></ion-icon>
+          {{'BLOCKCHAIN.block_size' | translate }}
+        </div>
+        <span class="blockchain-text"> {{block.size}} </span>
       </ion-item>
-      <ion-item>
-        {{'BLOCKCHAIN.block_size' | translate }} {{block.size}}
+      <ion-item text-wrap>
+        <div class="blockchain-title">
+          <ion-icon name="blockchain-n_tx" item-left class="blockchain-icon"></ion-icon>
+          {{'BLOCKCHAIN.block_n_tx' | translate }}
+        </div>
+        <span class="blockchain-text"> {{block.n_tx}} </span>
       </ion-item>
-      <ion-item>
-        {{'BLOCKCHAIN.block_n_tx' | translate }} {{block.n_tx}}
+      <ion-item text-wrap>
+        <div class="blockchain-title">
+          <ion-icon name="blockchain-total" item-left class="blockchain-icon"></ion-icon>
+          {{'BLOCKCHAIN.block_total' | translate }}
+        </div>
+        <span class="blockchain-text"> {{block.total}}</span>
       </ion-item>
-      <ion-item>
-        {{'BLOCKCHAIN.block_total' | translate }} {{block.total}}
+      <ion-item text-wrap>
+        <div class="blockchain-title">
+          <ion-icon name="blockchain-fees" item-left class="blockchain-icon"></ion-icon>
+          {{'BLOCKCHAIN.block_fees' | translate }}
+        </div>
+        <span class="blockchain-text"> {{block.fees}}</span>
       </ion-item>
-      <ion-item>
-        {{'BLOCKCHAIN.block_fees' | translate }} {{block.fees}}
+      <ion-item text-wrap>
+        <div class="blockchain-title">
+          <ion-icon name="blockchain-time" item-left class="blockchain-icon"></ion-icon>
+          {{'BLOCKCHAIN.block_time' | translate }}
+        </div>
+        <span class="blockchain-text">{{block.time | date:'dd MMM, y hh:mm a'}}</span>
       </ion-item>
-      <ion-item>
-        {{'BLOCKCHAIN.block_time' | translate }} {{block.time | date:'dd MMM, y hh:mm a'}}
+      <ion-item text-wrap>
+        <div class="blockchain-title">
+          <ion-icon name="blockchain-received" item-left class="blockchain-icon"></ion-icon>
+          {{'BLOCKCHAIN.block_received_time' | translate }}
+        </div>
+        <span class="blockchain-text">{{block.received_time | date:'dd MMM, y hh:mm a' }}</span>
       </ion-item>
-      <ion-item>
-        {{'BLOCKCHAIN.block_received_time' | translate }}: {{block.received_time | date:'dd MMM, y hh:mm a' }}
-      </ion-item>
-      <button ion-item (click)="getBlock(block.prev_block, true)">
-        {{'BLOCKCHAIN.block_prev_block' | translate }} {{block.prev_block}}
+      <button ion-item class="blockchain-button" (click)="getBlock(block.prev_block, true)">
+        <div class="blockchain-title">
+          <ion-icon name="blockchain-prev-block" item-left class="blockchain-icon"></ion-icon>
+          {{'BLOCKCHAIN.block_prev_block' | translate }}
+        </div>
+        <span class="blockchain-text">{{block.prev_block}}</span>
         <ion-icon name="arrow-dropright" item-end></ion-icon>
       </button>
-    </div>
+    </ion-list>
   </ion-list>
 </ion-content>

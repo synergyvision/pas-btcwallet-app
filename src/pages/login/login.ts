@@ -47,8 +47,10 @@ export class LoginPage {
   }
 
   private loginEmail(loginForm: FormGroup) {
+    console.log('here');
     this.authService.login(loginForm.value.email, loginForm.value.password)
       .then((success) => {
+        console.log('here');
         this.events.publish('user:loggedIn');
       }).catch((error) => {
         console.log(error);
@@ -60,6 +62,10 @@ export class LoginPage {
 
   private showRecovery() {
     this.showRecoverPassword = true;
+  }
+
+  private goBack() {
+    this.showRecoverPassword = false;
   }
 
   private recoverPassword() {

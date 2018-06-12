@@ -5,13 +5,13 @@ import { IToken } from './models/user';
 export class AppSettings {
 
   public static pagesMenu = [
-    { title: 'HOME.title', component: 'HomePage', icon: 'wallet-home' },
-    { title: 'ACCOUNT.title', component: 'AccountPage', icon: 'wallet-account' },
-    { title: 'ADDRESS_BOOK.title', component: 'AddressBookPage', icon: 'wallet-address-book' },
-    { title: 'TRANSACTIONS.title', component: 'TransactionsPage', icon: 'wallet-transactions' },
-    { title: 'ACTIVITY.title', component: 'ActivityPage', icon: 'wallet-activity' },
-    { title: 'EXCHANGE.title', component: 'ExchangePage', icon: 'wallet-activity'},
-    { title: 'BLOCKCHAIN.title', component: 'BlockchainPage', icon: 'wallet-transactions'},
+    { title: 'HOME.title', component: 'HomePage', icon: 'menu-home' },
+    { title: 'ACCOUNT.title', component: 'AccountPage', icon: 'menu-account' },
+    { title: 'ADDRESS_BOOK.title', component: 'AddressBookPage', icon: 'menu-address-book' },
+    { title: 'TRANSACTIONS.title', component: 'TransactionsPage', icon: 'menu-transactions' },
+    { title: 'ACTIVITY.title', component: 'ActivityPage', icon: 'menu-activity' },
+    { title: 'EXCHANGE.title', component: 'ExchangePage', icon: 'menu-exchange'},
+    { title: 'BLOCKCHAIN.title', component: 'BlockchainPage', icon: 'menu-explorer'},
   ];
 
   public static accountOptions = [

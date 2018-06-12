@@ -26,12 +26,13 @@ export class AddressBookPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
               public dataProvider: FirebaseProvider, public sharedService: SharedService) {
-    this.zone = new NgZone({ enableLongStackTrace: false });
     this.uid = this.sharedService.user.uid;
     this.addressBook = dataProvider.getAddressBook(this.uid);
     this.signers = this.navParams.get('signer');
     console.log(this.signers);
     if (this.signers) {
+      console.log('HERE');
+      this.zone = new NgZone({ enableLongStackTrace: false });
       this.selectContacts();
     } else
     if (this.navCtrl.last().name === 'SendPage') {
@@ -40,6 +41,7 @@ export class AddressBookPage {
     }
   }
   private onChange(uid, email) {
+    console.log('HERE');
     const user = { uid: uid, email: email};
     console.log(user);
     this.selectedSigners.push(user);

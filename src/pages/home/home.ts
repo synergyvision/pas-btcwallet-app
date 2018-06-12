@@ -1,7 +1,6 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { User } from '../../app/models/user';
 import { RestService } from '../../app/services/rest.service';
-import { Observable } from 'rxjs/Observable';
 import { LoaderService } from '../../app/services/loader.service';
 import { IonicPage, NavController, Slides } from 'ionic-angular';
 import { Events } from 'ionic-angular/util/events';
@@ -74,14 +73,16 @@ export class HomePage {
   public getBalance(): Promise<any> {
     // We get the balance from all of the user Wallets
     return new Promise((resolve, reject) => {
-      this.sharedService.updateBalances()
+      const balanceSub = this.sharedService.updateBalances()
       .subscribe((wallets) => {
           this.balances = wallets;
           this.canCreateNewWallet = !(this.balances.length > 6);
           this.getExchange();
           this.currency = this.sharedService.currency;
+          balanceSub.unsubscribe();
           resolve();
       }, (error) => {
+        balanceSub.unsubscribe();
         reject(error);
       });
     });

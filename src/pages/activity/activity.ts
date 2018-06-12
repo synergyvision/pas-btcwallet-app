@@ -26,8 +26,9 @@ export class ActivityPage {
               private loaderService: LoaderService, private translate: TranslateService,
               private dataProvider: FirebaseProvider) {
     this.activityList = this.dataProvider.getActivitiesList(this.sharedService.user.uid);
-    this.activityList.subscribe((response) => {
+    const activitySub = this.activityList.subscribe((response) => {
       this.activity = response.length > 0;
+      activitySub.unsubscribe();
     });
     this.requestList = this.sharedService.getRequests();
     this.pendingTxList = this.sharedService.pendingTxs;

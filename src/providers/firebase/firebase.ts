@@ -30,7 +30,6 @@ export class FirebaseProvider {
   public wallets: Observable<any>;
 
   constructor(private angularFire: AngularFireDatabase, private storageProvider: StorageProvider) {
-
   }
 
   /*
@@ -49,14 +48,26 @@ export class FirebaseProvider {
     if (pictureURL === undefined) {
       return this.createProfilePicture(email, uid)
       .then((url) => {
+        this.addUserToList({
+          email: email,
+          img: url,
+        }, uid);
         return url;
       });
     } else {
       return this.angularFire.list('user/' + uid).set('img', pictureURL)
       .then(() => {
+        this.addUserToList({
+          email: email,
+          img: pictureURL,
+        }, uid);
         return pictureURL;
       });
     }
+  }
+
+  public addUserToList(data: any, uid: string) {
+    this.angularFire.object('userList/' + uid).set(data);
   }
 
 /*
@@ -107,10 +118,6 @@ export class FirebaseProvider {
     return this.angularFire.list('user/' + uid).set('currency', currency);
   }
 
-  public updateEmail(email: string, uid: string ) {
-    this.angularFire.list('user/' + uid).set('userEmail', email);
-  }
-
   /*
   Wallet CRUD Operations
   Wallets are stored under the user / uid / wallet path on the database
@@ -118,8 +125,15 @@ export class FirebaseProvider {
 
   // Saves a new Wallet Object
 
-  public addWallet(wallet: Wallet, uid: string) {
+  public addWallet(wallet: Wallet, uid: string, email: string) {
     this.angularFire.list('user/' + uid + '/wallet/').push(wallet);
+    this.angularFire.list('wallet/').push({
+      name: wallet.name,
+      user: email,
+      crypto: wallet.crypto.value,
+      address: wallet.address,
+      multisigned: wallet.multiSignedKey,
+    });
   }
 
   // Retrieves all Wallets
@@ -210,7 +224,26 @@ export class FirebaseProvider {
     if (multisigned === '') {
       multisigned = null;
     }
-    return this.angularFire.list('/user', (ref) =>
+    return this.angularFire.list('wallet', (ref) =>
+    ref.orderByChild('user').equalTo(email))
+    .valueChanges()
+    .first()
+    .map((wallets: any[]) => {
+      const wallet = wallets.filter((w) => {
+        return (w.crypto === coin);
+      });
+      if (wallet.length > 0) {
+        const userWallet = wallet.filter((w) => {
+          return w.multiSignedKey !== multisigned;
+        }).pop();
+        if ((userWallet.multiSignedKey !== '') || (userWallet.crypto === 'tet') ||
+          (userWallet.crypto === 'eth')) {
+          return {address: userWallet.address};
+        }
+        return {name: userWallet.name};
+      }
+    });
+    /* return this.angularFire.list('/user', (ref) =>
       ref.orderByChild('userEmail').equalTo(email))
       .valueChanges()
       .first()
@@ -229,18 +262,18 @@ export class FirebaseProvider {
           }
           return {name: userWallet.name};
         }
-    });
+    }); */
   }
 
   // Verifies if a user is registered on the APP
 
   public getUserByEmail(email: string) {
-    return this.angularFire.list('user', (ref) =>
-      ref.orderByChild('userEmail')
+    return this.angularFire.list('userList', (ref) =>
+      ref.orderByChild('email')
       .equalTo(email))
       .snapshotChanges()
       .map((users) => {
-          return users.map((c) => ({
+        return users.map((c) => ({
             key: c.payload.key,
             img: c.payload.val().img,
           }));
@@ -276,7 +309,7 @@ export class FirebaseProvider {
     const wallet = multiWallet.toWallet(key);
     walletOwner.forEach((owner) => {
       wallet.keys = owner.pubKey;
-      this.addWallet(wallet, owner.uid);
+      this.addWallet(wallet, owner.uid, owner.email);
     });
   }
 

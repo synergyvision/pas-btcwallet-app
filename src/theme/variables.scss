@@ -32,6 +32,7 @@ $colors: (
   secondary: #243156, 
   tertiary : #c56126, 
   dark : #686868,
+  grey: #c9c9c9,
   light: #e4e5e4,
   clear: #ffffff,
 );
@@ -51,7 +52,136 @@ $grid-padding-width: 5px !default;
   font-family: "Wallet-Bold";
   src: url("../assets/fonts/SF-Pro-Display-Bold.otf");
 }
+ion-icon {
+  &[class*="transaction-"] {
+    mask-size: cover;
+    mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    background: map-get($colors, primary);
+    width: 1em;
+    height: 1em;
+  } // custom icons
+  &[class*="transaction-amount"] {
+    mask-image: url(../assets/icons/transactions/amount-icon.svg);
+  }
+  &[class*="transaction-hash"] {
+    mask-image: url(../assets/icons/transactions/hash-icon.svg);
+  }
+  &[class*="transaction-input"] {
+    mask-image: url(../assets/icons/transactions/input-icon.svg);
+  }
+  &[class*="transaction-output"] {
+    mask-image: url(../assets/icons/transactions/output-icon.svg);
+  }
+  &[class*="transaction-received"] {
+    mask-image: url(../assets/icons/transactions/received-icon.svg);
+  }
+  &[class*="transaction-fee"] {
+    mask-image: url(../assets/icons/transactions/fee-icon.svg);
+  }
+}
 
+ion-icon {
+  &[class*="blockchain-"] {
+    mask-size: cover;
+    mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    background: map-get($colors, primary);
+    width: 1em;
+    height: 1em;
+  } // custom icons
+  &[class*="blockchain-total"] {
+    mask-image: url(../assets/iconsblockchain/total-icon.svg);
+  }
+  &[class*="blockchain-fee"] {
+    mask-image: url(../assets/icons/blockchain/fee-icon.svg);
+  }
+  &[class*="blockchain-hash"] {
+    mask-image: url(../assets/icons/blockchain/hash-icon.svg);
+  }
+  &[class*="blockchain-height"] {
+    mask-image: url(../assets/icons/blockchain/height-icon.svg);
+  }
+  &[class*="blockchain-n_tx"] {
+    mask-image: url(../assets/icons/blockchain/n_tx-icon.svg);
+  }
+  &[class*="blockchain-nonce"] {
+    mask-image: url(../assets/icons/blockchain/nonce-icon.svg);
+  }
+  &[class*="blockchain-prev-block"] {
+    mask-image: url(../assets/icons/blockchain/prev-block-icon.svg);
+  }
+  &[class*="blockchain-received"] {
+    mask-image: url(../assets/icons/blockchain/received-icon.svg);
+  }
+  &[class*="blockchain-size"] {
+    mask-image: url(../assets/icons/blockchain/size-icon.svg);
+  }
+  &[class*="blockchain-time"] {
+    mask-image: url(../assets/icons/blockchain/time-icon.svg);
+  }
+}
+
+ion-icon {
+  &[class*="form-"]{
+    mask-size: contain;
+    mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    background: map-get($colors, primary);
+    width: 1em;
+    height: 1em;
+  }
+  &[class*="form-arrow"] {
+    mask-image: url(../assets/icons/form/arrow-icon.svg);
+  }
+  &[class*="form-email"] {
+    mask-image: url(../assets/icons/form/email-icon.svg);
+  }
+  &[class*="form-password"] {
+    mask-image: url(../assets/icons/form/password-icon.svg);
+  }
+  &[class*="form-google-plus"] {
+    mask-image: url(../assets/icons/form/google-plus-icon.svg);
+  }
+
+}
+
+ion-icon {
+  &[class*="menu-"] {
+    // Instead of using the font-based icons
+    // We're applying SVG masks
+    mask-size: contain;
+    mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    background: map-get($colors, primary);
+    width: 1em;
+    height: 1em;
+  } // custom icons
+  &[class*="menu-account"] {
+    mask-image: url(../assets/icons/menu/account-icon.svg);
+  }
+  &[class*="menu-activity"] {
+    mask-image: url(../assets/icons/menu/activity-icon.svg);
+  }
+  &[class*="menu-address-book"] {
+    mask-image: url(../assets/icons/menu/address-book-icon.svg);
+  }
+  &[class*="menu-exchange"] {
+    mask-image: url(../assets/icons/menu/exchange-icon.svg);
+  }
+  &[class*="menu-explorer"] {
+    mask-image: url(../assets/icons/menu/explorer-icon.svg);
+  }
+  &[class*="menu-home"] {
+    mask-image: url(../assets/icons/menu/home-icon.svg);
+  }
+  &[class*="menu-logout"] {
+    mask-image: url(../assets/icons/menu/logout-icon.svg);
+  }
+  &[class*="menu-transactions"] {
+    mask-image: url(../assets/icons/menu/transactions-icon.svg);
+  }
+}
 
 ion-icon {
   &[class*="wallet-"] {
@@ -64,37 +194,17 @@ ion-icon {
     width: 1em;
     height: 1em;
   } // custom icons
-  &[class*="wallet-activity"] {
-    mask-image: url(../assets/icons/wallet-activity.svg);
-  }
-  &[class*="wallet-home"] {
-    mask-image: url(../assets/icons/wallet-home.svg);
-  }
-  &[class*="wallet-address-book"] {
-    mask-image: url(../assets/icons/wallet-address-book.svg);
-  }
-  &[class*="wallet-transactions"] {
-    mask-image: url(../assets/icons/wallet-transactions.svg);
-  }
-  &[class*="wallet-account"] {
-    mask-image: url(../assets/icons/wallet-account.svg);
-  }
-  &[class*="wallet-logout"] {
-    mask-image: url(../assets/icons/wallet-logout.svg);
-  }
-  &[class*="wallet-email"] {
-    mask-image: url(../assets/icons/wallet-email.svg);
-  }
-  &[class*="wallet-password"] {
-    mask-image: url(../assets/icons/wallet-password.svg);
-  }
   &[class*="wallet-user"] {
     mask-image: url(../assets/icons/wallet-user.svg);
   }
-  &[class*="wallet-arrow"] {
-    mask-image: url(../assets/icons/wallet-arrow.svg);
+  &[class*="wallet-add"] {
+    mask-image: url(../assets/icons/add-wallet.svg);
+  }
+  &[class*="wallet-add-multisignature"] {
+    mask-image: url(../assets/icons/add-wallet-multisignature.svg);
   }
 }
+
 ion-icon {
   &[class*="currency-"] {
     mask-size: contain;
@@ -125,7 +235,8 @@ ion-icon {
   &[class*="currency-tet"] {
     mask-image: url(../assets/icons/currencies/ETH.svg);
   }
-  
+
+
 }
 
 // App iOS Variables

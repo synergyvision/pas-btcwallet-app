@@ -38,36 +38,38 @@ export class AddressPage {
   // Save changes to the address
   private onSubmit(form) {
     this.loaderService.showSpinner();
-    this.sharedService.addressExist(form.value.email)
+    const firebaseSub = this.sharedService.addressExist(form.value.email)
     .subscribe((response) => {
       if (response) {
         response = response.pop();
         const newAddress = new Address(form.value.alias, form.value.email, response.img, response.key);
         this.validateAddress(newAddress);
+        this.loaderService.dismissLoader();
       } else {
         this.error = this.translate.instant('ERROR.user_does_not_exist');
         this.loaderService.dismissLoader();
       }
+      firebaseSub.unsubscribe();
     }, ((error) => {
       this.translate.instant(error);
+      firebaseSub.unsubscribe();
     }));
   }
 
   private validateAddress(address: Address) {
-    this.sharedService.isAddressSaved(address.email)
+    const firebaseSub = this.sharedService.isAddressSaved(address.email)
       .subscribe((response) => {
         if (response.length === 0) {
-          this.loaderService.dismissLoader();
           this.sharedService.addAddress(address);
           this.navCtrl.pop();
         } else {
           // User already exists on the addressBook
           this.error = this.translate.instant('ERROR.duplicated_user');
-          this.loaderService.dismissLoader();
         }
+        firebaseSub.unsubscribe();
       }, (error) => {
+        firebaseSub.unsubscribe();
         this.error = this.translate.instant(error);
-        this.loaderService.dismissLoader();
       });
   }
 }

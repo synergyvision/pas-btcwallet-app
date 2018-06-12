@@ -11,6 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../app/services/auth.service';
 import { SharedService } from '../../app/services/shared.service';
 import { AppData } from '../../app/app.data';
+import { TwoFactorAuthService } from '../../app/services/twofactorauth.service';
 
 @IonicPage()
 @Component({
@@ -29,8 +30,9 @@ export class SendPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public event: Events,
               private qrScanner: QRScanner, private formBuilder: FormBuilder, private alertService: AlertService,
-              private restService: RestService, private loaderService: LoaderService, private authService: AuthService,
-              private translate: TranslateService, private sharedService: SharedService) {
+              private restService: RestService, private loaderService: LoaderService,
+              private translate: TranslateService, private sharedService: SharedService,
+              private twoFactorAuthService: TwoFactorAuthService) {
     this.inputs =  AppData.selectAddressForm;
     // If the user has not activated the 2FA, we remove this input
     if (this.sharedService.user.token.activated === false) {
@@ -124,7 +126,7 @@ export class SendPage {
 
   private validateToken(token?: number): Promise<any> {
     if (token !== undefined) {
-      return this.authService.validate2FAU(token);
+      return this.twoFactorAuthService.validate2FAU(token);
     }
     return Promise.resolve();
   }

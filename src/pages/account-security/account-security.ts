@@ -7,6 +7,7 @@ import { SharedService } from '../../app/services/shared.service';
 import { AuthService } from '../../app/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LoaderService } from '../../app/services/loader.service';
+import { TwoFactorAuthService } from '../../app/services/twofactorauth.service';
 
 @IonicPage()
 @Component({
@@ -26,7 +27,8 @@ export class AccountSecurityPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private authService: AuthService,
               public events: Events, private sharedService: SharedService, private formBuilder: FormBuilder,
-              public translate: TranslateService, private loaderService: LoaderService) {
+              public translate: TranslateService, private loaderService: LoaderService,
+              private twoFactorAuthService: TwoFactorAuthService) {
     this.securityOptions = AppSettings.securityOptions;
     this.update();
     this.showEmailInput = false;
@@ -80,7 +82,7 @@ export class AccountSecurityPage {
   private verifyToken() {
     this.error = undefined;
     this.loaderService.showLoader('LOADER.wait');
-    this.authService.verify2FAU(this.token)
+    this.twoFactorAuthService.verify2FAU(this.token)
     .then((response) => {
       setTimeout(() => {
         this.update();
@@ -96,7 +98,7 @@ export class AccountSecurityPage {
 
   private activateTwoFactorAuth() {
     this.loaderService.showLoader('LOADER.wait');
-    this.authService.activate2FAU()
+    this.twoFactorAuthService.activate2FAU()
     .then((response) => {
       this.message = this.translate.instant('SECURITY_SETTINGS.activate_2FA', {email: this.user.email});
       this.loaderService.dismissLoader();
@@ -111,7 +113,7 @@ export class AccountSecurityPage {
 
   private deactivateTwoFactorAuth() {
     this.loaderService.showSpinner();
-    this.authService.deactivate2FAU()
+    this.twoFactorAuthService.deactivate2FAU()
     .then((response) => {
       this.message = this.translate.instant('SECURITY_SETTINGS.2FA_deactivated');
       this.loaderService.dismissLoader();

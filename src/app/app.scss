@@ -1,10 +1,13 @@
+
+// Global Variables
+
 // Font Sizes
 $font-size-header: 1.375em;
 $font-size-input: 1.1em;
 $font-size-input-thin: 1em;
 $font-size-menu: 1em;
 $font-size-menu-lg: 1.1em;
-$font-size-title:1.375em;
+$font-size-title: 1.375em;
 $font-size-buttons: 1.26em;
 $font-size-info-text: 0.9em;
 $font-size-email: 1.25em;
@@ -20,7 +23,7 @@ $font-size-account-options: 1.05em;
 $font-size-transactions-date: 0.8em;
 $font-size-transactions-amount: 0.8em;
 $font-size-transactions-address: 0.6em;
-
+$font-size-error: 1em;
 
 // Colors
 $primary: map-get($colors, primary);
@@ -29,6 +32,7 @@ $tertiary: map-get($colors, tertiary);
 $clear: map-get($colors, clear);
 $light: map-get($colors, light);
 $dark: map-get($colors, dark);
+$grey: map-get($colors, grey);
 
 // Div sizes
 $height-balance: 8.5em;
@@ -39,6 +43,8 @@ $account-img-width: 72px;
 $menu-img-height: 62px;
 $menu-img-width: 62px;
 $confirm-email-img: 144px;
+$home-info-radius: 1.5em;
+$home-info-width: 20em;
 
 // Transaction Container Styles
 $transactions-img-height: 62px;
@@ -83,7 +89,7 @@ $padding-md: 1.25em;
 $padding-sm: 0.625em;
 $padding-address: 1em;
 
-// SCSS for the APP
+// Common CSS for App elements
 
 * {
   font-family: 'Wallet';
@@ -102,6 +108,15 @@ $padding-address: 1em;
   background-image: none;
 }
 
+// Text that can be selected and copied
+.selectable {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+// Menu List
 .md ion-list>.item:last-child,
 .md ion-list>.item-wrapper:last-child .item,
 .wp ion-list>.item:last-child,
@@ -111,10 +126,63 @@ $padding-address: 1em;
   border-bottom: none;
 }
 
+// Loader
 .full-loader, .full-alert{
   background: $primary;
 }
 
+
+// Footers
+
+.footer-button {
+  width: $button-width-lg;
+  margin: auto;
+  margin-top: $padding-sm;
+  margin-bottom: $padding-sm;
+  position: fixed;
+  left: 0;
+  bottom: $padding-sm;
+  right: 0;
+}
+
+// Inputs and Form Elements
+
+ion-item.input {
+  color: $dark;
+  margin: auto;
+  background: $light;
+  border-radius: $input-radius;
+  min-height: $input-height;
+  width: $input-width;
+  margin-top: $padding-sm;
+  font-size: $font-size-input;
+}
+
+ion-item.input, ion-item.crypto {
+  ion-label.label-md {
+    margin: 0px;
+  }
+}
+
+ion-item.thin-input {
+  margin: auto;
+  background: $light;
+  border-radius: $input-thin-radius;
+  min-height: $input-thin-height;
+  width: $input-thin-width;
+  margin-bottom: $padding-md;
+  color: $secondary;
+  font-size: $font-size-input-thin;
+}
+
+// Selects
+.ios, .md{
+  .select-option{
+    min-width: 100%;
+  }
+}
+
+// Buttons
 
 .button {
   height: $button-height;
@@ -133,21 +201,7 @@ $padding-address: 1em;
   }
 }
 
-.footer-button {
-  width: $button-width-lg;
-  margin: auto;
-  margin-top: $padding-sm;
-  margin-bottom: $padding-sm;
-  position: absolute;
-  bottom:   0;
-
-}
-.ios, .md{
-  .select-option{
-    min-width: 100%;
-  }
-  
-}
+// Headers and Titles
 
 .title.title-md {
   position: absolute;
@@ -172,11 +226,11 @@ $padding-address: 1em;
   padding-top: $padding-md;
 }
 
+// Images
 .display-img {
   display: flex;
   width: 100%; 
   height: $container-height-md;
-  background-color: $primary;
   align-items: center;
   justify-content: center;
   color: map-get($colors, clear);
@@ -192,7 +246,32 @@ $padding-address: 1em;
 .img.circular {
   border-radius: 50%;
 }
+// Wallet Information
+.wallet-balance {
+  font-family: "Wallet-Bold";
+  text-align: center;
+  display: flex;
+  height: 3.5em;
+  font-size: $font-size-home-balance;
+  background-color: $secondary;
+}
 
+.wallet-balance-unit {
+  font-size: 0.8em;
+}
+
+.wallet-balance-crypto {
+  font-size: 30%;
+}
+
+.wallet-name {
+    font-family: "Wallet";
+    font-size: $font-size-home-wallet;
+    color: $secondary;
+    text-align: center;
+}
+
+// Address Container 
 .address-container {
   background-color: $light;
   border-radius: $address-container-radius;
@@ -234,36 +313,18 @@ img.address-img {
   border-radius: 50%;
 }
 
-ion-item.input {
-  color: $dark;
-  margin: auto;
-  background: $light;
-  border-radius: $input-radius;
-  min-height: $input-height;
-  width: $input-width;
-  margin-top: $padding-sm;
-  font-size: $font-size-input;
-}
-
-ion-item.thin-input {
-  margin: auto;
-  background: $light;
-  border-radius: $input-thin-radius;
-  min-height: $input-thin-height;
-  width: $input-thin-width;
-  margin-bottom: $padding-md;
-  color: $secondary;
-  font-size: $font-size-input-thin;
-}
-
+// Error Message
 .error-message{
-  font-size: $font-size-info-text;
+  font-size: $font-size-error;
   color: $dark;
   width: 100%;
   display: block;
   text-align: center;
 }
-// app.component.ts Style 
+
+// app.component.ts Styles
+
+// Menu
 ion-item.menu-user {
   text-align: center;
   font-size: $font-size-menu-lg;
@@ -293,69 +354,5 @@ img.menu-img {
   object-fit: cover;
 }
 
-.account-header-background{
-    background-color: $tertiary;
-}
 
-img.account-img {
-    height: $account-img-height;
-    width: $account-img-width;
-    max-width: 100%;
-    max-height: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    display:block;
-
-}
-.account-header{
-    font-size: $font-size-menu-lg;
-    text-align: center;
-}
-
-.account-info{
-    font-size: $font-size-info-text;
-    color: $secondary;
-    margin-top: $padding-md;
-    text-align: center;
-}
-
-button.account-options {
-    border-radius: $account-options-radius;
-    border-color: $secondary;
-    width: $account-options-width;
-    height: $account-options-height;
-    font-size: $font-size-account-options;
-    color:$dark;
-    background:$clear;
-}
-
-.wallet-balance {
-  font-family: "Wallet-Bold";
-  text-align: center;
-  display: flex;
-  height: 3.5em;
-  font-size: $font-size-home-balance;
-}
-
-.wallet-balance-unit {
-  font-size: 0.8em;
-}
-
-.wallet-balance-crypto {
-  font-size: 30%;
-}
-
-.wallet-name {
-    font-family: "Wallet";
-    font-size: $font-size-home-wallet;
-    color: $secondary;
-    text-align: center;
-}
-
-.selectable {
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
-  user-select: text;
-}
 

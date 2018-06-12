@@ -10,40 +10,55 @@
   </div>
   <ion-card class="transaction-confirmation selectable">
     <ion-list>
-      <ion-item text-wrap>
-        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.hash' | translate }} </span>
-        {{transaction.hash}}
-      </ion-item>
-      <ion-item >
-        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.receiver' | translate }}</span>
-        <ul  class= "transaction-list" *ngFor="let o of transaction.outputs">
-          <li text-wrap>{{o.addresses}}</li>
-        </ul>
+      <ion-item>
+        <div class="transaction-title">
+          <ion-icon name="transaction-hash" item-left class="transaction-icon"></ion-icon>
+            {{'TRANSACTION_CONFIRMATION.hash' | translate }}
+        </div>
+        <span class="transaction-text">{{transaction.hash}}</span>
       </ion-item>
       <ion-item>
-        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.outputs' | translate }}</span>
-        <ul class="transaction-list" *ngFor="let i of transaction.inputs">
-          <li text-wrap>{{i.addresses}}</li>
-        </ul>
+        <div class="transaction-title">
+          <ion-icon name="transaction-output" item-left class="transaction-icon"></ion-icon>
+            {{'TRANSACTION_CONFIRMATION.output' | translate }}
+        </div>
+        <div *ngFor="let o of transaction.outputs | pluck: 'addresses'">
+          <span class="transaction-text">{{o}}</span>
+        </div>
       </ion-item>
       <ion-item>
-        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.amount' | translate }} </span> 
-        {{transaction.outputs[0].value / wallet.crypto.units.exchange | number }} {{wallet.crypto.units.name}}
+        <div class="transaction-title">
+          <ion-icon name="transaction-input" item-left class="transaction-icon"></ion-icon>
+            {{'TRANSACTION_CONFIRMATION.input' | translate }}
+        </div>
+        <div *ngFor="let i of transaction.inputs | pluck: 'addresses'">
+          <span class="transaction-text">{{i}}</span>
+        </div>
       </ion-item>
       <ion-item>
-        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.total' | translate }} </span> 
-        {{transaction.total / wallet.crypto.units.exchange | number }} {{wallet.crypto.units.name}}
+        <div class="transaction-title">
+          <ion-icon name="transaction-amount" item-left class="transaction-icon"></ion-icon>
+            {{'TRANSACTION_CONFIRMATION.amount' | translate }}
+        </div>
+        <span class="transaction-text">{{transaction.outputs[0].value / wallet.crypto.units.exchange | number }} {{wallet.crypto.units.name}} </span>
       </ion-item>
       <ion-item>
-        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.fee' | translate }} </span>
-        {{transaction.fees / wallet.crypto.units.exchange | number }} {{wallet.crypto.units.name}}
+        <div class="transaction-title">
+          <ion-icon name="transaction-fee" item-left class="transaction-icon"></ion-icon>
+            {{'TRANSACTION_CONFIRMATION.fee' | translate }}
+        </div>
+        <span class="transaction-text">{{transaction.fees / wallet.crypto.units.exchange | number }} {{wallet.crypto.units.name}} </span>
       </ion-item>
-      <ion-item>
-        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.received_time' | translate }} </span>{{transaction.received | date:'MMM dd, y hh:mm a'}}
+      <ion-item class="transaction-received">
+        <div class="transaction-title transaction-received">
+          <ion-icon name="transaction-received" class="transaction-received-icon"></ion-icon><br>
+            {{'TRANSACTION_CONFIRMATION.received_time' | translate }}
+        </div>
+        <span class="transaction-text">{{transaction.received | date:'MMM dd, y hh:mm a'}}</span>
       </ion-item>
       <ion-item *ngIf="metadata">
-        <span class="transaction-title">{{'TRANSACTION_CONFIRMATION.metadata' | translate }}</span> 
-        {{metadata}}
+        <div class="transaction-title">{{'TRANSACTION_CONFIRMATION.metadata' | translate }}</div>
+        <span class="transaction-text">{{metadata}}</span>
       </ion-item>
     </ion-list>
   </ion-card>

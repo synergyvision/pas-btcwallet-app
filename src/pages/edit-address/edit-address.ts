@@ -19,7 +19,7 @@ export class EditAddressPage {
   private addressForm: FormGroup;
   private key: string;
   private uid: string;
-  private inputs = AppData.addressInputs;
+  private inputs = AppData.editAddressInputs;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public sharedService: SharedService,
               public formBuilder: FormBuilder, public dataProvider: FirebaseProvider, public event: Events ) {

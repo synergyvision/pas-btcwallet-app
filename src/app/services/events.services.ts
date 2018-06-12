@@ -1,4 +1,3 @@
-import { Transaction } from '../models/transaction';
 import { Activity } from '../models/activity';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Rx';

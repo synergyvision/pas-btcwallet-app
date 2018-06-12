@@ -7,7 +7,7 @@
   <form [formGroup]="addressForm" (ngSubmit)="onSubmit(addressForm)">
     <ion-list>
       <ng-container *ngFor="let i of inputs">
-        <ion-item class="input" *ngIf="(i.name!=='key') && (i.name!=='img')">
+        <ion-item class="input">
           <ion-label>
             {{i.placeholder | translate}}
           </ion-label>

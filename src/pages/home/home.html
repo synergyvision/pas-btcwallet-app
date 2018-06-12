@@ -17,7 +17,7 @@
   <!-- BlockCypher is unavailable Error-->
   <ion-slides pager="true" class="balances-slides" *ngIf="!balances">
     <ion-slide class="wallet-slide" *ngFor="let w of wallets">
-      <div class="display-img wallet-balance"  (click)="goToWalletPage(w)">
+      <div class="display-img wallet-balance no-internet"  (click)="goToWalletPage(w)">
         <ion-icon class="currency" name="currency-{{w.crypto.value}}" item-top></ion-icon>
         {{ w.crypto.coin }}
       </div>
@@ -27,7 +27,8 @@
       <div class="wallet-name">
         {{w.name}}
       </div>
-      <div class="home-info">
+      <div class="img-no-internet"></div>
+      <div class="error-message">
         <p>{{error}}</p>
       </div>
     </ion-slide>
@@ -53,14 +54,26 @@
         {{b.wallet.name}}
       </div>
       <div class="home-info">
-        <p> {{'HOME.transactions' | translate }}: {{b.n_tx}}</p>
-        <p> {{'HOME.total_received' | translate }}: {{b.total_received / b.wallet.crypto.units.exchange | number }} {{ b.wallet.crypto.units.name }}</p>
-        <p> {{'HOME.total_sent' | translate }}: {{b.total_sent / b.wallet.crypto.units.exchange | number }} {{ b.wallet.crypto.units.name }}</p>
-        <p> {{'HOME.unconfirmed_balance' | translate }}: {{ b.unconfirmed_balance / b.wallet.crypto.units.exchange | number }} {{b.wallet.crypto.units.name}}
+        <p> {{'HOME.transactions' | translate }}:
+          <span class="home-info-value">{{b.n_tx}}</span>
         </p>
-        <p>{{'HOME.unconfirmed_n_tx' | translate }}: {{b.unconfirmed_n_tx}}</p>
+        <p> {{'HOME.total_received' | translate }}: 
+          <span class="home-info-value">{{b.total_received / b.wallet.crypto.units.exchange | number }} <strong>{{ b.wallet.crypto.units.name }}</strong>
+          </span>
+        </p>
+        <p> {{'HOME.total_sent' | translate }}: 
+          <span class="home-info-value">{{b.total_sent / b.wallet.crypto.units.exchange | number }} <strong>{{ b.wallet.crypto.units.name }}</strong>
+          </span>
+        </p>
+        <p> {{'HOME.unconfirmed_balance' | translate }}: 
+          <span class="home-info-value">{{ b.unconfirmed_balance / b.wallet.crypto.units.exchange | number }} <strong>{{b.wallet.crypto.units.name}}</strong>
+          </span>
+        </p>
+        <p>{{'HOME.unconfirmed_n_tx' | translate }}: 
+          <span class="home-info-value">{{b.unconfirmed_n_tx}}</span>
+        </p>
       </div>
-      <div class="home-info" *ngIf="error">
+      <div class="error-message" *ngIf="error">
         <p>{{error}}</p>
       </div>
       <button class="home-button receive-button" block ion-button on-click="goToReceive(b.wallet)">

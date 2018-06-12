@@ -4,7 +4,6 @@ import { RestService } from '../../app/services/rest.service';
 import { LoaderService } from '../../app/services/loader.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Address } from '../../app/models/address';
-import { Transaction } from '../../app/models/transaction';
 import { AlertService } from '../../app/services/alert.service';
 import { SharedService } from '../../app/services/shared.service';
 import { TranslateService } from '@ngx-translate/core';

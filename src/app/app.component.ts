@@ -61,7 +61,8 @@ export class MyApp {
     this.events.subscribe('user:loggedIn', () => {
       this.sharedService.updateUser();
       this.user = this.sharedService.user;
-      this.rootPage = 'HomePage';
+      this.nav.setRoot('HomePage');
+      this.nav.popToRoot();
       // Function for showing the notification symbol on Activity
       this.sharedService.showNotification();
     });
@@ -69,7 +70,8 @@ export class MyApp {
       this.rootPage = 'CreateWalletPage';
     });
     this.events.subscribe('user:loggedOut', () => {
-      this.rootPage = 'LoginPage';
+      this.nav.setRoot('LoginPage');
+      this.nav.popToRoot();
     });
     this.events.subscribe('user:changedData', () => {
       this.user = this.sharedService.user;
@@ -97,7 +99,6 @@ export class MyApp {
 
   // Log Out of the App
   public logOut() {
-    this.authService.logout();
     this.events.publish('user:loggedOut');
   }
 }

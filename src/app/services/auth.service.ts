@@ -22,8 +22,7 @@ Currently uses Firebase Auth for handling passwords and sessions states
 export class AuthService {
     public user: firebase.User;
 
-    constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider, private events: Events,
-                private twoFactorAuthService: TwoFactorAuthService) {
+    constructor(private firebaseAuth: AngularFireAuth, private firebaseData: FirebaseProvider, private events: Events) {
         // This keeps an Observable of the Auth State of the Application
         this.firebaseAuth.authState.first()
             .subscribe((user) => {
@@ -53,10 +52,6 @@ export class AuthService {
                     // We store the user on Firebase Realtime DataBase
                     this.firebaseData.addUser(response.email, response.uid, undefined);
                     resolve(response);
-                })
-                .catch((error) => {
-                    console.log(error);
-                    reject(error);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -92,6 +87,7 @@ export class AuthService {
 
     // Logs out the current user
     public logout() {
+        this.user = null;
         this.firebaseAuth.auth.signOut();
     }
 
@@ -107,7 +103,7 @@ export class AuthService {
 
     public recoverPassword(email: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.firebaseData.getUserByEmail(email)
+            const firebaseSub = this.firebaseData.getUserByEmail(email)
             .subscribe((user) => {
                 if (user.length > 0) {
                     firebase.auth().sendPasswordResetEmail(this.user.email)
@@ -120,8 +116,10 @@ export class AuthService {
                 } else {
                     reject('ERROR.FIREBASE.auth/user-not-found');
                 }
+                firebaseSub.unsubscribe();
             }, (error) => {
-                    reject(error);
+                firebaseSub.unsubscribe();
+                reject(error);
             });
         });
     }
@@ -134,13 +132,15 @@ export class AuthService {
     }
 
     public setProfilePicture() {
-        this.firebaseData.getProfilePicture(this.user.uid)
+        const firebaseSub = this.firebaseData.getProfilePicture(this.user.uid)
             .subscribe((photo) => {
                 this.firebaseAuth.auth.currentUser
                 .updateProfile({
                     displayName: this.user.displayName,
                     photoURL: photo,
-            });
+                }).then(() => {
+                    firebaseSub.unsubscribe();
+                });
         });
     }
 
@@ -152,81 +152,7 @@ export class AuthService {
     The IdToken is explained on: https://firebase.google.com/docs/auth/admin/verify-id-tokens
     */
 
-    // Creates the request of 2FA for the logged user
-    public activate2FAU(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.user.getIdToken(true)
-            .then((token) => {
-                // We redirect to the twoFactorAuth Service
-                this.twoFactorAuthService.active2FAU(token)
-                .subscribe((res) => {
-                    resolve(res);
-                }, (error) => {
-                    reject(error);
-                });
-            })
-            .catch((error) => {
-                reject(error);
-            });
-        });
-    }
-
-    // Validates the token sent by the user
-    public validate2FAU(token: number) {
-        return new Promise((resolve, reject) => {
-            this.user.getIdToken(true)
-            .then((idToken) => {
-                // We redirect to the twoFactorAuth Service
-                this.twoFactorAuthService.validateToken(idToken, token)
-                .subscribe((res) => {
-                    resolve();
-                }, (error) => {
-                    reject(error);
-                });
-            })
-            .catch((error) => {
-                reject(error);
-            });
-        });
-    }
-
-    // Activates the 2FA for the logged user (need to have a pending 2FA request)
-    public verify2FAU(token: number) {
-        return new Promise((resolve, reject) => {
-            this.user.getIdToken(true)
-            .then((idToken) => {
-                // We redirect to the twoFactorAuth Service
-                this.twoFactorAuthService.verifySecret(idToken, token)
-                .subscribe((res) => {
-                    resolve();
-                }, (error) => {
-                    reject(error);
-                });
-            })
-            .catch((error) => {
-                reject(error);
-            });
-        });
-
-    }
-
-    // Deactivates the 2FA for the logged user
-
-    public deactivate2FAU() {
-        return new Promise ((resolve, reject) => {
-            this.user.getIdToken(true)
-            .then((idToken) => {
-                // We redirect to the twoFactorAuth Service
-                this.twoFactorAuthService.deactivate2FA(idToken)
-                .subscribe((res) => {
-                    resolve(res);
-                }, (error) => {
-                    reject(error);
-                });
-            })
-            .catch((error) => {
-                reject(error);
-            });
-        });
+    public getIdToken(): Promise<any> {
+        return this.user.getIdToken(true);
     }
 }

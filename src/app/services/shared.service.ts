@@ -53,7 +53,7 @@ export class SharedService {
 
     constructor(public firebaseData: FirebaseProvider, public restService: RestService, public events: Events,
                 public eventService: EventService, public keyService: KeyService, public authService: AuthService,
-                public exchangeService: ExchangeService, public storageProvider: StorageProvider, 
+                public exchangeService: ExchangeService, public storageProvider: StorageProvider,
                 public activityService: ActivityService) {
         // We create a listener on the auth state
         this.events.subscribe('user:loggedOut', () => {
@@ -72,21 +72,23 @@ export class SharedService {
     // Setters
 
     public setUser(user: User) {
-        if (user !== undefined) {
+        if (user) {
             this.user = user;
-            this.getWalletsAsync()
-                    .subscribe((wallets) => {
-                        this.setWallets(wallets);
-                    });
+            const walletSub = this.getWalletsAsync()
+                .subscribe((wallets) => {
+                    this.setWallets(wallets);
+                    walletSub.unsubscribe();
+                });
             this.getCurrency();
             this.getToken();
         }
     }
 
     public getCurrency() {
-        this.firebaseData.getCurrency(this.user.uid)
+        const currencySub = this.firebaseData.getCurrency(this.user.uid)
         .subscribe((currency) => {
             this.currency = currency;
+            currencySub.unsubscribe();
         });
     }
 
@@ -108,9 +110,10 @@ export class SharedService {
     }
 
     public getToken() {
-        this.firebaseData.getToken(this.user.uid)
+        const firebaseSub = this.firebaseData.getToken(this.user.uid)
         .subscribe((token) => {
             this.user.token = token;
+            firebaseSub.unsubscribe();
         });
     }
 
@@ -139,9 +142,10 @@ export class SharedService {
         this.multiSignedWallets = [];
         wallets.forEach((wallet) => {
             if (wallet.multiSignedKey !== '') {
-                this.firebaseData.getMultiSignedWallet(wallet.multiSignedKey)
+                const multiWalletSub = this.firebaseData.getMultiSignedWallet(wallet.multiSignedKey)
                     .subscribe((mSWallet: MultiSignedWallet) => {
                         this.multiSignedWallets.push(mSWallet);
+                        multiWalletSub.unsubscribe();
                     });
             }
         });
@@ -156,6 +160,7 @@ export class SharedService {
                 } else {
                     console.log('NO');
                 }
+                this.pendingTxs().unsubscribe();
             });
         }
     }
@@ -190,8 +195,8 @@ export class SharedService {
     }
 
     public updateUser() {
-        this.user = this.authService.getLoggedUser();
-        this.setUser(this.user);
+        console.log(this.user);
+        this.setUser(this.authService.getLoggedUser());
     }
 
     public getWalletSigners(signers: ISigner[]): Observable<Address[]> {
@@ -269,7 +274,7 @@ export class SharedService {
         if (wallet.address !== '') {
             return this.restService.getAddressWalletBalance(wallet);
         } else {
-            return this.restService.getBalanceFromWallet(wallet);
+            return this.restService.getWalletBalance(wallet);
         }
     }
 
@@ -327,11 +332,11 @@ export class SharedService {
             };
            // We send the info to the BlockCypher API
             if ((crypto !== 'tet') && (crypto !== 'eth')) {
-                this.restService.createWalletHD(data, crypto)
+                this.restService.createWallet(data, crypto)
                     .subscribe((hdWallet) => {
                         // Succeed Creating the Wallet, so now we need to store the info on Firebase
                         const newWallet = new Wallet(hdWallet.name, keys, currency);
-                        this.firebaseData.addWallet(newWallet, this.user.uid);
+                        this.firebaseData.addWallet(newWallet, this.user.uid, this.user.email);
                         resolve(newWallet);
                     }, (error) => {
                         reject(error);
@@ -341,7 +346,7 @@ export class SharedService {
                 const address = this.keyService.generateAddress(keys);
                 const newWallet = new Wallet(data.name, keys, currency);
                 newWallet.address = address;
-                this.firebaseData.addWallet(newWallet, this.user.uid);
+                this.firebaseData.addWallet(newWallet, this.user.uid, this.user.email);
                 resolve(newWallet);
             }
         });
@@ -528,7 +533,7 @@ export class SharedService {
         return new Promise((resolve, reject) => {
             console.log(request);
             // First we create the new Wallet Data
-            const name = 'MS' + request.crypto  + Math.random().toString(36).substr(2, length);
+            const name = 'MS' + request.crypto  + this.createRandomUUID(this.user.uid);
             const script = request.type;
             const currency = AppData.cryptoUnitList.filter((c) => {
                 return c.value.includes(request.crypto);

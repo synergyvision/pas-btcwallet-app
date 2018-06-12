@@ -7,7 +7,6 @@ import { ECPair, HDNode, TransactionBuilder, networks } from 'bitcoinjs-lib';
 import { ISigner } from '../models/multisignedWallet';
 import { ITransactionSke } from '../interfaces/ITransactionSke';
 import { ITInput } from '../interfaces/ITInput';
-import { ENGINE_METHOD_PKEY_ASN1_METHS } from 'constants';
 
 @Injectable()
 

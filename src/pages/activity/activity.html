@@ -65,7 +65,7 @@
         {{'ACTIVITY.activity_title' | translate }}
     </ion-item>
     <ion-item class="thin-input date" *ngIf="!activity">
-      No activity
+      {{'ACTIVITY.no_activity_title' | translate }}
     </ion-item>
     <ion-item-sliding *ngFor="let a of activityList | async" text-wrap>
       <ion-item class="thin-input">

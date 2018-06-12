@@ -4,10 +4,6 @@
 // More info on https://firebase.google.com/docs/reference/js/firebase.User
 
 export interface IToken {
-  secret?: string;
-  tempSecret?: string;
-  dataURL?: string;
-  otpURL?: string;
   activated?: boolean;
   enabled?: boolean;
 }
