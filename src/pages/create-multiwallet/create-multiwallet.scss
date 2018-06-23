@@ -1,14 +1,14 @@
-.select-label  {
-    max-width: 20%;
-    color: $dark !important;
-}
+
 
 .page-create-multiwallet {
-    .select-crypto {
-            max-width: 40%;
-            min-width: 40%;
-            width: 40%;
-            text-align: right;
-            display: flex;
+    .select-label  {
+        max-width: 20%;
+        color: $dark !important;
+    }
+    
+    .select-signers {
+        min-width: 50 !important;
+        display: inline-block;
+        position: relative !important;
     }
 }

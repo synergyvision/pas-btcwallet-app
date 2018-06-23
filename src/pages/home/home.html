@@ -9,7 +9,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content no-bounce overflow-scroll="false">
+<ion-content>
   <ion-refresher class="home-refresher" (ionRefresh)="refresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
@@ -17,12 +17,12 @@
   <!-- BlockCypher is unavailable Error-->
   <ion-slides pager="true" class="balances-slides" *ngIf="!balances">
     <ion-slide class="wallet-slide" *ngFor="let w of wallets">
-      <div class="display-img wallet-balance no-internet"  (click)="goToWalletPage(w)">
+      <div class="display-img wallet-balance no-internet" (click)="goToWalletPage(w)">
         <ion-icon class="currency" name="currency-{{w.crypto.value}}" item-top></ion-icon>
         {{ w.crypto.coin }}
       </div>
       <div class="page-title">
-          {{'wallet' | translate }} {{w.crypto.name | uppercase}}
+        {{'wallet' | translate }} {{w.crypto.name | uppercase}}
       </div>
       <div class="wallet-name">
         {{w.name}}
@@ -48,7 +48,7 @@
         </div>
       </div>
       <div class="page-title">
-          {{'wallet' | translate }} {{b.wallet.crypto.name | uppercase}}
+        {{'wallet' | translate }} {{b.wallet.crypto.name | uppercase}}
       </div>
       <div class="wallet-name">
         {{b.wallet.name}}
@@ -57,19 +57,22 @@
         <p> {{'HOME.transactions' | translate }}:
           <span class="home-info-value">{{b.n_tx}}</span>
         </p>
-        <p> {{'HOME.total_received' | translate }}: 
-          <span class="home-info-value">{{b.total_received / b.wallet.crypto.units.exchange | number }} <strong>{{ b.wallet.crypto.units.name }}</strong>
+        <p> {{'HOME.total_received' | translate }}:
+          <span class="home-info-value">{{b.total_received / b.wallet.crypto.units.exchange | number }}
+            <strong>{{ b.wallet.crypto.units.name }}</strong>
           </span>
         </p>
-        <p> {{'HOME.total_sent' | translate }}: 
-          <span class="home-info-value">{{b.total_sent / b.wallet.crypto.units.exchange | number }} <strong>{{ b.wallet.crypto.units.name }}</strong>
+        <p> {{'HOME.total_sent' | translate }}:
+          <span class="home-info-value">{{b.total_sent / b.wallet.crypto.units.exchange | number }}
+            <strong>{{ b.wallet.crypto.units.name }}</strong>
           </span>
         </p>
-        <p> {{'HOME.unconfirmed_balance' | translate }}: 
-          <span class="home-info-value">{{ b.unconfirmed_balance / b.wallet.crypto.units.exchange | number }} <strong>{{b.wallet.crypto.units.name}}</strong>
+        <p> {{'HOME.unconfirmed_balance' | translate }}:
+          <span class="home-info-value">{{ b.unconfirmed_balance / b.wallet.crypto.units.exchange | number }}
+            <strong>{{b.wallet.crypto.units.name}}</strong>
           </span>
         </p>
-        <p>{{'HOME.unconfirmed_n_tx' | translate }}: 
+        <p>{{'HOME.unconfirmed_n_tx' | translate }}:
           <span class="home-info-value">{{b.unconfirmed_n_tx}}</span>
         </p>
       </div>
@@ -77,24 +80,33 @@
         <p>{{error}}</p>
       </div>
       <button class="home-button receive-button" block ion-button on-click="goToReceive(b.wallet)">
-          {{'FORM.receive' | translate }}
+        {{'FORM.receive' | translate }}
       </button>
       <button class="home-button send" block ion-button on-click="goToSend(b)">
-          {{'FORM.send' | translate }}
+        {{'FORM.send' | translate }}
       </button>
     </ion-slide>
-    
+
     <!-- New Wallet Pages -->
     <ion-slide class="new-wallet-slide">
-      <ion-icon class="new-wallet-icon" name="add" on-click="createNewMultiWallet()"></ion-icon>
-      <button class="new-wallet-button" block ion-button on-click="createNewMultiWallet()">
+      <div class="new-wallet-button new-wallet" on-click="createNewMultiWallet()">
+        <div class="new-wallet-icon">
+            <ion-icon name="add" ></ion-icon>
+        </div>
+        <br>
+        <div class="new-wallet-text">
           {{'FORM.add_multisigned_wallet' | translate }}
-      </button>
-      <ion-icon class="new-wallet-icon" name="add" on-click="createNewWallet()"></ion-icon>
-      <button class="new-wallet-button" block ion-button on-click="createNewWallet()">
+        </div>
+      </div>
+      <div class="new-wallet-button new-multi-wallet"  on-click="createNewWallet()">
+        <div class="new-wallet-icon">
+            <ion-icon name="add"></ion-icon>
+        </div>
+        <br>
+        <div class="new-wallet-text">
           {{'FORM.add_wallet' | translate }}
-      </button>
+        </div>
+      </div>
     </ion-slide>
   </ion-slides>
-
 </ion-content>

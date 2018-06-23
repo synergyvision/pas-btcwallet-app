@@ -32,14 +32,11 @@ export class ExchangePage {
               private sharedService: SharedService, private exchangeService: ExchangeService,
               private translate: TranslateService, private alertService: AlertService) {
       this.balances =  this.sharedService.balances;
-      if (this.balances === undefined) {
+/*       if (this.balances === undefined) {
         this.error = this.translate.instant('ERROR.no_internet');
-      }
+      } */
       this.walletList = this.walletDestinationList = this.sharedService.wallets;
-      this.currency = {
-        name: 'USD',
-        exchange: 381.23,
-      };
+      this.currency = this.sharedService.currency;
   }
 
   private onOriginWalletSelect() {

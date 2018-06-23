@@ -8,8 +8,8 @@
   <span class="error-message" *ngIf="error!==undefined">
     {{error}}
   </span>
-  <ion-list>
-    <ion-item class="crypto input">
+  <ion-list no-lines>
+    <ion-item class="input">
       <ion-label>{{'cryptocoins' | translate }}</ion-label>
       <ion-select class="select-crypto" [(ngModel)]="selectedCrypto" (ionChange)="onBlockchainChange()">
         <ion-option *ngFor="let c of crypto" value="{{c.value}}">{{c.name}}</ion-option>
@@ -23,16 +23,13 @@
       </ion-input>
     </ion-item>
     <div *ngIf="selectedCrypto && blockchain" class="blockchain-info selectable">
-      <ion-item class="header">
-        {{'BLOCKCHAIN.default_block' | translate }}
-      </ion-item>
-      <ion-item text-wrap>
+      <ion-item class="blockchain-item" text-wrap>
         {{'BLOCKCHAIN.time' | translate }} {{blockchain.time | date:'dd MMM, y hh:mm a'}}
       </ion-item>
-      <ion-item text-wrap>
+      <ion-item class="blockchain-item"text-wrap>
         {{'BLOCKCHAIN.height' | translate }} {{blockchain.height}}
       </ion-item>
-      <button ion-item (click)="toggleBlock(blockchain.hash)">
+      <button class="blockchain-item" ion-item (click)="toggleBlock(blockchain.hash)">
         {{'BLOCKCHAIN.hash' | translate }}{{blockchain.hash}}
         <ion-icon *ngIf="!showBlock" name="arrow-dropright" item-end></ion-icon>
         <ion-icon *ngIf="showBlock" name="arrow-dropdown" item-end></ion-icon>
@@ -46,56 +43,56 @@
         </div>
         <span class="blockchain-text"> {{block.hash}} </span>
       </ion-item>
-      <ion-item text-wrap>
+      <ion-item>
         <div class="blockchain-title">
           <ion-icon name="blockchain-nonce" item-left class="blockchain-icon"></ion-icon>
           {{'BLOCKCHAIN.block_nonce' | translate }}
         </div>
         <span class="blockchain-text"> {{block.nonce}} </span>
       </ion-item>
-      <ion-item text-wrap>
+      <ion-item>
         <div class="blockchain-title">
           <ion-icon name="blockchain-height" item-left class="blockchain-icon"></ion-icon>
           {{'BLOCKCHAIN.block_height' | translate }}
         </div>
         <span class="blockchain-text"> {{block.height}} </span>
       </ion-item>
-      <ion-item text-wrap>
+      <ion-item>
         <div class="blockchain-title">
           <ion-icon name="blockchain-size" item-left class="blockchain-icon"></ion-icon>
           {{'BLOCKCHAIN.block_size' | translate }}
         </div>
         <span class="blockchain-text"> {{block.size}} </span>
       </ion-item>
-      <ion-item text-wrap>
+      <ion-item>
         <div class="blockchain-title">
           <ion-icon name="blockchain-n_tx" item-left class="blockchain-icon"></ion-icon>
           {{'BLOCKCHAIN.block_n_tx' | translate }}
         </div>
         <span class="blockchain-text"> {{block.n_tx}} </span>
       </ion-item>
-      <ion-item text-wrap>
+      <ion-item>
         <div class="blockchain-title">
           <ion-icon name="blockchain-total" item-left class="blockchain-icon"></ion-icon>
           {{'BLOCKCHAIN.block_total' | translate }}
         </div>
         <span class="blockchain-text"> {{block.total}}</span>
       </ion-item>
-      <ion-item text-wrap>
+      <ion-item>
         <div class="blockchain-title">
           <ion-icon name="blockchain-fees" item-left class="blockchain-icon"></ion-icon>
           {{'BLOCKCHAIN.block_fees' | translate }}
         </div>
         <span class="blockchain-text"> {{block.fees}}</span>
       </ion-item>
-      <ion-item text-wrap>
+      <ion-item>
         <div class="blockchain-title">
           <ion-icon name="blockchain-time" item-left class="blockchain-icon"></ion-icon>
           {{'BLOCKCHAIN.block_time' | translate }}
         </div>
         <span class="blockchain-text">{{block.time | date:'dd MMM, y hh:mm a'}}</span>
       </ion-item>
-      <ion-item text-wrap>
+      <ion-item>
         <div class="blockchain-title">
           <ion-icon name="blockchain-received" item-left class="blockchain-icon"></ion-icon>
           {{'BLOCKCHAIN.block_received_time' | translate }}

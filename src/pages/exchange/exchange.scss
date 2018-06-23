@@ -1,5 +1,47 @@
 page-exchange {
-    .wallet-balance {
-        font-size: 1em;
+
+    .exchange-container {
+        background-color: $light;
+        border-radius: $exchange-radius;
+        margin-bottom: $padding-md;
+        padding: $padding-sm;
+        .thin-input {
+            background-color: $grey;
+            width: 100%;
+            border-radius: $exchange-radius;
+        }
+        .exchange-balance {
+            background-color: transparent;
+            color: $dark;
+        }
+        .select-placeholder {
+            color: $secondary;
+        }
+        .select-text {
+        }
     }
+
+    .exchange-rate {
+        background-color: $light;
+        border-radius: $exchange-radius;
+
+    }
+
+    .exchange-input {
+        width: 100%;
+        background-color: transparent;
+        border-bottom: solid 1px $grey!important;
+        .label-md {
+            color: black;
+        }
+    }
+    ion-item:last-child {
+        border-bottom: solid 0px !important;
+    }
+    
+    .exchange-balance-amount {
+        font-weight: bold;
+        color: $secondary;
+    }
+
 }

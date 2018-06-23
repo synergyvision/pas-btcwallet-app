@@ -20,16 +20,16 @@
       </ion-item>
       <ion-item class="crypto input">
         <ion-label class="select-label">{{'FORM.type' | translate }}</ion-label>
-        <ion-select class="select-crypto" placeholder="{{'CREATE_MULTIWALLET.signatures' | translate }}" 
+        <ion-select class="select-signers" placeholder="{{'CREATE_MULTIWALLET.signatures' | translate }}" 
                     name="numberOfSigners" [(ngModel)]="numberOfSigners" (ionChange)="onSignersChange()" required>
           <ion-option *ngFor="let s of signers"value="{{s}}">{{s}}</ion-option>
         </ion-select>
-        <ion-select class="select-crypto" name="numberOfSignatures" placeholder="{{'CREATE_MULTIWALLET.signers' | translate }}" 
+        <ion-select class="select-signer" name="numberOfSignatures" placeholder="{{'CREATE_MULTIWALLET.signers' | translate }}" 
                     [(ngModel)]="numberOfSignatures" [disabled] ="!numberOfSigners">
           <ion-option *ngFor="let s of signatures"  value="{{s}}">{{s}}</ion-option>
         </ion-select>
       </ion-item>
-      <div>
+      <div *ngIf="numberOfSignatures" class="info-message">
         {{"CREATE_MULTIWALLET.select_signers" | translate}}
       </div>
       <button ion-button type="button" block [disabled]="!numberOfSignatures" (click)="goToAddressBook()">
@@ -41,7 +41,7 @@
           <ion-input type="email" disabled placeholder="{{'FORM.email' | translate }}" [name]="'user-'+i" [(ngModel)]="users[i].email" required></ion-input>
         </ion-item>
       </div>
-      <div *ngIf="error" class="error">
+      <div *ngIf="error" class="error-message">
         {{error}}
       </div>
       <button ion-button type="submit" class="footer-button" [disabled]="!walletForm.form.valid" block>

@@ -40,6 +40,11 @@ $colors: (
 $toolbar-background: map-get($colors, primary);
 $toolbar-border-color: map-get($colors, primary);
 $grid-padding-width: 5px !default;
+$text-input-md-highlight-color-invalid: transparent;
+$text-input-md-highlight-color-valid: transparent;
+$text-input-md-show-invalid-highlight: transparent;
+$text-input-md-highlight-color: transparent;
+$text-input-md-show-valid-highlight: transparent;
 
 
 @font-face {
@@ -91,7 +96,7 @@ ion-icon {
     height: 1em;
   } // custom icons
   &[class*="blockchain-total"] {
-    mask-image: url(../assets/iconsblockchain/total-icon.svg);
+    mask-image: url(../assets/icons/blockchain/total-icon.svg);
   }
   &[class*="blockchain-fee"] {
     mask-image: url(../assets/icons/blockchain/fee-icon.svg);
@@ -204,7 +209,37 @@ ion-icon {
     mask-image: url(../assets/icons/add-wallet-multisignature.svg);
   }
 }
-
+ion-icon {
+  &[class*="exchange-"] {
+    mask-size: contain;
+    mask-position: 50% 50%;
+    mask-repeat: no-repeat;
+    background-color: map-get($colors, secondary);
+    width: 1em;
+    height: 1em;
+  }
+  &[class*="exchange-btc"] {
+    mask-image: url(../assets/icons/exchange/BTC.svg);
+  }
+  &[class*="exchange-bcy"] {
+    mask-image: url(../assets/icons/exchange/BTC.svg);
+  }
+  &[class*="exchange-tes"] {
+    mask-image: url(../assets/icons/exchange/BTC.svg);
+  }
+  &[class*="exchange-dog"] {
+    mask-image: url(../assets/icons/exchange/DOGE.svg);
+  }
+  &[class*="exchange-ltc"] {
+    mask-image: url(../assets/icons/exchange/LTC.svg);
+  }
+  &[class*="exchange-eth"] {
+    mask-image: url(../assets/icons/exchange/ETH.svg);
+  }
+  &[class*="exchange-tet"] {
+    mask-image: url(../assets/icons/exchange/ETH.svg);
+  }
+}
 ion-icon {
   &[class*="currency-"] {
     mask-size: contain;
@@ -235,8 +270,6 @@ ion-icon {
   &[class*="currency-tet"] {
     mask-image: url(../assets/icons/currencies/ETH.svg);
   }
-
-
 }
 
 // App iOS Variables

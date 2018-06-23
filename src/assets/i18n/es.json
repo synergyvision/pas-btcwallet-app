@@ -127,7 +127,7 @@
         "sub_title": "Creación de Billeteras",
         "select_crypto": "Seleccione una Moneda",
         "mnemonics_title": "Mnemonics de la Billetera",
-        "passphrase_info": "Esta clave de seguridad se encargara de suministrar mayor seguridad a su billetera debe guardar esta información, ya que es vital para poder recuperar sus datos en caso de perder su contraseña"
+        "passphrase_info": "La clave de seguridad se encarga de suministrar mayor seguridad a su billetera, pero es opcional. Debe recordarla para poder recuperar sus criptomonedas en caso de perder su cuenta."
     },
 
     "EDIT_ADDRESS":{
@@ -138,9 +138,7 @@
         "title": "Exchange",
         "select_origin": "Billetera Origen",
         "select_destination": "Billetera Destino",
-        "balance": "Balance: ",
-        "amount": "Monto: ",
-        "destination_amount": "Monto en "
+        "balance": "Balance "
     },
     
     "RECEIVE": {
