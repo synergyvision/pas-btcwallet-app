@@ -35,6 +35,10 @@ button.account-options {
     font-size: $font-size-account-options;
     color:$dark;
     background:$clear;
+    .label-md {
+        margin: 0px !important;
+    }
+    
 }
 
 .wallet-info{
@@ -47,6 +51,7 @@ button.account-options {
     color: $dark;
     font-size: $font-size-info-text;
 }
+
 
 
 

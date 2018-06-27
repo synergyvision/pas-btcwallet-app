@@ -1,12 +1,16 @@
 .send-confirm-info{
     color: $dark;
-    margin-left: $padding-md;
+    margin-left: $padding-lg;
     margin-bottom: $padding-sm;
     text-align: left;
+    padding-left: $padding-md;
 }
 
 .send-confirm-subtitle{
     color:$secondary;
     font-weight: bold;
+}
 
+.send-confirm-subtitle:last-child {
+    margin-top: $padding-md;
 }

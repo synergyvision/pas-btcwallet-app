@@ -24,6 +24,7 @@ $font-size-transactions-date: 0.8em;
 $font-size-transactions-amount: 0.8em;
 $font-size-transactions-address: 0.6em;
 $font-size-error: 1em;
+$font-size-mnemonics: 1.25em;
 
 // Colors
 $primary: map-get($colors, primary);
@@ -38,14 +39,14 @@ $grey: map-get($colors, grey);
 $container-height-balance: 8.5em;
 $container-height-md: 25%;
 $container-height-lg: 30%;
-$account-img-height: 72px;
-$account-img-width: 72px;
-$menu-img-height: 62px;
-$menu-img-width: 62px;
-$confirm-email-img: 144px;
+$account-img-height: 4.5em;
+$account-img-width: 4.5em;
+$menu-img-height: 3.8em;
+$menu-img-width: 3.8em;
+$confirm-email-img: 9em;
 $home-info-radius: 1.5em;
 $home-info-width: 20em;
-$exchange-radius: 10px;
+$exchange-radius:0.625em;
 
 // New Wallet Div Size
 $new-wallet-height: 18.5em;
@@ -53,8 +54,8 @@ $new-wallet-width: 20em;
 $new-wallet-radius: 35px;
 
 // Transaction Container Styles
-$transactions-img-height: 62px;
-$transactions-img-width: 62px;
+$transactions-img-height: 3.8em;
+$transactions-img-width: 3.8em;
 $transactions-container-width: 18em;
 $transactions-container-height: 4.35em;
 $transactions-container-radius: 34.858px;
@@ -78,8 +79,8 @@ $account-options-height: 2.8em;
 $address-container-width: 18em;
 $address-container-height: 3.4em;
 $address-container-radius: 34.858px;
-$address-img-height: 74px;
-$address-img-width: 74px;
+$address-img-height: 4.625em;
+$address-img-width: 4.625em;
 
 // Input Styles
 $input-width: 16.45em;

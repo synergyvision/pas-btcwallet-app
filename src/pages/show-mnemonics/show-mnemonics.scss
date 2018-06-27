@@ -1,8 +1,17 @@
 page-show-mnemonics {
     .mnemonic-word {
         height: 3em;
-        font-size: 1.2em;
+        font-size: $font-size-mnemonics;
         text-align: center;
-        color: red;
+        color: $secondary;
+        background-color: $light;
+        border: $padding-sm solid white;
+    }
+
+    .mnemonics-info {
+        font-size: $font-size-small-title;
+        color: $secondary;
+        text-align: center;
+        margin-bottom: $padding-sm;
     }
 }

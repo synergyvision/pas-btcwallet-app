@@ -54,7 +54,7 @@
     },
 
     "WALLET_SETTINGS": {
-        "title": "Seguridad",
+        "title": "Ajustes",
         "sub_title": "Configuración de Billeteras",
         "email_verified_message": "Su cuenta no se encuentra verificada",
         "select_crypto_unit": "Seleccione Unidad",
@@ -82,11 +82,11 @@
     },
 
     "ADDRESS": {
-        "title": "Agregar Dirección"
+        "title": "Agregar Contacto"
     },
 
     "ADDRESS_BOOK": {
-        "title": "Libreta de Direcciones"
+        "title": "Libreta de Contactos"
     },
 
     "BLOCKCHAIN": {
@@ -162,10 +162,7 @@
         "selected_address": "Dirección Seleccionada",
         "metadata": "Concepto",
         "select_fee": "Preferencia",
-        "min_fee": "Comisión",
-        "fee_low": "Baja",
-        "fee_medium": "Media",
-        "fee_high": "Alta"
+        "min_fee": "Comisión"
     },
 
     "SHOW_MNEMONICS": {
@@ -198,7 +195,7 @@
     },
 
     "FORM": {
-        "email": "Correo Electrónico",
+        "email": "Correo",
         "password": "Contraseña",
         "repeat_password": "Repetir Contraseña",
         "alias": "Alias",
@@ -221,7 +218,7 @@
         "address": "Dirección",
         "fee_low": "Baja",
         "fee_medium": "Media",
-        "fee_high": "High",
+        "fee_high": "Alta",
         "passphrase": "Contraseña"
     },
 
@@ -288,7 +285,7 @@
         "success": "Éxito",
         "request_created": "Solicitud Creada",
         "try_later": "Intente mas tarde",
-        "changingc_picture": "Subiendo imagen"
+        "changing_picture": "Subiendo imagen"
     },
 
     "ACTION_SHEET": {

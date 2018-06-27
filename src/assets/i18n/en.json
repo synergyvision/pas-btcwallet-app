@@ -12,7 +12,8 @@
         "recover_password" : "Recover Password",
         "log_in": "Log In",
         "register": "Register",
-        "google": "Google"
+        "google": "Google",
+        "password_reset": "Se ha enviado un correo de recuperación de contraseña"
     },
 
     "REGISTER": {
@@ -57,7 +58,9 @@
         "sub_title": "Wallet Settings",
         "email_verified_message": "Your account is not verified",
         "select_crypto_unit": "Select the unit",
-        "select_wallet": "Select a Wallet"
+        "select_wallet": "Select a Wallet",
+        "wallet_imported": "Wallet Imported Succesfully",
+        "mnemonics_input": "Please input the mnemonic phrase. It is usually twelve words long."
     },
 
     "ACTIVITY": {
@@ -69,7 +72,13 @@
         "pending_tx_body": "The user {{ value }} is requesting a transaction approval",
         "destination": "Destination: ",
         "amount": "Amount: ",
-        "activity_title": "Recent Activity"
+        "activity_title": "Recent Activity",
+        "no_activity_title": "No recent Activity",
+        "password_changed": "Password Changed",
+        "logged_in": "Logged In",
+        "payment_sent": "Payment made ",
+        "payment_message": "for ",
+        "image_changed": "Changed User Picture "
     },
 
     "ADDRESS": {
@@ -130,8 +139,6 @@
         "select_origin": "Origin Wallet",
         "select_destination": "Destination Wallet",
         "balance": "Balance: ",
-        "amount": "Amount: ",
-        "destination_amount": "Amount in: "
     },
     
     "RECEIVE": {
@@ -152,9 +159,10 @@
         "sub_title": "Select Amount",
         "balance": "Available: ",
         "left": "Left: ",
-        "min_fee": "Minimun Fee: ",
         "selected_address": "Selected Destination",
-        "metadata": "Metadata"
+        "metadata": "Metadata",
+        "select_fee": "Preference",
+        "min_fee": "Fee"
     },
 
     "SHOW_MNEMONICS": {
@@ -165,12 +173,14 @@
     "TRANSACTION_CONFIRMATION": {
         "title": "Transaction",
         "sub_title": "Transaction Data",
-        "hash": "Hash: ",
-        "receiver": "Receiver: ",
-        "ouputs": "Outputs: ",
-        "amount": "Amount: ",
-        "fee": "Fee: ",
-        "received_time": "Received: "
+        "hash": "Hash",
+        "input": "Input",
+        "ouput": "Output",
+        "amount": "Amount",
+        "total": "Total",
+        "fee": "Fee",
+        "received_time": "Received",
+        "metadata": "Metadata"
     },
 
     "TRANSACTIONS": {
@@ -205,7 +215,11 @@
         "type": "Type",
         "cancel": "Cancel",
         "token": "OTP",
-        "address": "Address"
+        "address": "Address",
+        "fee_low": "Low",
+        "fee_medium": "Medium",
+        "fee_high": "Hugh",
+        "passphrase": "Pasword"
     },
 
     "ACCOUNT_OPTIONS": {
@@ -220,6 +234,10 @@
         "deactivate_2auf": "Deactivate Two Factor Auth",
         "email_sent": "An email was sent to ",
         "2FA_activated": "2FA has been activated correctly"
+    },
+
+    "WALLET": {
+        "title": "Wallet"
     },
 
     "WALLET_OPTIONS": {
@@ -240,10 +258,14 @@
         "duplicated_user": "The user you are trying to add is already on the address book",
         "invalid_address": "This address is not valid",
         "no_internet": "No internet connection, try again later",
+        "no_mnemonics": "This Wallet does not have a mnemonic phrase",
+        "cordova_not_available": "This action can not be completed at this moment",
         "FIREBASE": {
             "auth/wrong-password": "The password is invalid",
             "auth/user-not-found": "The user is not registered",
-            "auth/email-already-in-use": "This email is already in use by another user"
+            "auth/email-already-in-use": "This email is already in use by another user",
+            "auth/network-request-failed": "There has been an error, try again later",
+            "undefined": "There has been an error, try again later"
         },
         "CAMERA": {
             "unavailable": "The camera is unavailable at the moment",
@@ -262,7 +284,8 @@
         "error": "Error",
         "success": "Success",
         "request_created": "Request Created",
-        "try_later": "Try again later"
+        "try_later": "Try again later",
+        "changing_picture": "Uploading Image"
     },
 
     "ACTION_SHEET": {
@@ -275,6 +298,13 @@
         "wait": "Wait",
         "creating_data": "Creating Data",
         "generating_code": "Generating Code",
-        "sending_payment": "Sending Payment"
+        "sending_payment": "Sending Payment",
+        "retrieving_data": "Recovering Data"
+    },
+    
+    "METADATA": {
+        "payment": "Payment",
+        "gift": "Gift",
+        "transfer": "Wire"
     }
 }

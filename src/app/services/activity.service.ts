@@ -16,7 +16,7 @@ export class ActivityService {
     private uid: string;
 
     constructor(private dataProvider: FirebaseProvider, private events: Events, private authService: AuthService) {
-        // this.loginActivity();
+        this.loginActivity();
         this.changedPassword();
         this.paymentSent();
         this.imageChanged();
@@ -61,7 +61,6 @@ export class ActivityService {
     }
 
     private addActivity(activity: Activity) {
-        console.log(activity);
         this.dataProvider.addActivity(this.uid, activity);
     }
 }

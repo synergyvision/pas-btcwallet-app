@@ -283,9 +283,7 @@ export class FirebaseProvider {
   // Activity CRUD Operations
 
   public addActivity(uid: string, activity: Activity) {
-    this.angularFire.list('user/' + uid + '/activities/').push(activity).then((e) => {
-      console.log(e);
-    });
+    this.angularFire.list('user/' + uid + '/activities/').push(activity);
   }
 
   public getActivitiesList(uid: string) {
