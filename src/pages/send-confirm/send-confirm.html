@@ -25,7 +25,7 @@
         {{(balance.balance / balance.wallet.crypto.units.exchange)- 
         (sendForm.value.amount / balance.wallet.crypto.units.exchange) | number }} {{balance.wallet.crypto.units.name}}<br> 
 
-        <div class="send-confirm-subtitle">{{'SEND_CONFIRM.min_fee' | translate }}</div>
+        <div  *ngIf="!ethereum" class="send-confirm-subtitle">{{'SEND_CONFIRM.min_fee' | translate }}</div>
       </div>
       <ion-item class="thin-input" *ngIf="!ethereum">
           <ion-select class="select-option" formControlName="fee" placeholder="{{ 'SEND_CONFIRM.select_fee' | translate }}">

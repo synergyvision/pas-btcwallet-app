@@ -80,8 +80,7 @@ export class SendPage {
         if (status.authorized) {
           const scanSub = this.qrScanner.scan()
           .subscribe((text: string) => {
-            this.inputAddress = text;
-            this.validateInputedAddress(text);
+            this.selectAddressForm.controls.inputAddress.setValue(text);
             this.qrScanner.hide();
             window.document.querySelector('ion-app').classList.remove('transparent-body');
             scanSub.unsubscribe();

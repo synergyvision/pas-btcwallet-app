@@ -44,7 +44,8 @@ export class ActivityService {
     }
     private loginActivity() {
         this.events.subscribe('user:loggedIn', () => {
-            this.uid = this.authService.user.uid;
+            console.log(this.authService.user);
+            this.uid = this.authService.getLoggedUser().uid;
             const date = this.authService.user.metadata.lastSignInTime;
             const loginActivity = new Activity(date, 'ACTIVITY.logged_in');
             this.addActivity(loginActivity);
